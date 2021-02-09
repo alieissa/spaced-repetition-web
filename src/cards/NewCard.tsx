@@ -3,10 +3,13 @@
 import * as _ from 'lodash'
 import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Button, Card, Icon, Input, List } from 'semantic-ui-react'
+import { Card, Input, List } from 'semantic-ui-react'
+import { IconButton, Settings } from 'src/components'
 import '../App.css'
 import { styles } from '../styles'
+
 export default function NewCard() {
+  const [open, setOpen] = useState(false)
   const [answers, setAnswers] = useState(1)
   if (answers === 0) {
     return null
@@ -14,9 +17,31 @@ export default function NewCard() {
   return (
     <Card fluid className="flex-1">
       <Card.Header textAlign="right">
-        <Button circular icon style={styles.bgWhite}>
-          <Icon name="x" onClick={() => setAnswers(0)}></Icon>
-        </Button>
+        <IconButton
+          circular
+          icon
+          color="white"
+          name="x"
+          onClick={() => setAnswers(0)}
+        />
+        <Settings
+          id="dummyId4"
+          open={open}
+          easiness={1}
+          quality={2}
+          interval={2}
+          trigger={
+            <IconButton
+              circular
+              icon
+              color="white"
+              name="setting"
+              onClick={() => setOpen(true)}
+            />
+          }
+          onCancel={() => setOpen(false)}
+          onSave={_.noop}
+        />
       </Card.Header>
       <Card.Content>
         <List horizontal className="flex" style={styles.flex}>
@@ -28,27 +53,26 @@ export default function NewCard() {
               {_.map(_.range(0, answers), () => (
                 <List.Item className="flex" style={styles.flex}>
                   <Input placeholder="Enter answer here" className="w-full" />
-                  <Button
+                  <IconButton
                     circular
                     icon
+                    color="white"
+                    name="x"
                     size="small"
-                    style={styles.bgWhite}
                     onClick={() => setAnswers(answers - 1)}
-                  >
-                    <Icon name="x" />
-                  </Button>
+                  />
                 </List.Item>
               ))}
               <List.Item style={styles.textAlignRight}>
-                <Button
+                <IconButton
                   circular
                   icon
+                  color="white"
+                  iconColor="green"
+                  name="plus"
                   size="small"
-                  style={styles.bgWhite}
                   onClick={() => setAnswers(answers + 1)}
-                >
-                  <Icon name="plus" color="green" />
-                </Button>
+                />
               </List.Item>
             </List>
           </List.Item>

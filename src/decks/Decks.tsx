@@ -11,16 +11,21 @@ import {
   Icon,
   Segment,
 } from 'semantic-ui-react'
+import { Card as CCard, NewCard } from 'src/cards'
 import '../App.css'
+import Deck from './Deck'
 
 export default function Decks() {
   return (
-    <Container style={{ backgroundColor: 'ghostwhite', maxWidth: 1080 }}>
+    <Container className="w-max-xl">
       <section className="justify-space-between">
         <Header as="h2">Decks</Header>
         <CreateButton />
       </section>
-      <NoDecks />
+      <Deck />
+      <Deck />
+      <CCard />
+      <NewCard />
     </Container>
   )
 }

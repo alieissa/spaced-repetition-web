@@ -4,12 +4,14 @@ import * as _ from 'lodash'
 import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, Icon, Input, List, Segment } from 'semantic-ui-react'
+import { IconButton, Settings } from 'src/components'
 import '../App.css'
 import { NewCard } from '../cards'
 import { styles } from '../styles'
 
 export default function NewDeck() {
   const [cards, setCards] = useState(1)
+  const [open, setOpen] = useState(false)
   return (
     <>
       <Segment basic style={styles.p0}>
@@ -23,9 +25,24 @@ export default function NewDeck() {
       <main>
         <Card fluid>
           <Card.Header textAlign="right">
-            <Button icon style={styles.bgWhite}>
-              <Icon name="setting"></Icon>
-            </Button>
+            <Settings
+              id="dummy2"
+              open={open}
+              easiness={1}
+              quality={1}
+              interval={1}
+              trigger={
+                <IconButton
+                  circular
+                  icon
+                  color="white"
+                  name="setting"
+                  onClick={() => setOpen(true)}
+                />
+              }
+              onCancel={() => setOpen(false)}
+              onSave={_.noop}
+            />
           </Card.Header>
           <Card.Content>
             <List>

@@ -1,40 +1,27 @@
 /** @format */
 
-import React, { useCallback, useState } from 'react'
+import * as _ from 'lodash'
+import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Button, Card, Header, Icon, Portal, Segment } from 'semantic-ui-react'
-import './App.css'
+import { Card } from 'semantic-ui-react'
+import '../App.css'
+import { IconButton, Settings } from '../components'
 
-// TODO clean up and move to its own component
-const Settings = (props: { onClose: React.MouseEventHandler }) => {
-  return (
-    <Portal open onClose={props.onClose}>
-      <Segment
-        style={{
-          left: '40%',
-          position: 'fixed',
-          top: '50%',
-          zIndex: 1000,
-        }}
-      >
-        <Header>This is a controlled portal</Header>
-        <p>Portals have tons of great callback functions to hook into.</p>
-        <p>To close, simply click the close button or click away</p>
-
-        <Button content="Close Portal" negative onClick={props.onClose} />
-      </Segment>
-    </Portal>
-  )
-}
-export default function () {
+export default function Deck() {
   const [open, setOpen] = useState(false)
-  const onClose = useCallback(() => setOpen(false), [])
-  const onOpen = useCallback(() => setOpen(true), [])
   return (
     <Card>
       <Card.Header textAlign="right">
-        <Icon name="setting" onClick={onOpen} />
-        {open && <Settings onClose={onClose} />}
+        <Settings
+          id="dummyId"
+          open={open}
+          easiness={1}
+          quality={0.5}
+          interval={2}
+          trigger={<IconButton name="setting" onClick={() => setOpen(true)} />}
+          onCancel={() => setOpen(false)}
+          onSave={_.noop}
+        />
       </Card.Header>
       <Card.Content>French</Card.Content>
     </Card>
