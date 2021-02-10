@@ -13,10 +13,15 @@ interface Props extends Omit<ButtonProps, 'color'> {
 }
 
 export default function IconButton(props: Props) {
-  const t = props.color
+  // Semantic UI does not not accept white as color so remove and also does not have a name prop
+  const buttonProps = _.chain(props)
+    .omitBy((value, prop) => prop === 'color' && value === 'white')
+    .omit('name')
+    .value()
+
   return (
     <Button
-      {..._.omit(props, 'name')}
+      {...buttonProps}
       style={props.color === 'white' ? styles.bgWhite : {}}
     >
       <Icon name={props.name} color={props.iconColor}></Icon>

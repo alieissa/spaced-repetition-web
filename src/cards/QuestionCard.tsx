@@ -3,14 +3,14 @@
 import * as _ from 'lodash'
 import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Card as SemCard, Icon } from 'semantic-ui-react'
+import { Card as SemCard, CardProps } from 'semantic-ui-react'
 import '../App.css'
-import { Settings } from '../components'
+import { IconButton, Settings } from '../components'
 
-export default function Card() {
+export default function Card(props: CardProps) {
   const [open, setOpen] = useState(false)
   return (
-    <SemCard>
+    <SemCard {...props}>
       <SemCard.Header textAlign="right">
         <Settings
           id="dummyId2"
@@ -18,13 +18,21 @@ export default function Card() {
           easiness={1}
           quality={1}
           interval={1}
-          trigger={<Icon name="setting" onClick={() => setOpen(true)} />}
+          trigger={
+            <IconButton
+              icon
+              circular
+              color="white"
+              name="setting"
+              onClick={() => setOpen(true)}
+            />
+          }
           onCancel={() => setOpen(false)}
           onSave={_.noop}
         />
       </SemCard.Header>
       <SemCard.Content>
-        <span>J'ai beaucoup de trucs a faire</span>
+        <span className="ellipsis">J'ai beaucoup de trucs a faire</span>
       </SemCard.Content>
     </SemCard>
   )

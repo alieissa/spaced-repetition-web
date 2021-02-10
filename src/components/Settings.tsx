@@ -24,15 +24,16 @@ export default function Settings(props: Readonly<Props>) {
     <Popup
       basic
       on="click"
+      open={props.open}
       content={
-        props.open && (
-          <>
-            <Header>Settings</Header>
-            <SettingsFormContent {..._.omit(props, 'open')} />
-          </>
-        )
+        <>
+          <Header>Settings</Header>
+          {/* Form content is the stateful part so unmount it when closing. Unmounting destroys local state */}
+          {props.open && <SettingsFormContent {..._.omit(props, 'open')} />}
+        </>
       }
       trigger={props.trigger}
+      onClose={props.onCancel}
     />
   )
 }

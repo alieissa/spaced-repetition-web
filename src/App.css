@@ -7,6 +7,7 @@
 .bg-white {
   background-color: white;
 }
+
 .flex {
   display: flex;
 }
@@ -30,17 +31,20 @@
   justify-content: space-between;
 }
 
+.h-full {
+  height: 100%;
+}
+
 .w-inherit {
   width: inherit;
 }
-
 .w-full {
   width: 100%;
 }
-
 .w-max-xl {
   max-width: 1080px;
 }
+
 .p-0 {
   padding: 0;
 }
@@ -48,11 +52,14 @@
   padding: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.pointer {
+  cursor: pointer;
+}
+
+.ellipsis {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

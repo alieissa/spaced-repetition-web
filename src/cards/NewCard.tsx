@@ -50,8 +50,8 @@ export default function NewCard() {
           </List.Item>
           <List.Item className="flex-1">
             <List style={styles.p0}>
-              {_.map(_.range(0, answers), () => (
-                <List.Item className="flex" style={styles.flex}>
+              {_.map(_.range(0, answers), (_, index) => (
+                <List.Item key={index} className="flex" style={styles.flex}>
                   <Input placeholder="Enter answer here" className="w-full" />
                   <IconButton
                     circular

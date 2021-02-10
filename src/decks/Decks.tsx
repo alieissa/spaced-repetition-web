@@ -7,11 +7,12 @@ import {
   Button,
   ButtonProps,
   Container,
+  Grid,
   Header,
   Icon,
   Segment,
 } from 'semantic-ui-react'
-import { Card as CCard, NewCard } from 'src/cards'
+import { NewCard, QuestionCard } from 'src/cards'
 import '../App.css'
 import Deck from './Deck'
 
@@ -22,10 +23,23 @@ export default function Decks() {
         <Header as="h2">Decks</Header>
         <CreateButton />
       </section>
-      <Deck />
-      <Deck />
-      <CCard />
-      <NewCard />
+      <Grid doubling stackable>
+        <Grid.Column width={4}>
+          <Deck className="h-full" />
+        </Grid.Column>
+        <Grid.Column width={4}>
+          <Deck className="h-full" />
+        </Grid.Column>
+        <Grid.Column width={4}>
+          <Deck className="h-full" />
+        </Grid.Column>
+        <Grid.Column width={5}>
+          <QuestionCard className="h-full" />
+        </Grid.Column>
+        <Grid.Column width={10}>
+          <NewCard />
+        </Grid.Column>
+      </Grid>
     </Container>
   )
 }
