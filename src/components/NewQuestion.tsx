@@ -4,11 +4,12 @@ import * as _ from 'lodash'
 import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Card, Input, List } from 'semantic-ui-react'
-import { IconButton, Settings } from 'src/components'
+import { IconButton } from 'src/components'
+// import { IconButton, Settings } from 'src/components'
 import '../App.css'
 import { styles } from '../styles'
 
-export default function NewCard() {
+export default function NewQuestion() {
   const [open, setOpen] = useState(false)
   const [answers, setAnswers] = useState(1)
   if (answers === 0) {
@@ -17,7 +18,14 @@ export default function NewCard() {
   return (
     <Card fluid className="flex-1">
       <Card.Header textAlign="right">
-        <IconButton
+        {/* </SemCard.Content> */}
+        {/* <SemCard.Content> */}
+        <span>
+          <IconButton icon circular name="pencil" color="white" />
+          <IconButton icon circular name="x" color="white" iconColor="red" />
+          <IconButton icon circular name="setting" color="white" />
+        </span>
+        {/* <IconButton
           circular
           icon
           color="white"
@@ -41,7 +49,7 @@ export default function NewCard() {
           }
           onCancel={() => setOpen(false)}
           onSave={_.noop}
-        />
+        /> */}
       </Card.Header>
       <Card.Content>
         <List horizontal className="flex" style={styles.flex}>

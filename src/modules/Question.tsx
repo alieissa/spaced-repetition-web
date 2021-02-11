@@ -3,15 +3,19 @@
 import * as _ from 'lodash'
 import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Card as SemCard, CardProps } from 'semantic-ui-react'
+// import { CardProps, Segment } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react'
+import { IconButton, Settings } from 'src/components'
 import '../App.css'
-import { IconButton, Settings } from '../components'
 
-export default function Card(props: CardProps) {
+export default function Question() {
   const [open, setOpen] = useState(false)
   return (
-    <SemCard {...props}>
-      <SemCard.Header textAlign="right">
+    <Segment className="justify-space-between align-center">
+      <span className="ellipsis">J'ai beaucoup de trucs a faire</span>
+      <span>
+        <IconButton icon circular name="pencil" color="white" />
+        <IconButton icon circular name="x" color="white" iconColor="red" />
         <Settings
           id="dummyId2"
           open={open}
@@ -30,10 +34,7 @@ export default function Card(props: CardProps) {
           onCancel={() => setOpen(false)}
           onSave={_.noop}
         />
-      </SemCard.Header>
-      <SemCard.Content>
-        <span className="ellipsis">J'ai beaucoup de trucs a faire</span>
-      </SemCard.Content>
-    </SemCard>
+      </span>
+    </Segment>
   )
 }

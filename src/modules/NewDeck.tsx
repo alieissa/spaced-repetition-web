@@ -2,14 +2,14 @@
 
 import * as _ from 'lodash'
 import React, { useState } from 'react'
+import { RouteProps } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, Icon, Input, List, Segment } from 'semantic-ui-react'
-import { IconButton, Settings } from 'src/components'
+import { IconButton, NewQuestion, Settings } from 'src/components'
 import '../App.css'
-import { NewCard } from '../cards'
 import { styles } from '../styles'
 
-export default function NewDeck() {
+export default function NewDeck(props: RouteProps) {
   const [cards, setCards] = useState(1)
   const [open, setOpen] = useState(false)
   return (
@@ -62,7 +62,7 @@ export default function NewDeck() {
           <List>
             {_.map(_.range(cards), (_, index) => (
               <List.Item key={index}>
-                <NewCard />
+                <NewQuestion />
               </List.Item>
             ))}
           </List>

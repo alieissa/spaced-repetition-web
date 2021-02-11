@@ -3,12 +3,18 @@
 import clsx from 'clsx'
 import * as _ from 'lodash'
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Card, CardProps } from 'semantic-ui-react'
 import '../App.css'
 import { IconButton, Settings } from '../components'
-export default function Deck(props: CardProps) {
+interface Props {
+  readonly id: string
+}
+export default function Deck(props: Props & CardProps) {
   const [open, setOpen] = useState(false)
+  const history = useHistory()
+
   return (
     <Card
       className={clsx('pointer', props.className)}
@@ -16,7 +22,7 @@ export default function Deck(props: CardProps) {
     >
       <Card.Header textAlign="right">
         <Settings
-          id="dummyId"
+          id={props.id}
           open={open}
           easiness={1}
           quality={0.5}
@@ -34,7 +40,9 @@ export default function Deck(props: CardProps) {
           onSave={_.noop}
         />
       </Card.Header>
-      <Card.Content>French</Card.Content>
+      <Card.Content onClick={() => history.push(`/decks/${props.id}`)}>
+        French
+      </Card.Content>
     </Card>
   )
 }
