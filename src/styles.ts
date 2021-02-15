@@ -10,6 +10,9 @@ export const styles = {
   p0: {
     padding: 0,
   },
+  'pl-0': {
+    paddingLeft: 0,
+  },
   'py-0': {
     paddingTop: 0,
   },
@@ -24,5 +27,8 @@ export const styles = {
   },
   colorInherit: {
     color: 'inherit',
+  },
+  boxShadowNone: {
+    boxShadow: 'none',
   },
 }

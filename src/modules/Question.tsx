@@ -3,7 +3,6 @@
 import * as _ from 'lodash'
 import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-// import { CardProps, Segment } from 'semantic-ui-react'
 import { Segment } from 'semantic-ui-react'
 import { IconButton, Settings } from 'src/components'
 import '../App.css'

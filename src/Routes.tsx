@@ -9,8 +9,7 @@ import {
   Switch,
   useParams,
 } from 'react-router-dom'
-import { Decks, NewDeck } from './decks'
-import { DeckPage } from './modules'
+import { DeckPage, DecksListPage, NewDeck } from './modules'
 
 interface Props {
   readonly areValidParameters: (params: object) => boolean
@@ -37,7 +36,7 @@ export default function Routes() {
         render={(props: RouteProps) => <DeckPage {...props} />}
       />
       <Route path="/">
-        <Decks />
+        <DecksListPage />
       </Route>
     </Switch>
   )
