@@ -48,10 +48,10 @@ export default function DeckPage(__: RouteProps) {
           )}
         </Card.Content>
       </Card>
-      <List doubling stackable>
+      <List>
         {_.map(_.range(0, 3), (i) => {
           return (
-            <List.Item>
+            <List.Item key={i}>
               <Question />
             </List.Item>
           )
@@ -68,7 +68,6 @@ export default function DeckPage(__: RouteProps) {
       <Segment basic style={styles.p0} className="justify-flex-end">
         <IconButton
           icon
-          button
           color="green"
           name="plus"
           onClick={() => setNewQuestions(NewQuestions + 1)}

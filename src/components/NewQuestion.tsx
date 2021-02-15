@@ -18,38 +18,11 @@ export default function NewQuestion() {
   return (
     <Card fluid className="flex-1">
       <Card.Header textAlign="right">
-        {/* </SemCard.Content> */}
-        {/* <SemCard.Content> */}
         <span>
           <IconButton icon circular name="pencil" color="white" />
           <IconButton icon circular name="x" color="white" iconColor="red" />
           <IconButton icon circular name="setting" color="white" />
         </span>
-        {/* <IconButton
-          circular
-          icon
-          color="white"
-          name="x"
-          onClick={() => setAnswers(0)}
-        />
-        <Settings
-          id="dummyId4"
-          open={open}
-          easiness={1}
-          quality={2}
-          interval={2}
-          trigger={
-            <IconButton
-              circular
-              icon
-              color="white"
-              name="setting"
-              onClick={() => setOpen(true)}
-            />
-          }
-          onCancel={() => setOpen(false)}
-          onSave={_.noop}
-        /> */}
       </Card.Header>
       <Card.Content>
         <List horizontal className="flex" style={styles.flex}>

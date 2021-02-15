@@ -13,11 +13,19 @@ export const styles = {
   'pl-0': {
     paddingLeft: 0,
   },
+  'px-0': {
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
   'py-0': {
     paddingTop: 0,
   },
   m0: {
     margin: 0,
+  },
+  mX0: {
+    marginLeft: 0,
+    marginRight: 0,
   },
   bgWhite: {
     backgroundColor: 'white',
@@ -30,5 +38,12 @@ export const styles = {
   },
   boxShadowNone: {
     boxShadow: 'none',
+  },
+  flexColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  flexGrow1: {
+    flexGrow: 1,
   },
 }

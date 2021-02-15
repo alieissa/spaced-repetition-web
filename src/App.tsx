@@ -14,13 +14,7 @@ export default function App() {
       <Router>
         <SideNav />
         <div style={{ marginLeft: 250 }}>
-          <Grid
-            padded
-            grid="true"
-            vertically
-            columns={16}
-            style={{ maxWidth: 1080 }}
-          >
+          <Grid padded grid="true" columns={16} style={{ maxWidth: 1080 }}>
             <Grid.Column width={14}>
               <Routes />
             </Grid.Column>

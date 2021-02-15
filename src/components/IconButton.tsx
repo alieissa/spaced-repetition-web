@@ -17,6 +17,7 @@ export default function IconButton(props: Props) {
   const buttonProps = _.chain(props)
     .omitBy((value, prop) => prop === 'color' && value === 'white')
     .omit('name')
+    .omit('iconColor')
     .value()
 
   return (

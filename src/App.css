@@ -59,11 +59,17 @@
 .p-20 {
   padding: 20px;
 }
+.px-0 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
 
 .pointer {
   cursor: pointer;
 }
-
+.text-align-right {
+  text-align: right;
+}
 .ellipsis {
   display: inline-block;
   max-width: 100%;
