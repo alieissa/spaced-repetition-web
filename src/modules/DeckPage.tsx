@@ -9,10 +9,8 @@ import { Card, Container, Form, Header, List, Segment } from 'semantic-ui-react'
 import { styles } from 'src/styles'
 import { Question } from '.'
 import '../App.css'
-import { IconButton, NewQuestion, Settings } from '../components'
-
-// Add props of deck to prop type T
-type WithDeck<T, V extends keyof Deck> = T & Pick<Deck, V>
+import { IconButton, QuestionForm, Settings } from '../components'
+import { createAnswer } from './helpers'
 
 /**
  * Displays the deck information and a list of cards (questions) that belong to deck. User can
@@ -59,7 +57,14 @@ export default function DeckPage(__: RouteProps) {
         {_.map(_.range(0, NewQuestions), (i) => {
           return (
             <List.Item key={i} width={16}>
-              <NewQuestion></NewQuestion>
+              <Segment>
+                <QuestionForm
+                  content=""
+                  answers={[createAnswer({ content: '' })]}
+                  onSubmitForm={() => console.log('submit form')}
+                  onCancel={() => console.log('on cancel')}
+                />
+              </Segment>
             </List.Item>
           )
         })}
@@ -165,7 +170,9 @@ function DeckEditInfoForm(
           onChange={formik.handleChange}
         />
         <Form.Group className="justify-flex-end">
-          <Form.Button onClick={props.onCancel}>Cancel</Form.Button>
+          <Form.Button basic onClick={props.onCancel}>
+            Cancel
+          </Form.Button>
           <Form.Button type="submit" color="green">
             Save
           </Form.Button>

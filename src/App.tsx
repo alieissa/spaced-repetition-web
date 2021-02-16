@@ -5,8 +5,8 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Grid } from 'semantic-ui-react'
 import './App.css'
+import SideNav from './modules/TopNav'
 import Routes from './Routes'
-import SideNav from './TopNav'
 
 export default function App() {
   return (

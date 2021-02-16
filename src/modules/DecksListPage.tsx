@@ -17,8 +17,8 @@ export default function Decks() {
       </section>
       <Grid doubling stackable>
         {_.map(_.range(0, 3), (i) => (
-          <Grid.Column width={4}>
-            <Deck id={`${i}`} key={i} className="h-full" />
+          <Grid.Column width={4} key={i}>
+            <Deck id={`${i}`} className="h-full" />
           </Grid.Column>
         ))}
       </Grid>

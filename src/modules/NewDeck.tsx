@@ -5,9 +5,10 @@ import React, { useState } from 'react'
 import { RouteProps } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, Icon, Input, List, Segment } from 'semantic-ui-react'
-import { IconButton, NewQuestion, Settings } from 'src/components'
+import { IconButton, QuestionForm, Settings } from 'src/components'
 import '../App.css'
 import { styles } from '../styles'
+import { createAnswer } from './helpers'
 
 export default function NewDeck(props: RouteProps) {
   const [cards, setCards] = useState(1)
@@ -45,6 +46,7 @@ export default function NewDeck(props: RouteProps) {
             />
           </Card.Header>
           <Card.Content>
+            {/* TODO refactor edit deck info and this form into one component */}
             <List>
               <List.Item>
                 <Input placeholder="Enter name here" className="w-full"></Input>
@@ -62,7 +64,14 @@ export default function NewDeck(props: RouteProps) {
           <List>
             {_.map(_.range(cards), (_, index) => (
               <List.Item key={index}>
-                <NewQuestion />
+                <Segment>
+                  <QuestionForm
+                    content=""
+                    answers={[createAnswer({ content: '' })]}
+                    onSubmitForm={() => console.log('test')}
+                    onCancel={() => console.log('cancel')}
+                  />
+                </Segment>
               </List.Item>
             ))}
           </List>
