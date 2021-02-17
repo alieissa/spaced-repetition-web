@@ -18,9 +18,10 @@ interface Question extends Meta {
 }
 type WithQuestion<T, V extends keyof Question> = WithItem<T, V, Question>
 
-interface Deck extends Meta {
+interface DeckPostRequest extends Meta {
   readonly name: string
   readonly description?: string
   readonly questions: ReadonlyArray<Question>
 }
+type Deck = DeckPostRequest & { id: string }
 type WithDeck<T, V extends keyof Deck> = WithItem<T, V, Deck>

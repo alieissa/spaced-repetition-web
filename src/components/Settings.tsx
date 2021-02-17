@@ -4,12 +4,20 @@ import { useFormik } from 'formik'
 import * as _ from 'lodash'
 import React, { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Form, Header, Popup, PopupProps } from 'semantic-ui-react'
+import {
+  DropdownProps,
+  Form,
+  Header,
+  Popup,
+  PopupProps,
+} from 'semantic-ui-react'
 import { styles } from 'src/styles'
 import '../App.css'
 
 interface Props {
   id: string
+  deckId?: string
+  decks?: ReadonlyArray<Deck>
   open: boolean
   easiness: number
   quality: number
@@ -44,6 +52,7 @@ function SettingsFormContent(props: Omit<Props, 'open'>) {
       // Not used in inputs but passed to component calling it to identify to which widget
       // the settings belong
       id: props.id,
+      deckId: props.deckId,
       easiness: props.easiness,
       quality: props.quality,
       interval: props.interval,
@@ -53,6 +62,17 @@ function SettingsFormContent(props: Omit<Props, 'open'>) {
 
   return (
     <Form onSubmit={formik.handleSubmit}>
+      {props.deckId && props.decks && (
+        <Form.Select
+          name="deckId"
+          label="Deck"
+          options={_.map(props.decks, (d) => ({ text: d.name, value: d.id }))}
+          value={formik.values.deckId}
+          onChange={(__, data: DropdownProps) => {
+            formik.setFieldValue('deckId', data.value)
+          }}
+        />
+      )}
       <Form.Input
         id="easiness"
         name="easiness"

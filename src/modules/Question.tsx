@@ -5,7 +5,7 @@ import 'semantic-ui-css/semantic.min.css'
 import { Segment } from 'semantic-ui-react'
 import { IconButton, QuestionForm, Settings } from 'src/components'
 import '../App.css'
-import { createAnswer } from './helpers'
+import { createAnswer, createDeck } from './helpers'
 
 /**
  * Displays the card (question) content or edit form when user selects edit. User can
@@ -70,6 +70,11 @@ function QuestionContent(props: WithQuestion<QuestionContentProps, 'content'>) {
         />
         <Settings
           id="dummyId2"
+          deckId="dummyDeck1Id"
+          decks={[
+            createDeck({ name: 'Deck 1', id: 'dummyDeck1Id' }),
+            createDeck({ name: 'Deck 2', id: 'dummyDeck2Id' }),
+          ]}
           open={open}
           easiness={1}
           quality={1}
