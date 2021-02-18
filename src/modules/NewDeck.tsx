@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { RouteProps } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, Icon, Input, List, Segment } from 'semantic-ui-react'
-import { IconButton, QuestionForm, Settings } from 'src/components'
+import { QuestionForm, Settings } from 'src/components'
 import '../App.css'
 import { styles } from '../styles'
 import { createAnswer } from './helpers'
@@ -33,11 +33,9 @@ export default function NewDeck(props: RouteProps) {
               quality={1}
               interval={1}
               trigger={
-                <IconButton
-                  circular
-                  icon
-                  color="white"
-                  name="setting"
+                <Button
+                  style={styles.bgWhite}
+                  icon={<Icon name="setting" />}
                   onClick={() => setOpen(true)}
                 />
               }
@@ -78,7 +76,6 @@ export default function NewDeck(props: RouteProps) {
         </section>
       </main>
       <Segment basic style={styles.p0} className="flex-row-reverse">
-        <Button color="green">Done</Button>
         <Button icon color="green" onClick={() => setCards(cards + 1)}>
           <Icon name="plus" />
         </Button>

@@ -3,8 +3,7 @@ import { useFormik } from 'formik'
 import * as _ from 'lodash'
 import React, { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Form, Input, List } from 'semantic-ui-react'
-import { IconButton } from 'src/components'
+import { Button, Form, Icon, Input, List } from 'semantic-ui-react'
 import { styles } from 'src/styles'
 import '../App.css'
 
@@ -68,24 +67,19 @@ export default function QuestionForm(
                   className="w-full"
                   onChange={formik.handleChange}
                 />
-                <IconButton
-                  circular
-                  icon
-                  color="white"
-                  name="x"
+                <Button
                   size="small"
+                  style={styles.bgWhite}
+                  icon={<Icon name="x" />}
                   onClick={formik.removeAnswer}
                 />
               </List.Item>
             ))}
             <List.Item style={styles.textAlignRight}>
-              <IconButton
-                circular
-                icon
-                color="white"
-                iconColor="green"
-                name="plus"
+              <Button
                 size="small"
+                style={styles.bgWhite}
+                icon={<Icon name="plus" color="green" />}
                 onClick={formik.addAnswer}
               />
             </List.Item>

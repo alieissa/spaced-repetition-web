@@ -64,6 +64,14 @@
   padding-right: 0px;
 }
 
+.relative {
+  position: relative;
+}
+
+.rotate_45 {
+  transform: rotate(-45deg);
+}
+
 .pointer {
   cursor: pointer;
 }

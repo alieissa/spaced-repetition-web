@@ -17,8 +17,12 @@ export const styles = {
     paddingLeft: 0,
     paddingRight: 0,
   },
+  'pt-0': {
+    paddingTop: 0,
+  },
   'py-0': {
     paddingTop: 0,
+    paddingBottom: 0,
   },
   m0: {
     margin: 0,

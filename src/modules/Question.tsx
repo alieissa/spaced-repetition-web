@@ -2,8 +2,9 @@
 
 import React, { MouseEventHandler, useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Segment } from 'semantic-ui-react'
-import { IconButton, QuestionForm, Settings } from 'src/components'
+import { Button, Icon, Segment } from 'semantic-ui-react'
+import { QuestionForm, Settings } from 'src/components'
+import { styles } from 'src/styles'
 import '../App.css'
 import { createAnswer, createDeck } from './helpers'
 
@@ -53,19 +54,14 @@ function QuestionContent(props: WithQuestion<QuestionContentProps, 'content'>) {
     <>
       <span className="ellipsis">{props.content}</span>
       <span>
-        <IconButton
-          icon
-          circular
-          name="pencil"
-          color="white"
+        <Button
+          style={styles.bgWhite}
+          icon={<Icon name="pencil" />}
           onClick={props.onEdit}
         />
-        <IconButton
-          icon
-          circular
-          name="x"
-          color="white"
-          iconColor="red"
+        <Button
+          style={styles.bgWhite}
+          icon={<Icon name="x" color="red" />}
           onClick={props.onDelete}
         />
         <Settings
@@ -80,11 +76,9 @@ function QuestionContent(props: WithQuestion<QuestionContentProps, 'content'>) {
           quality={1}
           interval={1}
           trigger={
-            <IconButton
-              icon
-              circular
-              color="white"
-              name="setting"
+            <Button
+              style={styles.bgWhite}
+              icon={<Icon name="setting" />}
               onClick={() => setOpen(true)}
             />
           }

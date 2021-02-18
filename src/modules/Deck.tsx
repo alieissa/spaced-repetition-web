@@ -5,9 +5,10 @@ import * as _ from 'lodash'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
-import { Card, CardProps } from 'semantic-ui-react'
+import { Button, Card, CardProps, Icon } from 'semantic-ui-react'
+import { styles } from 'src/styles'
 import '../App.css'
-import { IconButton, Settings } from '../components'
+import { Settings } from '../components'
 interface Props {
   readonly id: string
 }
@@ -21,6 +22,12 @@ export default function Deck(props: Props & CardProps) {
       {..._.omit(props, 'className')}
     >
       <Card.Header textAlign="right">
+        <Button
+          style={styles.bgWhite}
+          icon={<i className="fas fa-dumbbell rotate_45" />}
+          onClick={() => history.push(`decks/${props.id}/exam`)}
+        />
+
         <Settings
           id={props.id}
           open={open}
@@ -28,11 +35,10 @@ export default function Deck(props: Props & CardProps) {
           quality={0.5}
           interval={2}
           trigger={
-            <IconButton
+            <Button
               circular
-              icon
-              color="white"
-              name="setting"
+              style={styles.bgWhite}
+              icon={<Icon name="setting" />}
               onClick={() => setOpen(true)}
             />
           }

@@ -5,11 +5,20 @@ import * as _ from 'lodash'
 import React, { MouseEventHandler, useState } from 'react'
 import { RouteProps } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
-import { Card, Container, Form, Header, List, Segment } from 'semantic-ui-react'
+import {
+  Button,
+  Card,
+  Container,
+  Form,
+  Header,
+  Icon,
+  List,
+  Segment,
+} from 'semantic-ui-react'
 import { styles } from 'src/styles'
 import { Question } from '.'
 import '../App.css'
-import { IconButton, QuestionForm, Settings } from '../components'
+import { QuestionForm, Settings } from '../components'
 import { createAnswer } from './helpers'
 
 /**
@@ -24,8 +33,8 @@ export default function DeckPage(__: RouteProps) {
     <Container className="w-max-xl">
       <Card fluid style={styles.boxShadowNone}>
         <Card.Content
-          className="justify-space-between"
-          style={{ ...styles['pl-0'], position: 'relative', paddingRight: 0 }}
+          className="justify-space-between relative"
+          style={{ ...styles['px-0'], ...styles['pt-0'] }}
         >
           {editing ? (
             <DeckEditInfoForm
@@ -71,10 +80,10 @@ export default function DeckPage(__: RouteProps) {
       </List>
 
       <Segment basic style={styles.p0} className="justify-flex-end">
-        <IconButton
-          icon
+        <Button
           color="green"
-          name="plus"
+          style={styles.bgWhite}
+          icon={<Icon name="plus" />}
           onClick={() => setNewQuestions(NewQuestions + 1)}
         />
       </Segment>
@@ -97,21 +106,20 @@ function DeckInfo(props: WithDeck<DeckInfoProps, 'name' | 'description'>) {
     <Card fluid style={styles.boxShadowNone}>
       <Card.Content
         className="justify-space-between"
-        style={{ ...styles['pl-0'] }}
+        style={{ ...styles['pl-0'], ...styles['pt-0'] }}
       >
         <span className="flex-1" style={{ width: '100%' }}>
           <Header as="h2">{props.name}</Header>
           <Card.Description>{props.description}</Card.Description>
         </span>
         <span>
-          <IconButton
-            icon
+          <Button
             circular
-            name="pencil"
-            color="white"
+            style={styles.bgWhite}
+            icon={<Icon name="pencil" />}
             onClick={() => props.onEdit()}
           />
-          <IconButton icon circular name="x" color="white" iconColor="red" />
+          <Button style={styles.bgWhite} icon={<Icon name="x" color="red" />} />
           <Settings
             id="dummyId2"
             open={open}
@@ -119,11 +127,9 @@ function DeckInfo(props: WithDeck<DeckInfoProps, 'name' | 'description'>) {
             quality={1}
             interval={1}
             trigger={
-              <IconButton
-                icon
-                circular
-                color="white"
-                name="setting"
+              <Button
+                style={styles.bgWhite}
+                icon={<Icon name="setting" />}
                 onClick={() => setOpen(true)}
               />
             }
