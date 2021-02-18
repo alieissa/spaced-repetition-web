@@ -10,6 +10,7 @@ import {
   useParams,
 } from 'react-router-dom'
 import { DeckPage, DecksListPage, NewDeck } from './modules'
+import DeckTestPage from './modules/DeckTestPage'
 
 interface Props {
   readonly areValidParameters: (params: object) => boolean
@@ -31,9 +32,16 @@ export default function Routes() {
         render={(props: RouteProps) => <NewDeck {...props} />}
       />
       <ParametrisedRoute
+        exact
         path="/decks/:deckId"
         areValidParameters={(params: RouteProps) => true}
         render={(props: RouteProps) => <DeckPage {...props} />}
+      />
+      <ParametrisedRoute
+        exact
+        path="/decks/:deckId/exam"
+        areValidParameters={(params: RouteProps) => true}
+        render={(props: RouteProps) => <DeckTestPage {...props} />}
       />
       <Route path="/">
         <DecksListPage />
