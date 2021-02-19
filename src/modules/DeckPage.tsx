@@ -10,7 +10,6 @@ import {
   Card,
   Container,
   Form,
-  Header,
   Icon,
   List,
   Segment,
@@ -18,7 +17,7 @@ import {
 import { styles } from 'src/styles'
 import { Question } from '.'
 import '../App.css'
-import { QuestionForm, Settings } from '../components'
+import { DeckInfo, QuestionForm } from '../components'
 import { createAnswer } from './helpers'
 
 /**
@@ -47,8 +46,13 @@ export default function DeckPage(__: RouteProps) {
             />
           ) : (
             <DeckInfo
+              id="dummyDeckId"
               name="Deck 2"
               description="Dummy deck description"
+              easiness={1}
+              quality={1}
+              interval={1}
+              questions={[]}
               onEdit={() => setEditing(true)}
               onSubmitSettings={() => console.log('submit settings')}
             />
@@ -88,57 +92,6 @@ export default function DeckPage(__: RouteProps) {
         />
       </Segment>
     </Container>
-  )
-}
-
-interface DeckInfoProps {
-  readonly onEdit: VoidFunction
-  readonly onSubmitSettings: VoidFunction
-}
-/**
- * Displays the name and description of a deck. User can delete deck, open deck settings form
- * and open form to edit name and description of a deck
- */
-function DeckInfo(props: WithDeck<DeckInfoProps, 'name' | 'description'>) {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <Card fluid style={styles.boxShadowNone}>
-      <Card.Content
-        className="justify-space-between"
-        style={{ ...styles['pl-0'], ...styles['pt-0'] }}
-      >
-        <span className="flex-1" style={{ width: '100%' }}>
-          <Header as="h2">{props.name}</Header>
-          <Card.Description>{props.description}</Card.Description>
-        </span>
-        <span>
-          <Button
-            circular
-            style={styles.bgWhite}
-            icon={<Icon name="pencil" />}
-            onClick={() => props.onEdit()}
-          />
-          <Button style={styles.bgWhite} icon={<Icon name="x" color="red" />} />
-          <Settings
-            id="dummyId2"
-            open={open}
-            easiness={1}
-            quality={1}
-            interval={1}
-            trigger={
-              <Button
-                style={styles.bgWhite}
-                icon={<Icon name="setting" />}
-                onClick={() => setOpen(true)}
-              />
-            }
-            onCancel={() => setOpen(false)}
-            onSave={props.onSubmitSettings}
-          />
-        </span>
-      </Card.Content>
-    </Card>
   )
 }
 

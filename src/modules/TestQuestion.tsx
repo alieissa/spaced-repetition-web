@@ -38,10 +38,17 @@ export default function Card() {
           <Form.Field>
             <Form.Input type="text" placeholder="Enter answer here" />
             <Form.Button
-              size="small"
-              style={styles.bgWhite}
-              icon={<Icon name="check" />}
-            />
+              className="justify-flex-end"
+              onClick={() => console.log('test')}
+            >
+              I don't know
+            </Form.Button>
+            <Form.Button
+              className="justify-flex-end"
+              onClick={() => console.log('test')}
+            >
+              Accept answer as correct
+            </Form.Button>
           </Form.Field>
         </Form>
       </SemCard.Content>
