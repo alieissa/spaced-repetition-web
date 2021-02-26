@@ -4,7 +4,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Menu } from 'semantic-ui-react'
 
-export default function () {
+export default function TopNav() {
   return (
     <Menu>
       <Link to="/">
