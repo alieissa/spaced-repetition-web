@@ -1,5 +1,14 @@
-FROM nginx:1.19.7-alpine
+FROM node:15.0-alpine3.10
 
-COPY ./build /usr/share/nginx/html
+WORKDIR /app
+COPY ./public /app/public
+COPY ./src /app/src
+COPY ./*.json /app/
 
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+RUN npm install
+## Use reat-scripts already installed
+RUN npm install react-scripts@3.4.1 -g --silent
+
+EXPOSE 3000
+
+ENTRYPOINT [ "npm", "start" ]

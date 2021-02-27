@@ -18,7 +18,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '14.x'
       - name: Install Packages
         run: npm install
       - name: Build
@@ -32,10 +32,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: list files
+        run: ls -la
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: .
+          file: ./Dockerfile.prod
           push: true
-          tags: aeissa/spaced-repetition-app:latest
+          tags: aeissa/spaced-repetition-app
