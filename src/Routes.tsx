@@ -10,11 +10,12 @@ import {
   useParams,
 } from 'react-router-dom'
 import { DeckPage, DecksListPage, NewDeck } from './modules'
-import DeckTestPage from './modules/DeckTestPage'
+import DeckTestPage from './modules/decks/DeckTestPage'
 
 interface Props {
   readonly areValidParameters: (params: object) => boolean
 }
+
 function ParametrisedRoute(props: Props & RouteProps) {
   const params = useParams()
   return props.areValidParameters(params) ? (

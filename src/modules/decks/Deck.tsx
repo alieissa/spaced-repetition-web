@@ -6,9 +6,9 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, CardProps, Icon } from 'semantic-ui-react'
+import 'src/App.css'
 import { styles } from 'src/styles'
-import '../App.css'
-import { Settings } from '../components'
+import { Settings } from '../../components'
 interface Props {
   readonly id: string
 }

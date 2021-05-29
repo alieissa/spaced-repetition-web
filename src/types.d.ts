@@ -26,3 +26,7 @@ interface DeckPostRequest extends Settings {
 }
 type Deck = DeckPostRequest & { id: string }
 type WithDeck<T, V extends keyof Deck> = WithItem<T, V, Deck>
+
+type RootState = {
+  decks: DecksState
+}

@@ -14,11 +14,11 @@ import {
   List,
   Segment,
 } from 'semantic-ui-react'
+import 'src/App.css'
 import { styles } from 'src/styles'
-import { Question } from '.'
-import '../App.css'
-import { DeckInfo, QuestionForm } from '../components'
-import { createAnswer } from './helpers'
+import { Question } from '..'
+import { DeckInfo, QuestionForm } from '../../components'
+import { createAnswer } from '../helpers'
 
 /**
  * Displays the deck information and a list of cards (questions) that belong to deck. User can
