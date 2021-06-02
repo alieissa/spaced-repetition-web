@@ -1,4 +1,6 @@
 /** @format */
+type Optional<T, K> = Omit<T, K> & Partial<Pick<T, K>>
+
 type WithItem<T, V extends keyof I, I> = T & Pick<I, V>
 interface Settings {
   readonly easiness: number
@@ -10,10 +12,22 @@ interface Settings {
 type WithSettings<T, V extends keyof Settings = keyof Settings> = T &
   Pick<Settings, V>
 interface Answer extends Settings {
+  readonly id: string
   readonly content: string
 }
 
+function Answer(
+  a: Optional<Answer, 'easiness' | 'quality' | 'interval'>,
+): Omit<Answer, 'id'> {
+  return {
+    easiness: values.easiness || 1,
+    quality: values.quality || 1,
+    interval: values.interval || 1,
+    content: values.content,
+  }
+}
 interface Question extends Settings {
+  readonly id: string
   readonly content: string
   readonly answers: ReadonlyArray<Answer>
 }

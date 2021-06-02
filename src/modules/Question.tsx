@@ -12,7 +12,7 @@ import { createAnswer, createDeck } from './helpers'
  * Displays the card (question) content or edit form when user selects edit. User can
  * also delete or update settings of a card (question) in this component
  */
-export default function Question() {
+export default function Question(props: Question) {
   const [editing, setEditing] = useState(false)
   return (
     <Segment className="justify-space-between align-center">
@@ -28,7 +28,7 @@ export default function Question() {
         />
       ) : (
         <QuestionContent
-          content="J'ai beaucoup de trucs a faire"
+          content={props.content}
           onEdit={() => setEditing(true)}
           onDelete={() => console.log('on delete')}
           onSubmitSettings={() => console.log('submitSettings')}

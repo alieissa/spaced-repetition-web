@@ -18,13 +18,12 @@ import 'src/App.css'
 import { styles } from 'src/styles'
 import { Question } from '..'
 import { DeckInfo, QuestionForm } from '../../components'
-import { createAnswer } from '../helpers'
 
 /**
  * Displays the deck information and a list of cards (questions) that belong to deck. User can
  * perform CRUD operation on individual cards (questions) and/or on entire deck
  */
-export default function DeckPage(__: RouteProps) {
+export default function DeckPage(props: Deck & RouteProps) {
   const [NewQuestions, setNewQuestions] = useState(0)
   const [editing, setEditing] = useState(false)
 
@@ -46,13 +45,13 @@ export default function DeckPage(__: RouteProps) {
             />
           ) : (
             <DeckInfo
-              id="dummyDeckId"
-              name="Deck 2"
-              description="Dummy deck description"
-              easiness={1}
-              quality={1}
-              interval={1}
-              questions={[]}
+              id={props.id}
+              name={props.name}
+              description={props.description}
+              easiness={props.easiness}
+              quality={props.quality}
+              interval={props.quality}
+              questions={props.questions}
               onEdit={() => setEditing(true)}
               onSubmitSettings={() => console.log('submit settings')}
             />
@@ -60,10 +59,10 @@ export default function DeckPage(__: RouteProps) {
         </Card.Content>
       </Card>
       <List>
-        {_.map(_.range(0, 3), (i) => {
+        {_.map(props.questions, (q) => {
           return (
-            <List.Item key={i}>
-              <Question />
+            <List.Item key={q.id}>
+              <Question {...q} />
             </List.Item>
           )
         })}
@@ -73,7 +72,8 @@ export default function DeckPage(__: RouteProps) {
               <Segment>
                 <QuestionForm
                   content=""
-                  answers={[createAnswer({ content: '' })]}
+                  // TODO create Answer contructor
+                  answers={[Answer({ content: '' })]}
                   onSubmitForm={() => console.log('submit form')}
                   onCancel={() => console.log('on cancel')}
                 />
@@ -88,7 +88,8 @@ export default function DeckPage(__: RouteProps) {
           color="green"
           style={styles.bgWhite}
           icon={<Icon name="plus" />}
-          onClick={() => setNewQuestions(NewQuestions + 1)}
+          // TODO Create questions contructor
+          onClick={() => setNewQuestions([...NewQuestions, Question()])}
         />
       </Segment>
     </Container>
