@@ -15,15 +15,17 @@ import {
   Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
+import { Question } from 'src/modules/questions'
 import { styles } from 'src/styles'
-import { Question } from '..'
 import { DeckInfo, QuestionForm } from '../../components'
 
 /**
  * Displays the deck information and a list of cards (questions) that belong to deck. User can
  * perform CRUD operation on individual cards (questions) and/or on entire deck
  */
-export default function DeckPage(props: Deck & RouteProps) {
+
+// TODO Create an HOC that gets deck info and injects into DeckPage component
+export default function DeckPage(props: RouteProps) {
   const [NewQuestions, setNewQuestions] = useState(0)
   const [editing, setEditing] = useState(false)
 
@@ -39,19 +41,20 @@ export default function DeckPage(props: Deck & RouteProps) {
               name="Deck 2"
               description="Dummy deck description"
               onCancel={() => setEditing(false)}
-              onSubmitForm={(name, description) =>
-                console.log(name, description)
-              }
+              onSubmitForm={({
+                name,
+                description,
+              }: {
+                name: string
+                description: string
+              }) => console.log(name)}
             />
           ) : (
             <DeckInfo
-              id={props.id}
-              name={props.name}
-              description={props.description}
-              easiness={props.easiness}
-              quality={props.quality}
-              interval={props.quality}
-              questions={props.questions}
+              id={''}
+              name={''}
+              description={''}
+              questions={[]}
               onEdit={() => setEditing(true)}
               onSubmitSettings={() => console.log('submit settings')}
             />
@@ -59,9 +62,9 @@ export default function DeckPage(props: Deck & RouteProps) {
         </Card.Content>
       </Card>
       <List>
-        {_.map(props.questions, (q) => {
+        {_.map([], (q) => {
           return (
-            <List.Item key={q.id}>
+            <List.Item>
               <Question {...q} />
             </List.Item>
           )
@@ -73,7 +76,8 @@ export default function DeckPage(props: Deck & RouteProps) {
                 <QuestionForm
                   content=""
                   // TODO create Answer contructor
-                  answers={[Answer({ content: '' })]}
+                  answers={[]}
+                  // answers={[AnswerPostRequest({ content: '' })]}
                   onSubmitForm={() => console.log('submit form')}
                   onCancel={() => console.log('on cancel')}
                 />
@@ -89,7 +93,7 @@ export default function DeckPage(props: Deck & RouteProps) {
           style={styles.bgWhite}
           icon={<Icon name="plus" />}
           // TODO Create questions contructor
-          onClick={() => setNewQuestions([...NewQuestions, Question()])}
+          // onClick={() => setNewQuestions([...NewQuestions, Question()])}
         />
       </Segment>
     </Container>
@@ -97,6 +101,8 @@ export default function DeckPage(props: Deck & RouteProps) {
 }
 
 interface DeckEditInfoFormProps {
+  name: string
+  description: string
   readonly onSubmitForm: FormikConfig<{
     name: string
     description: string
@@ -106,9 +112,7 @@ interface DeckEditInfoFormProps {
 /**
  * User can change name and description of a deck using this component
  */
-function DeckEditInfoForm(
-  props: WithDeck<DeckEditInfoFormProps, 'name' | 'description'>,
-) {
+function DeckEditInfoForm(props: DeckEditInfoFormProps) {
   const formik = useFormik({
     initialValues: {
       description: props.description || '',

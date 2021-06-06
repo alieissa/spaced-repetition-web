@@ -4,10 +4,12 @@ import * as _ from 'lodash'
 import React, { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Form, Icon, Input, List } from 'semantic-ui-react'
+import 'src/App.css'
 import { styles } from 'src/styles'
-import '../App.css'
+import { Questions } from './questions.types'
 
-type WithQuestion<T, V extends keyof Question> = T & Pick<Question, V>
+type WithQuestion<T, V extends keyof Questions.Question> = T &
+  Pick<Questions.Question, V>
 interface Props {
   readonly onSubmitForm: any
   readonly onCancel: MouseEventHandler
@@ -18,7 +20,6 @@ function useQuestionFormik(props: WithQuestion<Props, 'content' | 'answers'>) {
       // Not used in inputs but passed to component calling it to identify to which widget
       // the settings belong
       content: props.content,
-      // TODO when passing in real answers group by id. Easier to manipulate
       answers: props.answers,
     },
     onSubmit: props.onSubmitForm,
@@ -46,9 +47,9 @@ function useQuestionFormik(props: WithQuestion<Props, 'content' | 'answers'>) {
   return { ...formik, addAnswer, removeAnswer }
 }
 
-export default function QuestionForm(
-  props: WithQuestion<Props, 'content' | 'answers'>,
-) {
+export default function QuestionForm<
+  Q extends Questions.PostRequest | Questions.Question = Questions.Question,
+>(props: WithQuestion<Props, 'content' | 'answers'>) {
   const formik = useQuestionFormik(props)
 
   return (
@@ -87,14 +88,14 @@ export default function QuestionForm(
         </List.Item>
       </List>
 
-      <Form.Group className="justify-flex-end w-full">
+      {/* <Form.Group className="justify-flex-end w-full">
         <Form.Button basic onClick={props.onCancel}>
           Cancel
         </Form.Button>
         <Form.Button color="green" type="submit">
           Save
         </Form.Button>
-      </Form.Group>
+      </Form.Group> */}
     </Form>
   )
 }

@@ -9,8 +9,12 @@ import {
   Switch,
   useParams,
 } from 'react-router-dom'
-import { DeckPage, DecksListPage, NewDeck } from './modules'
-import DeckTestPage from './modules/decks/DeckTestPage'
+import {
+  DeckPage,
+  DecksListPage,
+  DeckTestPage,
+  NewDeck,
+} from 'src/modules/decks'
 
 interface Props {
   readonly areValidParameters: (params: object) => boolean

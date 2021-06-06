@@ -5,13 +5,12 @@ import React, { useState } from 'react'
 import { RouteProps } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, Icon, Input, List, Segment } from 'semantic-ui-react'
-import { QuestionForm, Settings } from 'src/components'
-import '../App.css'
-import { styles } from '../styles'
-import { createAnswer } from './helpers'
+import 'src/App.css'
+import { QuestionForm, Questions } from 'src/modules/questions'
+import { styles } from 'src/styles'
 
 export default function NewDeck(props: RouteProps) {
-  const [cards, setCards] = useState(1)
+  const [questions, setQuestions] = useState([Questions.PostRequest({})])
   const [open, setOpen] = useState(false)
   return (
     <>
@@ -26,7 +25,7 @@ export default function NewDeck(props: RouteProps) {
       <main>
         <Card fluid>
           <Card.Header textAlign="right">
-            <Settings
+            {/* <Settings
               id="dummy2"
               open={open}
               easiness={1}
@@ -41,7 +40,7 @@ export default function NewDeck(props: RouteProps) {
               }
               onCancel={() => setOpen(false)}
               onSave={_.noop}
-            />
+            /> */}
           </Card.Header>
           <Card.Content>
             {/* TODO refactor edit deck info and this form into one component */}
@@ -60,12 +59,12 @@ export default function NewDeck(props: RouteProps) {
         </Card>
         <section className="flex-column w-inherit">
           <List>
-            {_.map(_.range(cards), (_, index) => (
+            {_.map(questions, (q, index) => (
               <List.Item key={index}>
                 <Segment>
-                  <QuestionForm
-                    content=""
-                    answers={[createAnswer({ content: '' })]}
+                  <QuestionForm<Questions.PostRequest>
+                    content="new question"
+                    answers={[]}
                     onSubmitForm={() => console.log('test')}
                     onCancel={() => console.log('cancel')}
                   />
@@ -76,7 +75,13 @@ export default function NewDeck(props: RouteProps) {
         </section>
       </main>
       <Segment basic style={styles.p0} className="flex-row-reverse">
-        <Button icon color="green" onClick={() => setCards(cards + 1)}>
+        <Button
+          icon
+          color="green"
+          onClick={() =>
+            setQuestions([...questions, Questions.PostRequest({})])
+          }
+        >
           <Icon name="plus" />
         </Button>
       </Segment>

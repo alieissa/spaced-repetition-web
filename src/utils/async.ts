@@ -12,6 +12,10 @@ export function Untriggered(): Untriggered {
   }
 }
 
+const t: Optional<Answer, 'easiness' | 'quality' | 'interval'> = {
+  id: '',
+  content: 'fsdfds',
+}
 export type Loading<V> = {
   type: 'Loading'
   value: V

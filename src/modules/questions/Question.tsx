@@ -3,26 +3,23 @@
 import React, { MouseEventHandler, useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Icon, Segment } from 'semantic-ui-react'
+import 'src/App.css'
 import { QuestionForm, Settings } from 'src/components'
 import { styles } from 'src/styles'
-import '../App.css'
-import { createAnswer, createDeck } from './helpers'
+import { Questions } from './questions.types'
 
 /**
  * Displays the card (question) content or edit form when user selects edit. User can
  * also delete or update settings of a card (question) in this component
  */
-export default function Question(props: Question) {
+export default function Question(props: Questions.Question) {
   const [editing, setEditing] = useState(false)
   return (
     <Segment className="justify-space-between align-center">
       {editing ? (
         <QuestionForm
           content="question"
-          answers={[
-            createAnswer({ content: 'ansewer 1' }),
-            createAnswer({ content: 'answer 2' }),
-          ]}
+          answers={[]}
           onSubmitForm={() => console.log('question form')}
           onCancel={() => setEditing(false)}
         />
@@ -39,6 +36,7 @@ export default function Question(props: Question) {
 }
 
 interface QuestionContentProps {
+  content: Questions.Question['content']
   onEdit: MouseEventHandler
   onDelete: MouseEventHandler
   // TODO add type
@@ -48,7 +46,7 @@ interface QuestionContentProps {
  * Displays the content of the question and the delete, edit and settings buttons
  * from which user can delete, open edit form, or open settings menu
  */
-function QuestionContent(props: WithQuestion<QuestionContentProps, 'content'>) {
+function QuestionContent(props: QuestionContentProps) {
   const [open, setOpen] = useState(false)
   return (
     <>
@@ -67,10 +65,7 @@ function QuestionContent(props: WithQuestion<QuestionContentProps, 'content'>) {
         <Settings
           id="dummyId2"
           deckId="dummyDeck1Id"
-          decks={[
-            createDeck({ name: 'Deck 1', id: 'dummyDeck1Id' }),
-            createDeck({ name: 'Deck 2', id: 'dummyDeck2Id' }),
-          ]}
+          decks={[]}
           open={open}
           easiness={1}
           quality={1}

@@ -7,7 +7,7 @@ import { Card, Container } from 'semantic-ui-react'
 import 'src/App.css'
 import { DeckInfo } from 'src/components'
 import { styles } from 'src/styles'
-import TestQuestion from '../TestQuestion'
+import TestQuestion from '../questions/TestQuestion'
 
 /**
  * Displays a series of questions that user must answer. User update settings of a question and
@@ -26,9 +26,6 @@ export default function DeckTestPage(__: RouteProps) {
             name="Deck 2"
             description="Dummy deck description"
             questions={[]}
-            easiness={1}
-            quality={1}
-            interval={1}
           />
         </Card.Content>
       </Card>

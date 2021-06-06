@@ -11,14 +11,25 @@ interface Settings {
 }
 type WithSettings<T, V extends keyof Settings = keyof Settings> = T &
   Pick<Settings, V>
-interface Answer extends Settings {
-  readonly id: string
+
+type AnswerPostRequest = Settings & {
   readonly content: string
 }
+function AnswerPostRequest(req: Partial<AnswerPostRequest>): AnswerPostRequest {
+  return {
+    easiness: values.easiness || 1,
+    quality: values.quality || 1,
+    interval: values.interval || 1,
+    content: values.content || 'new answer',
+  }
+}
 
+type Answer = AnswerPostRequest & {
+  readonly id: string
+}
 function Answer(
   a: Optional<Answer, 'easiness' | 'quality' | 'interval'>,
-): Omit<Answer, 'id'> {
+): Answer {
   return {
     easiness: values.easiness || 1,
     quality: values.quality || 1,
@@ -26,20 +37,16 @@ function Answer(
     content: values.content,
   }
 }
-interface Question extends Settings {
-  readonly id: string
-  readonly content: string
-  readonly answers: ReadonlyArray<Answer>
+/**
+ * If a has all the fields of an Answer and nothing else
+ * then it is detected as of type Answer
+ */
+function isAnswer(a: unknown): a is Answer {
+  return _.isEmpty(
+    _.sortBy(['easiness', 'quality', 'interval', 'content', 'id']),
+    _.sortBy(_.keys(a)),
+  )
 }
-type WithQuestion<T, V extends keyof Question> = WithItem<T, V, Question>
-
-interface DeckPostRequest extends Settings {
-  readonly name: string
-  readonly description?: string
-  readonly questions: ReadonlyArray<Question>
-}
-type Deck = DeckPostRequest & { id: string }
-type WithDeck<T, V extends keyof Deck> = WithItem<T, V, Deck>
 
 type RootState = {
   decks: DecksState

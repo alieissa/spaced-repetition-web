@@ -9,9 +9,10 @@ import { async } from 'src/utils'
 import { CreateButton } from '../../components'
 import Deck from './Deck'
 import { useDecks } from './decks.hooks'
+import { Decks } from './decks.types'
 
 type Props = {
-  readonly decks: ReadonlyArray<Deck>
+  readonly decks: ReadonlyArray<Decks.Deck>
 }
 export function DecksComponent(props: Props) {
   return (

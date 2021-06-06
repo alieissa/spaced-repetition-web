@@ -2,6 +2,7 @@
 
 import { Dispatch } from 'react'
 import { Either, Left, Right } from 'src/utils/either'
+import { Decks } from './decks.types'
 
 export type GetDecks = {
   readonly type: 'GetDecks'
@@ -9,7 +10,7 @@ export type GetDecks = {
 
 export type DecksLoaded = {
   readonly type: 'DecksLoaded'
-  readonly result: Either<Error, ReadonlyArray<Deck>>
+  readonly result: Either<Error, ReadonlyArray<Decks.Deck>>
 }
 
 export type DecksAction = GetDecks | DecksLoaded

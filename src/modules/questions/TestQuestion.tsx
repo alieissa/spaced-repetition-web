@@ -4,9 +4,9 @@ import _ from 'lodash'
 import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card as SemCard, Form, Icon, Segment } from 'semantic-ui-react'
+import 'src/App.css'
 import { Settings } from 'src/components'
 import { styles } from 'src/styles'
-import '../App.css'
 
 export default function Card() {
   const [open, setOpen] = useState(false)
