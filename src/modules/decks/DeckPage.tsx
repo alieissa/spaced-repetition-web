@@ -15,7 +15,7 @@ import {
   Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
-import { Question } from 'src/modules/questions'
+import { Question, Questions } from 'src/modules/questions'
 import { styles } from 'src/styles'
 import { DeckInfo, QuestionForm } from '../../components'
 
@@ -26,7 +26,6 @@ import { DeckInfo, QuestionForm } from '../../components'
 
 // TODO Create an HOC that gets deck info and injects into DeckPage component
 export default function DeckPage(props: RouteProps) {
-  const [NewQuestions, setNewQuestions] = useState(0)
   const [editing, setEditing] = useState(false)
 
   return (
@@ -69,15 +68,12 @@ export default function DeckPage(props: RouteProps) {
             </List.Item>
           )
         })}
-        {_.map(_.range(0, NewQuestions), (i) => {
+        {_.map(_.range(0, 5), (i) => {
           return (
             <List.Item key={i} width={16}>
               <Segment>
                 <QuestionForm
-                  content=""
-                  // TODO create Answer contructor
-                  answers={[]}
-                  // answers={[AnswerPostRequest({ content: '' })]}
+                  {...Questions.PostRequest({})}
                   onSubmitForm={() => console.log('submit form')}
                   onCancel={() => console.log('on cancel')}
                 />

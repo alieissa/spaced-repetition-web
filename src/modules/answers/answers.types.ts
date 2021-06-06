@@ -3,10 +3,13 @@ import * as _ from 'lodash'
 
 export namespace Answers {
   export type PostRequest = Settings & {
+    // __key__ is only used as a react key when displaying them
+    readonly __key__: string
     readonly content: string
   }
   export function PostRequest(req: Partial<PostRequest>): PostRequest {
     return {
+      __key__: _.uniqueId(),
       easiness: req.easiness || 1,
       quality: req.quality || 1,
       interval: req.interval || 1,

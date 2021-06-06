@@ -13,7 +13,7 @@ export namespace Questions {
       quality: 1,
       interval: 1,
       content: q.content || 'new question',
-      answers: q.answers || [],
+      answers: q.answers || [Answers.PostRequest({})],
     }
   }
 

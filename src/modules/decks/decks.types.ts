@@ -15,5 +15,13 @@ export namespace Decks {
     readonly questions: ReadonlyArray<Questions.PostRequest>
   }
 
+  export function PostRequest(d: Partial<PostRequest>): PostRequest {
+    return {
+      name: d.name || 'new deck',
+      description: d.description,
+      questions: d.questions || [Questions.PostRequest({})],
+    }
+  }
+
   export type Deck = PostRequest & { id: string }
 }

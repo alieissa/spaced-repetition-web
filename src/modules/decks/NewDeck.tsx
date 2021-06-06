@@ -1,17 +1,22 @@
 /** @format */
 
+import { useFormik } from 'formik'
 import * as _ from 'lodash'
-import React, { useState } from 'react'
+import React from 'react'
 import { RouteProps } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, Icon, Input, List, Segment } from 'semantic-ui-react'
 import 'src/App.css'
 import { QuestionForm, Questions } from 'src/modules/questions'
 import { styles } from 'src/styles'
+import { Decks } from './decks.types'
 
 export default function NewDeck(props: RouteProps) {
-  const [questions, setQuestions] = useState([Questions.PostRequest({})])
-  const [open, setOpen] = useState(false)
+  const formik = useFormik({
+    initialValues: { ...Decks.PostRequest({}) },
+    onSubmit: () => console.log('submit'),
+  })
+
   return (
     <>
       <Segment basic style={styles.p0}>
@@ -24,24 +29,7 @@ export default function NewDeck(props: RouteProps) {
       </Segment>
       <main>
         <Card fluid>
-          <Card.Header textAlign="right">
-            {/* <Settings
-              id="dummy2"
-              open={open}
-              easiness={1}
-              quality={1}
-              interval={1}
-              trigger={
-                <Button
-                  style={styles.bgWhite}
-                  icon={<Icon name="setting" />}
-                  onClick={() => setOpen(true)}
-                />
-              }
-              onCancel={() => setOpen(false)}
-              onSave={_.noop}
-            /> */}
-          </Card.Header>
+          <Card.Header textAlign="right"></Card.Header>
           <Card.Content>
             {/* TODO refactor edit deck info and this form into one component */}
             <List>
@@ -59,12 +47,11 @@ export default function NewDeck(props: RouteProps) {
         </Card>
         <section className="flex-column w-inherit">
           <List>
-            {_.map(questions, (q, index) => (
+            {_.map(formik.values.questions, (q, index) => (
               <List.Item key={index}>
                 <Segment>
-                  <QuestionForm<Questions.PostRequest>
-                    content="new question"
-                    answers={[]}
+                  <QuestionForm
+                    {...q}
                     onSubmitForm={() => console.log('test')}
                     onCancel={() => console.log('cancel')}
                   />
@@ -78,9 +65,14 @@ export default function NewDeck(props: RouteProps) {
         <Button
           icon
           color="green"
-          onClick={() =>
-            setQuestions([...questions, Questions.PostRequest({})])
-          }
+          onClick={() => {
+            formik.setValues((values) => {
+              return {
+                ...values,
+                questions: [...values.questions, Questions.PostRequest({})],
+              }
+            })
+          }}
         >
           <Icon name="plus" />
         </Button>

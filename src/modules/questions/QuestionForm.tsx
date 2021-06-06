@@ -5,16 +5,16 @@ import React, { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Form, Icon, Input, List } from 'semantic-ui-react'
 import 'src/App.css'
+import { Answers } from 'src/modules/answers'
 import { styles } from 'src/styles'
 import { Questions } from './questions.types'
 
-type WithQuestion<T, V extends keyof Questions.Question> = T &
-  Pick<Questions.Question, V>
-interface Props {
+type Props = (Questions.PostRequest | Questions.Question) & {
   readonly onSubmitForm: any
   readonly onCancel: MouseEventHandler
 }
-function useQuestionFormik(props: WithQuestion<Props, 'content' | 'answers'>) {
+
+export default function QuestionForm(props: Props) {
   const formik = useFormik({
     initialValues: {
       // Not used in inputs but passed to component calling it to identify to which widget
@@ -25,33 +25,6 @@ function useQuestionFormik(props: WithQuestion<Props, 'content' | 'answers'>) {
     onSubmit: props.onSubmitForm,
   })
 
-  const answerOperation = (
-    operation: (
-      answer: object,
-      answers: ReadonlyArray<object>,
-    ) => ReadonlyArray<object>,
-  ) => {
-    return (answer: object) =>
-      formik.setValues((values) =>
-        _.assign(values, {
-          answers: operation(answer, values.answers),
-        }),
-      )
-  }
-  const removeAnswer = answerOperation((answer, values) => _.tail(values))
-  const addAnswer = answerOperation((answer, values) => [
-    ...values,
-    { content: 'new one' },
-  ])
-
-  return { ...formik, addAnswer, removeAnswer }
-}
-
-export default function QuestionForm<
-  Q extends Questions.PostRequest | Questions.Question = Questions.Question,
->(props: WithQuestion<Props, 'content' | 'answers'>) {
-  const formik = useQuestionFormik(props)
-
   return (
     <Form className="w-full">
       <List horizontal className="flex" style={styles.flex}>
@@ -60,19 +33,34 @@ export default function QuestionForm<
         </List.Item>
         <List.Item className="flex-1">
           <List style={styles.p0}>
-            {_.map(formik.values.answers, (_, index) => (
-              <List.Item key={index} className="flex" style={styles.flex}>
+            {_.map(formik.values.answers, (answer, index) => (
+              <List.Item
+                key={answer.__key__}
+                className="flex"
+                style={styles.flex}
+              >
                 <Input
-                  name={`answers.$index`}
+                  name={`answers[${index}]['content']`}
                   placeholder="Enter answer here"
                   className="w-full"
                   onChange={formik.handleChange}
                 />
+
                 <Button
                   size="small"
                   style={styles.bgWhite}
+                  disabled={_.size(formik.values.answers) == 1}
                   icon={<Icon name="x" />}
-                  onClick={formik.removeAnswer}
+                  onClick={() => {
+                    const answers = _.filter(
+                      formik.values.answers,
+                      (a) => !_.isEqual(a, answer),
+                    )
+                    formik.setValues((values) => ({
+                      ...values,
+                      answers: answers,
+                    }))
+                  }}
                 />
               </List.Item>
             ))}
@@ -81,7 +69,12 @@ export default function QuestionForm<
                 size="small"
                 style={styles.bgWhite}
                 icon={<Icon name="plus" color="green" />}
-                onClick={formik.addAnswer}
+                onClick={() => {
+                  formik.setValues((values) => ({
+                    ...values,
+                    answers: [...values.answers, Answers.PostRequest({})],
+                  }))
+                }}
               />
             </List.Item>
           </List>

@@ -18,8 +18,7 @@ export default function Question(props: Questions.Question) {
     <Segment className="justify-space-between align-center">
       {editing ? (
         <QuestionForm
-          content="question"
-          answers={[]}
+          {...Questions.PostRequest({})}
           onSubmitForm={() => console.log('question form')}
           onCancel={() => setEditing(false)}
         />
