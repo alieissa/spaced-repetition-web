@@ -1,5 +1,6 @@
 /** @format */
 
+import { withAuthenticationRequired } from '@auth0/auth0-react'
 import * as _ from 'lodash'
 import React from 'react'
 import {
@@ -16,41 +17,34 @@ import {
   NewDeck,
 } from 'src/modules/decks'
 
-interface Props {
-  readonly areValidParameters: (params: object) => boolean
-}
-
-function ParametrisedRoute(props: Props & RouteProps) {
-  const params = useParams()
-  return props.areValidParameters(params) ? (
-    <Route {..._.omit(props, 'areValidParameter')}></Route>
-  ) : (
-    <Redirect to="/not-found" />
-  )
-}
+type ProtectedRouteProps = Omit<RouteProps, 'component'> &
+  Required<Pick<RouteProps, 'component'>>
+const ProtectedRoute = ({ component, ...args }: ProtectedRouteProps) => (
+  <Route component={withAuthenticationRequired(component)} {...args} />
+)
 export default function Routes() {
   return (
     <Switch>
-      <Route
-        exact
-        path="/decks/new"
-        render={(props: RouteProps) => <NewDeck {...props} />}
-      />
-      <ParametrisedRoute
+      <ProtectedRoute exact path="/decks/new" component={NewDeck} />
+      <ProtectedRoute
         exact
         path="/decks/:deckId"
-        areValidParameters={(params: RouteProps) => true}
-        render={(props: RouteProps) => <DeckPage {...props} />}
+        component={function Test(props: RouteProps) {
+          const params = useParams()
+          const deckId = _.get(params, 'deckId')
+          return deckId ? (
+            <DeckPage {...props} deckId={deckId} />
+          ) : (
+            <Redirect to="not-found" />
+          )
+        }}
       />
-      <ParametrisedRoute
+      <ProtectedRoute
         exact
         path="/decks/:deckId/exam"
-        areValidParameters={(params: RouteProps) => true}
-        render={(props: RouteProps) => <DeckTestPage {...props} />}
+        component={DeckTestPage}
       />
-      <Route path="/">
-        <DecksListPage />
-      </Route>
+      <ProtectedRoute component={DecksListPage} path="/" />
     </Switch>
   )
 }

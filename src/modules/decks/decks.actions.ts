@@ -1,8 +1,18 @@
 /** @format */
 
-import { Dispatch } from 'react'
-import { Either, Left, Right } from 'src/utils/either'
+import { Either } from 'src/utils/either'
 import { Decks } from './decks.types'
+
+export type GetDeck = {
+  readonly type: 'GetDeck'
+  readonly id: Decks.Deck['id']
+}
+
+export type DeckLoaded = {
+  readonly type: 'DeckLoaded'
+  readonly result: Either<Error, Decks.Deck>
+  readonly id: Decks.Deck['id']
+}
 
 export type GetDecks = {
   readonly type: 'GetDecks'
@@ -13,22 +23,19 @@ export type DecksLoaded = {
   readonly result: Either<Error, ReadonlyArray<Decks.Deck>>
 }
 
-export type DecksAction = GetDecks | DecksLoaded
-
-// TODO Add http response validator and body validators
-export function getDecks(dispatch: Dispatch<GetDecks | DecksLoaded>) {
-  dispatch({
-    type: 'GetDecks',
-  })
-  // TODO Get From env variable
-  fetch('http://localhost:3000/decks', { method: 'GET' })
-    .then((r) => r.json())
-    .then((data) => Right(data))
-    .catch((error) => Left(error))
-    .then((result) =>
-      dispatch({
-        type: 'DecksLoaded',
-        result,
-      }),
-    )
+export type CreateDeck = {
+  readonly type: 'CreateDeck'
 }
+
+export type DeckCreated = {
+  readonly type: 'DeckCreated'
+  readonly result: Either<Error, Decks.Deck>
+}
+
+export type DecksAction =
+  | GetDeck
+  | DeckLoaded
+  | GetDecks
+  | DecksLoaded
+  | CreateDeck
+  | DeckCreated

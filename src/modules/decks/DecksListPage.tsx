@@ -22,7 +22,7 @@ export function DecksComponent(props: Props) {
         <CreateButton createLink="/decks/new" />
       </section>
       <Grid doubling stackable>
-        {_.map(props.decks, (d) => (
+        {_.map(_.values(props.decks), (d) => (
           <Grid.Column width={4} key={d.id}>
             <Deck {...d} className="h-full" />
           </Grid.Column>

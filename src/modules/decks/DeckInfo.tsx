@@ -4,6 +4,7 @@ import _ from 'lodash'
 import React, { useState } from 'react'
 import { Button, Card, Header, Icon } from 'semantic-ui-react'
 import { styles } from 'src/styles'
+import { Settings } from 'src/types'
 import { Decks } from './decks.types'
 
 interface DeckInfoProps {

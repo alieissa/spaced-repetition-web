@@ -4,8 +4,9 @@ import React, { MouseEventHandler, useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Icon, Segment } from 'semantic-ui-react'
 import 'src/App.css'
-import { QuestionForm, Settings } from 'src/components'
+import { Settings } from 'src/components'
 import { styles } from 'src/styles'
+import { SubmittableQuestionForm } from '.'
 import { Questions } from './questions.types'
 
 /**
@@ -17,9 +18,9 @@ export default function Question(props: Questions.Question) {
   return (
     <Segment className="justify-space-between align-center">
       {editing ? (
-        <QuestionForm
-          {...Questions.PostRequest({})}
-          onSubmitForm={() => console.log('question form')}
+        <SubmittableQuestionForm
+          {...props}
+          onSubmit={(data) => console.log('question form data', data)}
           onCancel={() => setEditing(false)}
         />
       ) : (

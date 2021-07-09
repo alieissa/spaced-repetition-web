@@ -1,5 +1,4 @@
 /** @format */
-import { useFormik } from 'formik'
 import * as _ from 'lodash'
 import React, { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
@@ -7,59 +6,60 @@ import { Button, Form, Icon, Input, List } from 'semantic-ui-react'
 import 'src/App.css'
 import { Answers } from 'src/modules/answers'
 import { styles } from 'src/styles'
-import { Questions } from './questions.types'
 
-type Props = (Questions.PostRequest | Questions.Question) & {
-  readonly onSubmitForm: any
-  readonly onCancel: MouseEventHandler
-}
+export type QuestionFormProps<A extends Answers.Answer | Answers.PostRequest> =
+  {
+    readonly content: string
+    readonly answers: ReadonlyArray<A>
+    readonly onChangeContent: (content: string) => void
+    readonly onChangeAnswer: (answer: A, content: string) => void
+    readonly onDeleteAnswer: (answer: A) => void
+    readonly onAddAnswer: VoidFunction
+    readonly onSubmitForm?: any
+    readonly onCancel?: MouseEventHandler
+  }
 
-export default function QuestionForm(props: Props) {
-  const formik = useFormik({
-    initialValues: {
-      // Not used in inputs but passed to component calling it to identify to which widget
-      // the settings belong
-      content: props.content,
-      answers: props.answers,
-    },
-    onSubmit: props.onSubmitForm,
-  })
-
+export default function QuestionForm<
+  A extends Answers.Answer | Answers.PostRequest,
+>(props: QuestionFormProps<A>) {
   return (
     <Form className="w-full">
       <List horizontal className="flex" style={styles.flex}>
         <List.Item className="flex-1">
-          <Input placeholder="Enter question here" className="w-full" />
+          <Input
+            name="content"
+            value={props.content}
+            onChange={(e) => {
+              props.onChangeContent(e.target.value)
+            }}
+            placeholder="Enter question here"
+            className="w-full"
+          />
         </List.Item>
         <List.Item className="flex-1">
           <List style={styles.p0}>
-            {_.map(formik.values.answers, (answer, index) => (
+            {_.map(props.answers, (answer) => (
               <List.Item
-                key={answer.__key__}
+                key={_.get(answer, '__key__', _.get(answer, 'id'))}
                 className="flex"
                 style={styles.flex}
               >
                 <Input
-                  name={`answers[${index}]['content']`}
+                  value={answer.content}
                   placeholder="Enter answer here"
                   className="w-full"
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    props.onChangeAnswer(answer, e.target.value || '')
+                  }}
                 />
 
                 <Button
                   size="small"
                   style={styles.bgWhite}
-                  disabled={_.size(formik.values.answers) == 1}
+                  disabled={_.size(props.answers) == 1}
                   icon={<Icon name="x" />}
                   onClick={() => {
-                    const answers = _.filter(
-                      formik.values.answers,
-                      (a) => !_.isEqual(a, answer),
-                    )
-                    formik.setValues((values) => ({
-                      ...values,
-                      answers: answers,
-                    }))
+                    props.onDeleteAnswer(answer)
                   }}
                 />
               </List.Item>
@@ -70,10 +70,7 @@ export default function QuestionForm(props: Props) {
                 style={styles.bgWhite}
                 icon={<Icon name="plus" color="green" />}
                 onClick={() => {
-                  formik.setValues((values) => ({
-                    ...values,
-                    answers: [...values.answers, Answers.PostRequest({})],
-                  }))
+                  props.onAddAnswer()
                 }}
               />
             </List.Item>
@@ -81,14 +78,23 @@ export default function QuestionForm(props: Props) {
         </List.Item>
       </List>
 
-      {/* <Form.Group className="justify-flex-end w-full">
-        <Form.Button basic onClick={props.onCancel}>
-          Cancel
-        </Form.Button>
-        <Form.Button color="green" type="submit">
-          Save
-        </Form.Button>
-      </Form.Group> */}
+      <Form.Group style={styles.justifyEnd}>
+        {props.onCancel && (
+          <Form.Button basic size="small" onClick={props.onCancel}>
+            Cancel
+          </Form.Button>
+        )}
+        {props.onSubmitForm && (
+          <Form.Button
+            icon
+            size="small"
+            color="green"
+            onClick={props.onSubmitForm}
+          >
+            Save
+          </Form.Button>
+        )}
+      </Form.Group>
     </Form>
   )
 }
