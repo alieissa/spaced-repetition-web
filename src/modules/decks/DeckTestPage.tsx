@@ -1,13 +1,12 @@
 /** @format */
 
-import React from 'react'
 import { RouteProps } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Card, Container } from 'semantic-ui-react'
 import 'src/App.css'
 import { DeckInfo } from 'src/components'
+import { TestQuestion } from 'src/modules/questions'
 import { styles } from 'src/styles'
-import TestQuestion from '../questions/TestQuestion'
 
 /**
  * Displays a series of questions that user must answer. User update settings of a question and

@@ -1,7 +1,7 @@
 /** @format */
 
 import * as _ from 'lodash'
-import React, { MouseEventHandler, useEffect, useState } from 'react'
+import { MouseEventHandler, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RouteProps } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
@@ -15,6 +15,7 @@ import {
   Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
+import { DeckInfo } from 'src/components'
 import {
   Question,
   Questions,
@@ -22,8 +23,6 @@ import {
 } from 'src/modules/questions'
 import { styles } from 'src/styles'
 import { async } from 'src/utils'
-import { DeckInfo } from '../../components'
-import { useAuthRequest } from '../auth/auth.hooks'
 import { deckById, deckByIdStatus } from './decks.selectors'
 import { Decks } from './decks.types'
 
@@ -177,7 +176,7 @@ function useDeckById(
       type: 'GetDeck',
       id,
     })
-    getDeck().then((result) => {
+    getDeck().then((result: any) => {
       dispatch({ type: 'DeckLoaded', result, id })
     })
   }, [])

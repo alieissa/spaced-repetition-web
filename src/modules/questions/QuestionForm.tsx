@@ -1,6 +1,6 @@
 /** @format */
 import * as _ from 'lodash'
-import React, { MouseEventHandler } from 'react'
+import { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Form, Icon, Input, List } from 'semantic-ui-react'
 import 'src/App.css'

@@ -1,8 +1,8 @@
 /** @format */
 
 import * as _ from 'lodash'
+import { Answers } from 'src/modules/answers'
 import { Settings } from 'src/types'
-import { Answers } from '../answers'
 export namespace Questions {
   export type PostRequest = Settings & {
     readonly content: string
