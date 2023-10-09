@@ -1,6 +1,7 @@
 /** @format */
 
 import { Decks } from 'src/modules/decks/decks.types'
+import { NSignup } from 'src/modules/signup'
 
 /** @format */
 // export type Optional<T, K extends string | number | symbol> = Omit<T, K> & Partial<Pick<T, K>>
@@ -18,4 +19,5 @@ export type WithSettings<T, V extends keyof Settings = keyof Settings> = T &
 
 export type RootState = {
   decks: Decks.State
+  signup: NSignup.State
 }

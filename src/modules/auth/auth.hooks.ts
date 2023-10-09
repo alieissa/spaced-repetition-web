@@ -1,6 +1,5 @@
 /** @format */
 
-import { useAuth0 } from '@auth0/auth0-react'
 import { Left, Right } from 'src/utils/either'
 type UseRequestParams = {
   url: string
@@ -15,22 +14,19 @@ type UseRequestParams = {
  * the access token is saved
  */
 export function useAuthRequest<D = {}>({ url, method }: UseRequestParams) {
-  const { getAccessTokenSilently } = useAuth0()
+  const token = localStorage.getItem('token')
   const authFetch = (data?: D) => {
-    return getAccessTokenSilently()
-      .then((accessToken) => {
-        const apiUrl = `${process.env.REACT_APP_API_URL}/${url}`
-        const headers = {
-          Authorization: `Bearer ${accessToken}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        }
-        const init = data
-          ? { method, headers, body: JSON.stringify(data) }
-          : { method, headers }
+    const apiUrl = `${process.env.REACT_APP_API_URL}/${url}`
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    }
+    const init = data
+      ? { method, headers, body: JSON.stringify(data) }
+      : { method, headers }
 
-        return fetch(apiUrl, init)
-      })
+    return fetch(apiUrl, init)
       .then((r) => r.json())
       .then((data) => Right<D>(data))
       .catch((error) => Left(error))

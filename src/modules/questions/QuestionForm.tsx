@@ -40,7 +40,7 @@ export default function QuestionForm<
           <List style={styles.p0}>
             {_.map(props.answers, (answer) => (
               <List.Item
-                key={_.get(answer, '__key__', _.get(answer, 'id'))}
+                // key={_.get(answer, '__key__', _.get(answer, 'id'))}
                 className="flex"
                 style={styles.flex}
               >

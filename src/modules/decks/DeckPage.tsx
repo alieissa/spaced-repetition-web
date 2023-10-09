@@ -23,6 +23,7 @@ import {
 } from 'src/modules/questions'
 import { styles } from 'src/styles'
 import { async } from 'src/utils'
+import { useAuthRequest } from '../auth/auth.hooks'
 import { deckById, deckByIdStatus } from './decks.selectors'
 import { Decks } from './decks.types'
 
