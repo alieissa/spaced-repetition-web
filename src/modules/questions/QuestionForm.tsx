@@ -56,7 +56,7 @@ export default function QuestionForm<
                 <Button
                   size="small"
                   style={styles.bgWhite}
-                  disabled={_.size(props.answers) == 1}
+                  disabled={_.size(props.answers) === 1}
                   icon={<Icon name="x" />}
                   onClick={() => {
                     props.onDeleteAnswer(answer)

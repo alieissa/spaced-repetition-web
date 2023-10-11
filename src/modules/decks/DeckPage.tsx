@@ -180,6 +180,7 @@ function useDeckById(
     getDeck().then((result: any) => {
       dispatch({ type: 'DeckLoaded', result, id })
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return [deck, status]

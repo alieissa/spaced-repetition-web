@@ -1,4 +1,6 @@
 /** @format */
+
+/* eslint-disable @typescript-eslint/no-redeclare */
 /**
  * Credit goes to https://medium.com/@fillopeter/pattern-matching-with-typescript-done-right-94049ddd671c
  * For the pattern matching code
@@ -67,3 +69,5 @@ export function match<R, E, A>(
 ): <T>(pattern: AsyncPattern<T, R, E, A>) => T {
   return <T>(pattern: AsyncPattern<T, R, E, A>) => pattern[e.type](e as any)
 }
+
+/* eslint-enable @typescript-eslint/no-redeclare */

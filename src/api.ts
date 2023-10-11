@@ -33,7 +33,6 @@ const isResponse5xx = (response: Response) => {
 export function request<D = {}>({ url, method }: UseRequestParams) {
   const token = localStorage.getItem('token')
   return (data?: D) => {
-    const token = localStorage.getItem('token')
     const authHeader = token ? { Authorization: `Bearer ${token}` } : undefined
     const apiUrl = `${process.env.REACT_APP_API_ENDPOINT}/${url}`
     const headers = {

@@ -1,14 +1,17 @@
 /** @format */
 
 import '@testing-library/jest-dom'
-import { act, fireEvent, screen } from '@testing-library/react'
+import {
+  act,
+  fireEvent,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import { renderWithProviders } from 'src/utils/test-utils'
 import Signup from '../Signup'
-
-const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0))
 
 const signupUrl = `${process.env.REACT_APP_API_ENDPOINT}/users/register`
 
@@ -48,12 +51,12 @@ describe('Signup', () => {
       const passwordInput = screen.getByTitle('password')
       await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
       await act(() => user.type(passwordInput, 'heythere!'))
+      fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
 
-      await act(() =>
-        fireEvent.click(screen.getByRole('button', { name: 'Submit' })),
-      )
-
-      expect(screen.getByTestId('signup-form-loading')).toBeInTheDocument()
+      const testId = 'signup-form-loading'
+      expect(await screen.findByTestId(testId)).toBeInTheDocument()
+      // See https://davidwcai.medium.com/react-testing-library-and-the-not-wrapped-in-act-errors-491a5629193b
+      await waitForElementToBeRemoved(() => screen.queryByTestId(testId))
     })
 
     test('display failure', async () => {
@@ -71,14 +74,10 @@ describe('Signup', () => {
       await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
       await act(() => user.type(passwordInput, 'heythere!'))
 
-      await act(() =>
-        fireEvent.click(screen.getByRole('button', { name: 'Submit' })),
-      )
+      fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
 
-      // Make sure all the state updates have been performed
-      await act(flushPromises)
-
-      expect(screen.getByTestId('signup-form-error')).toBeInTheDocument()
+      const testId = 'signup-form-error'
+      expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
 
     test('display success', async () => {
@@ -90,14 +89,10 @@ describe('Signup', () => {
       await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
       await act(() => user.type(passwordInput, 'heythere!'))
 
-      await act(() =>
-        fireEvent.click(screen.getByRole('button', { name: 'Submit' })),
-      )
+      fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
 
-      // Make sure all the state updates have been performed
-      await act(flushPromises)
-
-      expect(screen.getByTestId('signup-form-successful')).toBeInTheDocument()
+      const testId = 'signup-form-successful'
+      expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
   })
 })

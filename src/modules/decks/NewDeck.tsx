@@ -2,7 +2,6 @@
 
 import * as _ from 'lodash'
 import { useReducer } from 'react'
-import { useDispatch } from 'react-redux'
 import { RouteProps, useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, Icon, Input, List, Segment } from 'semantic-ui-react'
@@ -80,7 +79,6 @@ function reducer(state: State, action: Action) {
 
 export default function NewDeck(props: RouteProps) {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
   const createDeck = useAuthRequest<Decks.PostRequest>({
     url: 'decks',
     method: 'POST',

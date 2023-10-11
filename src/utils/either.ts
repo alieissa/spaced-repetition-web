@@ -1,5 +1,7 @@
 /** @format */
 
+/* eslint-disable @typescript-eslint/no-redeclare */
+
 /**
  * Credit goes to https://medium.com/@fillopeter/pattern-matching-with-typescript-done-right-94049ddd671c
  * For the pattern matching code
@@ -42,3 +44,4 @@ export function match<L, R>(
 ): <T>(pattern: EitherPattern<T, L, R>) => T {
   return <T>(pattern: EitherPattern<T, L, R>) => pattern[e.type](e as any)
 }
+/* eslint-enable @typescript-eslint/no-redeclare */
