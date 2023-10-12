@@ -1,50 +1,38 @@
 /** @format */
 
-import { withAuthenticationRequired } from '@auth0/auth0-react'
 import * as _ from 'lodash'
-import React from 'react'
 import {
-  Redirect,
+  Navigate,
   Route,
   RouteProps,
-  Switch,
+  Routes,
   useParams,
 } from 'react-router-dom'
 import {
   DeckPage,
-  DecksListPage,
   DeckTestPage,
+  DecksListPage,
   NewDeck,
 } from 'src/modules/decks'
+import { Signup } from 'src/modules/signup'
 
-type ProtectedRouteProps = Omit<RouteProps, 'component'> &
-  Required<Pick<RouteProps, 'component'>>
-const ProtectedRoute = ({ component, ...args }: ProtectedRouteProps) => (
-  <Route component={withAuthenticationRequired(component)} {...args} />
-)
-export default function Routes() {
+function Test(props: RouteProps) {
+  const params = useParams()
+  const deckId = _.get(params, 'deckId')
+  return deckId ? (
+    <DeckPage {...props} deckId={deckId} />
+  ) : (
+    <Navigate to="not-found" />
+  )
+}
+export default function AppRoutes() {
   return (
-    <Switch>
-      <ProtectedRoute exact path="/decks/new" component={NewDeck} />
-      <ProtectedRoute
-        exact
-        path="/decks/:deckId"
-        component={function Test(props: RouteProps) {
-          const params = useParams()
-          const deckId = _.get(params, 'deckId')
-          return deckId ? (
-            <DeckPage {...props} deckId={deckId} />
-          ) : (
-            <Redirect to="not-found" />
-          )
-        }}
-      />
-      <ProtectedRoute
-        exact
-        path="/decks/:deckId/exam"
-        component={DeckTestPage}
-      />
-      <ProtectedRoute component={DecksListPage} path="/" />
-    </Switch>
+    <Routes>
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/decks/new" element={<NewDeck />} />
+      <Route path="/decks/:deckId" element={<Test />} />
+      <Route path="/decks/:deckId/exam" element={<DeckTestPage />} />
+      <Route path="/" element={<DecksListPage />} />
+    </Routes>
   )
 }

@@ -1,6 +1,6 @@
 /** @format */
 import * as _ from 'lodash'
-import React, { MouseEventHandler } from 'react'
+import { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Form, Icon, Input, List } from 'semantic-ui-react'
 import 'src/App.css'
@@ -40,7 +40,7 @@ export default function QuestionForm<
           <List style={styles.p0}>
             {_.map(props.answers, (answer) => (
               <List.Item
-                key={_.get(answer, '__key__', _.get(answer, 'id'))}
+                // key={_.get(answer, '__key__', _.get(answer, 'id'))}
                 className="flex"
                 style={styles.flex}
               >
@@ -56,7 +56,7 @@ export default function QuestionForm<
                 <Button
                   size="small"
                   style={styles.bgWhite}
-                  disabled={_.size(props.answers) == 1}
+                  disabled={_.size(props.answers) === 1}
                   icon={<Icon name="x" />}
                   onClick={() => {
                     props.onDeleteAnswer(answer)

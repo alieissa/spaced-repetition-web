@@ -1,7 +1,6 @@
 /** @format */
 
 import _ from 'lodash'
-import React, { useState } from 'react'
 import { Button, Card, Header, Icon } from 'semantic-ui-react'
 import { styles } from 'src/styles'
 import { Settings } from 'src/types'
@@ -19,8 +18,6 @@ interface DeckInfoProps {
  *  3. Edit name and description of deck if onEdit callback is defined
  */
 export default function DeckInfo(props: Partial<DeckInfoProps> & Decks.Deck) {
-  const [open, setOpen] = useState(false)
-
   return (
     <Card fluid style={styles.boxShadowNone}>
       <Card.Content

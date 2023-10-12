@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { MouseEventHandler, useState } from 'react'
+import { MouseEventHandler, useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Icon, Segment } from 'semantic-ui-react'
 import 'src/App.css'

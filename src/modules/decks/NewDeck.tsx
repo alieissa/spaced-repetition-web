@@ -1,16 +1,15 @@
 /** @format */
 
 import * as _ from 'lodash'
-import React, { useReducer } from 'react'
-import { useDispatch } from 'react-redux'
-import { RouteProps, useHistory } from 'react-router-dom'
+import { useReducer } from 'react'
+import { RouteProps, useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, Icon, Input, List, Segment } from 'semantic-ui-react'
 import 'src/App.css'
+import { Answers } from 'src/modules/answers'
+import { useAuthRequest } from 'src/modules/auth/auth.hooks'
 import { QuestionForm, Questions } from 'src/modules/questions'
 import { styles } from 'src/styles'
-import { Answers } from '../answers'
-import { useAuthRequest } from '../auth/auth.hooks'
 import { Decks } from './decks.types'
 // Save questions in a dictionary to make it easier to work with
 // in reducer
@@ -79,8 +78,7 @@ function reducer(state: State, action: Action) {
 }
 
 export default function NewDeck(props: RouteProps) {
-  const history = useHistory()
-  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const createDeck = useAuthRequest<Decks.PostRequest>({
     url: 'decks',
     method: 'POST',
@@ -96,7 +94,7 @@ export default function NewDeck(props: RouteProps) {
           <Button
             size="small"
             onClick={() => {
-              history.goBack()
+              navigate(-1)
             }}
           >
             Cancel
