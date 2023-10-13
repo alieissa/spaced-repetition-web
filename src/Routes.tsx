@@ -14,6 +14,7 @@ import {
   DecksListPage,
   NewDeck,
 } from 'src/modules/decks'
+import { Login } from 'src/modules/login'
 import { Signup } from 'src/modules/signup'
 
 function Test(props: RouteProps) {
@@ -28,6 +29,7 @@ function Test(props: RouteProps) {
 export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/decks/new" element={<NewDeck />} />
       <Route path="/decks/:deckId" element={<Test />} />

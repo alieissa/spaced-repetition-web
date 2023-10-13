@@ -48,6 +48,12 @@ export function request<D = {}>({ url, method }: UseRequestParams) {
       .then(isResponse4xx)
       .then(isResponse5xx)
       .then((r) => r.json())
+      .then((data) => {
+        if (url === "users/login") {
+          localStorage.setItem('token', JSON.stringify(data))
+        }
+        return data
+      })
       .then((data) => Right<D>(data))
       .catch((error) => {
         return Left(error.message)

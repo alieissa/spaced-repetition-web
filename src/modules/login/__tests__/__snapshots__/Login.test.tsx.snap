@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login view should render correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="ui segment"
+    data-testid="login-form"
+  >
+    <form
+      class="ui form"
+    >
+      <div
+        class="field"
+      >
+        <label>
+          Email
+        </label>
+        <input
+          placeholder="Email"
+          title="email"
+          value=""
+        />
+      </div>
+      <div
+        class="field"
+      >
+        <label>
+          Password
+        </label>
+        <input
+          placeholder="Password"
+          title="password"
+          type="password"
+          value=""
+        />
+      </div>
+      <button
+        class="ui button"
+        type="submit"
+      >
+        Login
+      </button>
+    </form>
+  </div>
+</DocumentFragment>
+`;
