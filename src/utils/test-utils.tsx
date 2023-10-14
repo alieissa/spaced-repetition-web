@@ -2,10 +2,12 @@
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { render } from '@testing-library/react'
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import { Provider } from 'react-redux'
+import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 
 // As a basic setup, import your same slice reducers
+import { loginReducer } from 'src/modules/login'
 import { signupReducer } from 'src/modules/signup'
 
 // This type interface extends the default options for render from RTL, as well
@@ -16,21 +18,26 @@ import { signupReducer } from 'src/modules/signup'
 // }
 
 const reducers = combineReducers({
+  login: loginReducer,
   signup: signupReducer,
 })
 
-export function renderWithProviders(
-  ui: React.ReactElement,
-  {
-    // Automatically create a store instance if no store was passed in
-    store = configureStore({ reducer: reducers }),
-    ...renderOptions
-  } = {},
-) {
-  function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
-    return <Provider store={store}>{children}</Provider>
-  }
-
-  // Return an object with the store and all of RTL's query functions
-  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) }
+const withRedux = (ui: React.ReactElement) => {
+  const store = configureStore({ reducer: reducers })
+  return <Provider store={store}>{ui}</Provider>
 }
+const withRouter = (ui: React.ReactElement) => {
+  const router = createMemoryRouter([{ element: ui, path: '/' }], {
+    initialEntries: ['/'],
+    initialIndex: 1,
+  })
+
+  return <RouterProvider router={router} />
+}
+export function renderWithProviders(ui: React.ReactElement) {
+  // Return an object with the store and all of RTL's query functions
+  return render(withRedux(withRouter(ui)))
+}
+
+export const flushPromises = () =>
+  new Promise((resolve) => setTimeout(resolve, 0))
