@@ -16,7 +16,7 @@ type UseRequestParams = {
 export function useAuthRequest<D = {}>({ url, method }: UseRequestParams) {
   const token = localStorage.getItem('token')
   const authFetch = (data?: D) => {
-    const apiUrl = `${process.env.REACT_APP_API_URL}/${url}`
+    const apiUrl = `${process.env.REACT_APP_API_ENDPOINT}/${url}`
     const headers = {
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',
