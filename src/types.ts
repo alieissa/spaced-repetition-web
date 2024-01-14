@@ -3,6 +3,7 @@
 import { Decks } from 'src/modules/decks/decks.types'
 import { NLogin } from 'src/modules/login'
 import { NSignup } from 'src/modules/signup'
+import { NVerification } from './modules/verification/verification.types'
 
 /** @format */
 // export type Optional<T, K extends string | number | symbol> = Omit<T, K> & Partial<Pick<T, K>>
@@ -22,4 +23,5 @@ export type RootState = {
   decks: Decks.State
   login: NLogin.State
   signup: NSignup.State
+  verification: NVerification.State
 }

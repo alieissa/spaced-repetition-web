@@ -5,6 +5,7 @@ import { Left, Right } from './utils/either'
 type UseRequestParams = {
   url: string
   method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
+  token?: string
 }
 
 const HTTPError4xx = () => {
@@ -30,8 +31,8 @@ const isResponse5xx = (response: Response) => {
   return response
 }
 
-export function request<D = {}>({ url, method }: UseRequestParams) {
-  const token = localStorage.getItem('token')
+export function request<D = {}>({ url, method, token: overridToken }: UseRequestParams) {
+  const token = overridToken || localStorage.getItem('token')
   return (data?: D) => {
     const authHeader = token ? { Authorization: `Bearer ${token}` } : undefined
     const apiUrl = `${process.env.REACT_APP_API_ENDPOINT}/${url}`
