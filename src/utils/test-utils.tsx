@@ -9,6 +9,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 // As a basic setup, import your same slice reducers
 import { loginReducer } from 'src/modules/login'
 import { signupReducer } from 'src/modules/signup'
+import { verificationReducer } from 'src/modules/verification'
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -20,6 +21,7 @@ import { signupReducer } from 'src/modules/signup'
 const reducers = combineReducers({
   login: loginReducer,
   signup: signupReducer,
+  verification: verificationReducer,
 })
 
 const withRedux = (ui: React.ReactElement) => {

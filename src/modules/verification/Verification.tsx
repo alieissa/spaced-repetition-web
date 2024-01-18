@@ -1,18 +1,22 @@
 /** @format */
 
+import { useNavigate } from 'react-router-dom'
 import { Loader, Message, Segment } from 'semantic-ui-react'
 import { async } from 'src/utils'
 import { useVerification } from './verification.hooks'
 
 function Verification() {
+  const navigate = useNavigate()
   const { status } = useVerification()
 
   return async.match(status)({
-    Untriggered: () => (
-      <Segment data-testid="verification">
-        <div>Untriggered</div>
-      </Segment>
-    ),
+    Untriggered: () => {
+      return (
+        <Segment data-testid="verification">
+          <Loader active></Loader>
+        </Segment>
+      )
+    },
     Loading: () => (
       <Segment data-testid="verification-loading">
         <Loader active></Loader>
@@ -27,11 +31,11 @@ function Verification() {
       </Segment>
     ),
     Success: () => (
-      <Segment data-testid="verification-successful">
-        <Message positive>
-          <Message.Header>Verification successful</Message.Header>
-          {/* TODO: Navigate to main page */}
-          <p>Click here to go to app</p>
+      <Segment data-testid="verification-success">
+        <Message success>
+          <Message.Header>
+            Your email has been verified.You can now log in
+          </Message.Header>
         </Message>
       </Segment>
     ),

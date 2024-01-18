@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verification view should render correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="ui segment"
+    data-testid="verification-loading"
+  >
+    <div
+      class="ui active loader"
+    />
+  </div>
+</DocumentFragment>
+`;

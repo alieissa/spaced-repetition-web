@@ -22,8 +22,8 @@ export default produce(
           Left: ({ value }) => {
             draft.status = Failure(value)
           },
-          Right: () => {
-            draft.status = Success(null)
+          Right: ({ value }) => {
+            draft.status = Success(value)
           },
         })
         return

@@ -11,7 +11,7 @@ export function useVerification() {
   const dispatch = useDispatch()
   const status = useSelector(Select.status)
   const verify = api.request({
-    method: 'POST',
+    method: 'GET',
     url: 'users/verify',
     // get method returns string | null, we want string | undefined
     token: queryParams.get('token') || undefined
