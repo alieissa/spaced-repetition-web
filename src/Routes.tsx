@@ -16,6 +16,7 @@ import {
 } from 'src/modules/decks'
 import { Login } from 'src/modules/login'
 import { Signup } from 'src/modules/signup'
+import { Verification } from 'src/modules/verification'
 
 function Test(props: RouteProps) {
   const params = useParams()
@@ -34,6 +35,7 @@ export default function AppRoutes() {
       <Route path="/decks/new" element={<NewDeck />} />
       <Route path="/decks/:deckId" element={<Test />} />
       <Route path="/decks/:deckId/exam" element={<DeckTestPage />} />
+      <Route path="/verify" element={<Verification />} />
       <Route path="/" element={<DecksListPage />} />
     </Routes>
   )

@@ -5,6 +5,7 @@ import { Left, Right } from './utils/either'
 type UseRequestParams = {
   url: string
   method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
+  token?: string
 }
 
 const HTTPError4xx = () => {
@@ -30,14 +31,14 @@ const isResponse5xx = (response: Response) => {
   return response
 }
 
-export function request<D = {}>({ url, method }: UseRequestParams) {
-  const token = localStorage.getItem('token')
+export function request<D = {}>({ url, method, token: overridToken }: UseRequestParams) {
+  const token = overridToken || localStorage.getItem('token')
   return (data?: D) => {
     const authHeader = token ? { Authorization: `Bearer ${token}` } : undefined
     const apiUrl = `${process.env.REACT_APP_API_ENDPOINT}/${url}`
     const headers = {
       ...authHeader,
-      Accept: 'application/json',
+      Accept: 'application/json, plain/text',
       'Content-Type': 'application/json',
     }
     const init = data
@@ -47,8 +48,18 @@ export function request<D = {}>({ url, method }: UseRequestParams) {
     return fetch(apiUrl, init)
       .then(isResponse4xx)
       .then(isResponse5xx)
-      .then((r) => r.json())
+      .then((r) => {
+        // TODO Detect response header Content-Type and
+        // treat accordingly. To do that must update the
+        // user management service to return Content-Type
+        // in header response
+        if (url === 'users/verify') {
+          return r.text()
+        }
+        return r.json()
+      })
       .then((data) => {
+        // TODO Move this to login reducer
         if (url === "users/login") {
           localStorage.setItem('token', JSON.stringify(data))
         }
