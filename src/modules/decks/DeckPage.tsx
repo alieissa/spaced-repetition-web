@@ -164,7 +164,7 @@ function DeckEditInfoForm(props: DeckEditInfoFormProps) {
 
 function useDeckById(
   id: NDecks.Deck['id'],
-): [NDecks.Deck, async.Async<null, Error, null>] {
+): [NDecks.Deck, async.Async<null, NDecks.RequestError, null>] {
   const deck = useSelector(deckById(id))
   const status = useSelector(deckByIdStatus(id))
   const dispatch = useDispatch()

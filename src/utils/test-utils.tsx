@@ -5,6 +5,7 @@ import { render } from '@testing-library/react'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
+import decksReducer from 'src/modules/decks/decks.reducer'
 
 // As a basic setup, import your same slice reducers
 import { loginReducer } from 'src/modules/login'
@@ -22,6 +23,7 @@ const reducers = combineReducers({
   login: loginReducer,
   signup: signupReducer,
   verification: verificationReducer,
+  decks: decksReducer,
 })
 
 const withRedux = (ui: React.ReactElement) => {

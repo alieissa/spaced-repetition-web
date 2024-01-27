@@ -76,7 +76,7 @@ export function request<D = {}>({
       .then((data) => {
         // TODO Move this to login reducer
         if (url === "users/login") {
-          localStorage.setItem('token', JSON.stringify(data))
+          localStorage.setItem('token', data.token)
         }
         return data
       })
