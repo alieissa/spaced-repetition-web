@@ -1,17 +1,17 @@
 /** @format */
 
 import { Either } from 'src/utils/either'
-import { Decks } from './decks.types'
+import { NDecks } from './decks.types'
 
 export type GetDeck = {
   readonly type: 'GetDeck'
-  readonly id: Decks.Deck['id']
+  readonly id: NDecks.Deck['id']
 }
 
 export type DeckLoaded = {
   readonly type: 'DeckLoaded'
-  readonly result: Either<Error, Decks.Deck>
-  readonly id: Decks.Deck['id']
+  readonly result: Either<NDecks.RequestError, NDecks.Deck>
+  readonly id: NDecks.Deck['id']
 }
 
 export type GetDecks = {
@@ -20,7 +20,7 @@ export type GetDecks = {
 
 export type DecksLoaded = {
   readonly type: 'DecksLoaded'
-  readonly result: Either<Error, ReadonlyArray<Decks.Deck>>
+  readonly result: Either<NDecks.RequestError, ReadonlyArray<NDecks.Deck>>
 }
 
 export type CreateDeck = {
@@ -29,7 +29,7 @@ export type CreateDeck = {
 
 export type DeckCreated = {
   readonly type: 'DeckCreated'
-  readonly result: Either<Error, Decks.Deck>
+  readonly result: Either<NDecks.RequestError, NDecks.Deck>
 }
 
 export type DecksAction =

@@ -1,15 +1,17 @@
 /** @format */
 
-import _ from 'lodash'
-import { Questions } from 'src/modules/questions'
-import { Async } from 'src/utils/async'
+import _ from 'lodash';
+import { Questions } from 'src/modules/questions';
+import { Async } from 'src/utils/async';
 
-export namespace Decks {
+export namespace NDecks {
+  export type RequestError = { message: string; cause?: number }
+  
   export type State = {
     decks: _.Dictionary<Deck>
-    status: Async<null, Error, null>
-    getStatus: _.Dictionary<Async<null, Error, null>>
-    createStatus: Async<null, Error, null>
+    status: Async<null, RequestError, null>
+    getStatus: _.Dictionary<Async<null, RequestError, null>>
+    createStatus: Async<null, RequestError, null>
   }
 
   export type PostRequest = {

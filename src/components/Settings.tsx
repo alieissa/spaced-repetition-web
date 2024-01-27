@@ -2,7 +2,7 @@
 
 import { useFormik } from 'formik'
 import * as _ from 'lodash'
-import React, { MouseEventHandler } from 'react'
+import { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import {
   DropdownProps,
@@ -12,13 +12,13 @@ import {
   PopupProps,
 } from 'semantic-ui-react'
 import 'src/App.css'
-import { Decks } from 'src/modules/decks/decks.types'
+import { NDecks } from 'src/modules/decks/decks.types'
 import { styles } from 'src/styles'
 
 interface Props {
   id: string
   deckId?: string
-  decks?: ReadonlyArray<Decks.Deck>
+  decks?: ReadonlyArray<NDecks.Deck>
   open: boolean
   easiness: number
   quality: number

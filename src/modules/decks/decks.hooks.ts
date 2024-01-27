@@ -2,14 +2,14 @@
 
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useAuthRequest } from '../auth/auth.hooks'
+import * as api from 'src/api'
 import * as Select from './decks.selectors'
 export function useDecks() {
   const status = useSelector(Select.status)
   const decks = useSelector(Select.decks)
   const dispatch = useDispatch()
-  const getDecks = useAuthRequest({ method: 'GET', url: 'decks' })
-
+  const getDecks = api.request({ method: 'GET', url: 'decks' })
+  
   useEffect(() => {
     dispatch({
       type: 'GetDecks',
