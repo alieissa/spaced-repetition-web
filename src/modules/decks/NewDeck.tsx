@@ -10,10 +10,10 @@ import { Answers } from 'src/modules/answers'
 import { useAuthRequest } from 'src/modules/auth/auth.hooks'
 import { QuestionForm, Questions } from 'src/modules/questions'
 import { styles } from 'src/styles'
-import { Decks } from './decks.types'
+import { NDecks } from './decks.types'
 // Save questions in a dictionary to make it easier to work with
 // in reducer
-type State = Omit<Decks.Initial, 'questions'> & {
+type State = Omit<NDecks.Initial, 'questions'> & {
   questions: _.Dictionary<Questions.Initial>
 }
 type Action =
@@ -30,11 +30,11 @@ type Action =
     }
   | {
       type: 'UPDATE_DECK'
-      name: Decks.Initial['name']
-      description: Decks.Initial['description']
+      name: NDecks.Initial['name']
+      description: NDecks.Initial['description']
     }
 const getInitState = () => {
-  const deck = Decks.Initial({})
+  const deck = NDecks.Initial({})
   return {
     ...deck,
     questions: _.keyBy(deck.questions, '__key__'),
@@ -79,7 +79,7 @@ function reducer(state: State, action: Action) {
 
 export default function NewDeck(props: RouteProps) {
   const navigate = useNavigate()
-  const createDeck = useAuthRequest<Decks.PostRequest>({
+  const createDeck = useAuthRequest<NDecks.PostRequest>({
     url: 'decks',
     method: 'POST',
   })
@@ -104,7 +104,7 @@ export default function NewDeck(props: RouteProps) {
             size="small"
             onClick={() => {
               createDeck(
-                Decks.toPostRequest({
+                NDecks.toPostRequest({
                   ...state,
                   questions: _.values(state.questions),
                 }),

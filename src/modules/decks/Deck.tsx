@@ -6,9 +6,9 @@ import 'semantic-ui-css/semantic.min.css'
 import { Button, Card, CardProps } from 'semantic-ui-react'
 import 'src/App.css'
 import { styles } from 'src/styles'
-import { Decks } from './decks.types'
+import { NDecks } from './decks.types'
 
-export default function Deck(props: Decks.Deck & CardProps) {
+export default function Deck(props: NDecks.Deck & CardProps) {
   const navigate = useNavigate()
   return (
     <Card className={clsx('pointer', props.className)}>

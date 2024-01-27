@@ -25,13 +25,13 @@ import { styles } from 'src/styles'
 import { async } from 'src/utils'
 import { useAuthRequest } from '../auth/auth.hooks'
 import { deckById, deckByIdStatus } from './decks.selectors'
-import { Decks } from './decks.types'
+import { NDecks } from './decks.types'
 
 /**
  * Displays the deck information and a list of cards (questions) that belong to deck. User can
  * perform CRUD operation on individual cards (questions) and/or on entire deck
  */
-export function DeckPageComponent(props: Decks.Deck) {
+export function DeckPageComponent(props: NDecks.Deck) {
   const [editing, setEditing] = useState(false)
   const [newQuestions, setNewQuestions] = useState<
     ReadonlyArray<Questions.Initial>
@@ -50,7 +50,9 @@ export function DeckPageComponent(props: Decks.Deck) {
               onSubmitForm={({
                 name,
                 description,
-              }: Pick<Decks.Deck, 'name' | 'description'>) => console.log(name)}
+              }: Pick<NDecks.Deck, 'name' | 'description'>) =>
+                console.log(name)
+              }
             />
           ) : (
             <DeckInfo
@@ -123,9 +125,9 @@ export default function DeckPage(props: RouteProps & { deckId: string }) {
 }
 
 type DeckEditInfoFormProps = {
-  readonly deck: Decks.Deck
+  readonly deck: NDecks.Deck
   readonly onCancel: MouseEventHandler
-  readonly onSubmitForm: (deck: Decks.Deck) => void
+  readonly onSubmitForm: (deck: NDecks.Deck) => void
 }
 /**
  * User can change name and description of a deck using this component
@@ -161,8 +163,8 @@ function DeckEditInfoForm(props: DeckEditInfoFormProps) {
 }
 
 function useDeckById(
-  id: Decks.Deck['id'],
-): [Decks.Deck, async.Async<null, Error, null>] {
+  id: NDecks.Deck['id'],
+): [NDecks.Deck, async.Async<null, NDecks.RequestError, null>] {
   const deck = useSelector(deckById(id))
   const status = useSelector(deckByIdStatus(id))
   const dispatch = useDispatch()

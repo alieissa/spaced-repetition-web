@@ -4,12 +4,15 @@ import _ from 'lodash'
 import { Button, Card, Header, Icon } from 'semantic-ui-react'
 import { styles } from 'src/styles'
 import { Settings } from 'src/types'
-import { Decks } from './decks.types'
+import { NDecks } from './decks.types'
 
 interface DeckInfoProps {
-  readonly onDelete?: (id: Decks.Deck['id']) => void
-  readonly onEdit?: (id: Decks.Deck['id']) => void
-  readonly onSubmitSettings?: (id: Decks.Deck['id'], settings: Settings) => void
+  readonly onDelete?: (id: NDecks.Deck['id']) => void
+  readonly onEdit?: (id: NDecks.Deck['id']) => void
+  readonly onSubmitSettings?: (
+    id: NDecks.Deck['id'],
+    settings: Settings,
+  ) => void
 }
 /**
  * Displays the name and description of a deck. User can
@@ -17,7 +20,7 @@ interface DeckInfoProps {
  *  2. Update settings of deck if onSubmitSettings callback is defined
  *  3. Edit name and description of deck if onEdit callback is defined
  */
-export default function DeckInfo(props: Partial<DeckInfoProps> & Decks.Deck) {
+export default function DeckInfo(props: Partial<DeckInfoProps> & NDecks.Deck) {
   return (
     <Card fluid style={styles.boxShadowNone}>
       <Card.Content

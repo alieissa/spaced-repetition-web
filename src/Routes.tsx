@@ -32,6 +32,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/decks" element={<DecksListPage />} />
       <Route path="/decks/new" element={<NewDeck />} />
       <Route path="/decks/:deckId" element={<Test />} />
       <Route path="/decks/:deckId/exam" element={<DeckTestPage />} />

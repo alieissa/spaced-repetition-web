@@ -1,5 +1,5 @@
 /** @format */
-
+// TODO Add type guards to detect HTTP error type
 import { Left, Right } from './utils/either'
 
 type UseRequestParams = {
@@ -8,8 +8,15 @@ type UseRequestParams = {
   token?: string
 }
 
-const HTTPError4xx = () => {
-  return new Error('Invalid data entered')
+export const isUnauthorized = (httpError: any) => {
+  if (httpError.cause === 401) {
+    return true
+  }
+
+  return false
+}
+const HTTPError4xx = (message: string, status: Response['status']) => {
+  return new Error(message, { cause: status })
 }
 const HTTPError5xx = () => {
   return new Error('Something went wrong')
@@ -17,7 +24,7 @@ const HTTPError5xx = () => {
 
 const isResponse4xx = (response: Response) => {
   if (response.status < 500 && response.status > 399) {
-    throw HTTPError4xx()
+    throw HTTPError4xx(response.statusText, response.status)
   }
 
   return response
@@ -31,10 +38,18 @@ const isResponse5xx = (response: Response) => {
   return response
 }
 
-export function request<D = {}>({ url, method, token: overridToken }: UseRequestParams) {
+export function request<D = {}>({
+  url,
+  method,
+  token: overridToken,
+}: UseRequestParams) {
   const token = overridToken || localStorage.getItem('token')
   return (data?: D) => {
-    const authHeader = token ? { Authorization: `Bearer ${token}` } : undefined
+    const authHeader =
+      token || url !== 'users/login'
+        ? { Authorization: `Bearer ${token}` }
+        : undefined
+
     const apiUrl = `${process.env.REACT_APP_API_ENDPOINT}/${url}`
     const headers = {
       ...authHeader,
@@ -61,13 +76,13 @@ export function request<D = {}>({ url, method, token: overridToken }: UseRequest
       .then((data) => {
         // TODO Move this to login reducer
         if (url === "users/login") {
-          localStorage.setItem('token', JSON.stringify(data))
+          localStorage.setItem('token', data.token)
         }
         return data
       })
       .then((data) => Right<D>(data))
       .catch((error) => {
-        return Left(error.message)
+        return Left({ message: error.message, cause: error.cause })
       })
   }
 }

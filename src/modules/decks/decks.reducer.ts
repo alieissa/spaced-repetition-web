@@ -5,16 +5,16 @@ import * as _ from 'lodash'
 import { either } from 'src/utils'
 import { Failure, Loading, Success, Untriggered } from 'src/utils/async'
 import { DecksAction } from './decks.actions'
-import { Decks } from './decks.types'
+import { NDecks } from './decks.types'
 
-const initialState: Decks.State = {
+const initialState: NDecks.State = {
   decks: {},
   status: Untriggered(),
   getStatus: {},
   createStatus: Untriggered(),
 }
 
-export default produce((draft: Decks.State, action: DecksAction) => {
+export default produce((draft: NDecks.State, action: DecksAction) => {
   switch (action.type) {
     case 'GetDeck': {
       draft.getStatus[action.id] = Loading(null)
@@ -42,7 +42,7 @@ export default produce((draft: Decks.State, action: DecksAction) => {
         },
         Right: ({ value }) => {
           draft.status = Success(null)
-          draft.decks = _.keyBy(value, 'id')
+          draft.decks = _.isEmpty(value) ? {} : _.keyBy(value, 'id')
         },
       })
       return
