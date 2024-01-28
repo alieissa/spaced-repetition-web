@@ -39,6 +39,14 @@
   justify-content: space-between;
 }
 
+.bt-none {
+  border-top: none;
+}
+
+.mx-auto {
+  margin-left: auto;
+}
+
 .h-full {
   height: 100%;
 }

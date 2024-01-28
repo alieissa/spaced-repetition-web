@@ -8,6 +8,14 @@ export function status(state: RootState) {
   return state.decks.status
 }
 
+export function createStatus(state: RootState) {
+  return state.decks.createStatus
+}
+
+export function getStatus(state: RootState) {
+  return state.decks.getStatus
+}
+
 export function decks(state: RootState) {
   return state.decks.decks
 }
