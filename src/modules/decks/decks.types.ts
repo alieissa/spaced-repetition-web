@@ -32,22 +32,26 @@ export namespace NDecks {
    * a __key__ is needed to differentiate them when
    * being displayed in the UI
    */
-  export type Initial = Omit<PostRequest, 'questions'> & {
+  export type Initial = Omit<PostRequest, 'questions' | 'name'> & {
     readonly __key__: string
+    readonly name?: string
     readonly questions: ReadonlyArray<Questions.Initial>
   }
 
   export function Initial(d: Partial<Initial>): Initial {
     return {
       __key__: _.uniqueId(),
-      name: d.name || 'new deck',
+      name: d.name,
       description: d.description,
       questions: d.questions || [Questions.Initial({})],
     }
   }
-  export function toPostRequest(initial: Initial): PostRequest {
+  // TODO instead of having this. Simply a type guard and use that type guard
+  // to detect the content of the request before sending to backend.
+  export function toPostRequest(initial: Omit<Initial, '__key__'>): PostRequest {
     return {
-      ..._.omit(initial, '__key__'),
+      name: initial.name as string,
+      description: initial.description,
       questions: _.map(initial.questions, (q) => Questions.toPostRequest(q)),
     }
   }

@@ -9,6 +9,7 @@ import { styles } from 'src/styles'
 
 export type QuestionFormProps<A extends Answers.Answer | Answers.PostRequest> =
   {
+    readonly id: number | string
     readonly content: string
     readonly answers: ReadonlyArray<A>
     readonly onChangeContent: (content: string) => void
@@ -27,24 +28,23 @@ export default function QuestionForm<
       <List horizontal className="flex" style={styles.flex}>
         <List.Item className="flex-1">
           <Input
+            data-testid={`question-content-${props.id}`}
             name="content"
+            placeholder="Enter question here"
+            className="w-full"
             value={props.content}
             onChange={(e) => {
               props.onChangeContent(e.target.value)
             }}
-            placeholder="Enter question here"
-            className="w-full"
           />
         </List.Item>
         <List.Item className="flex-1">
           <List style={styles.p0}>
-            {_.map(props.answers, (answer) => (
-              <List.Item
-                // key={_.get(answer, '__key__', _.get(answer, 'id'))}
-                className="flex"
-                style={styles.flex}
-              >
+            {/* TODO Use type guard to detect type and get key accordingly */}
+            {_.map(props.answers, (answer, index) => (
+              <List.Item key={index} className="flex" style={styles.flex}>
                 <Input
+                  data-testid={`answer-content-${index}`}
                   value={answer.content}
                   placeholder="Enter answer here"
                   className="w-full"

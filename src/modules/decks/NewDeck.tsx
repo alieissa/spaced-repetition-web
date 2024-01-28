@@ -1,18 +1,26 @@
 /** @format */
 
 import * as _ from 'lodash'
-import { useReducer } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import { RouteProps, useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
-import { Button, Card, Icon, Input, List, Segment } from 'semantic-ui-react'
+import {
+  Button,
+  Card,
+  Icon,
+  Input,
+  List,
+  Message,
+  MessageHeader,
+  Segment,
+} from 'semantic-ui-react'
 import 'src/App.css'
 import { Answers } from 'src/modules/answers'
-import { useAuthRequest } from 'src/modules/auth/auth.hooks'
 import { QuestionForm, Questions } from 'src/modules/questions'
 import { styles } from 'src/styles'
+import { useCreateDeck } from './decks.hooks'
 import { NDecks } from './decks.types'
-// Save questions in a dictionary to make it easier to work with
-// in reducer
+
 type State = Omit<NDecks.Initial, 'questions'> & {
   questions: _.Dictionary<Questions.Initial>
 }
@@ -33,6 +41,7 @@ type Action =
       name: NDecks.Initial['name']
       description: NDecks.Initial['description']
     }
+
 const getInitState = () => {
   const deck = NDecks.Initial({})
   return {
@@ -70,77 +79,135 @@ function reducer(state: State, action: Action) {
       }
     }
     case 'UPDATE_DECK': {
-      return { ...state, name: action.name, description: action.description }
+      return {
+        ...state,
+        name: _.trim(action.name),
+        description: _.trim(action.description),
+      }
     }
     default:
       return state
   }
 }
 
+const isValidAnswer = (
+  answer: State['questions'][number]['answers'][number],
+) => {
+  return _.trim(answer.content) !== ''
+}
+const isValidQuestion = (question: State['questions'][number]) => {
+  const isValidContent = _.trim(question.content) !== ''
+  const areValidAnswers = _.every(question.answers, isValidAnswer)
+
+  return isValidContent && areValidAnswers
+}
+const isValidForm = (state: State) => {
+  const isValidName = _.trim(state.name) != ''
+  const areValidQuestions = _.every(_.values(state.questions), isValidQuestion)
+
+  return isValidName && areValidQuestions
+}
+
 export default function NewDeck(props: RouteProps) {
   const navigate = useNavigate()
-  const createDeck = useAuthRequest<NDecks.PostRequest>({
-    url: 'decks',
-    method: 'POST',
-  })
 
-  const [state, localDispatch] = useReducer(reducer, getInitState())
+  const [status, createDeck] = useCreateDeck()
+  const [localState, localDispatch] = useReducer(reducer, getInitState())
+  const [displayValidationError, setDisplayValidationError] = useState(false)
+
+  useEffect(() => {
+    if (status.type !== 'Loading') {
+      setDisplayValidationError(false)
+    }
+  }, [status.type])
 
   return (
     <>
       <Segment basic style={styles.p0}>
         <header className="justify-space-between">
           <h2>Create new deck</h2>
-          <Button
-            size="small"
-            onClick={() => {
-              navigate(-1)
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            color="green"
-            size="small"
-            onClick={() => {
-              createDeck(
-                NDecks.toPostRequest({
-                  ...state,
-                  questions: _.values(state.questions),
-                }),
-              )
-            }}
-          >
-            Done
-          </Button>
+          <div>
+            <Button
+              className="mx-auto"
+              size="small"
+              onClick={() => {
+                navigate(-1)
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              data-testid="deck-save"
+              color="green"
+              size="small"
+              disabled={displayValidationError}
+              onClick={() => {
+                if (!isValidForm(localState)) {
+                  setDisplayValidationError(true)
+                  return
+                }
+
+                // TODO use type guard to make sure data
+                // is PostRequest before sending it to createDeck
+                createDeck(
+                  NDecks.toPostRequest({
+                    description: localState.description,
+                    name: localState.name,
+                    questions: _.values(localState.questions),
+                  }),
+                )
+              }}
+            >
+              Done
+            </Button>
+          </div>
         </header>
       </Segment>
       <main>
+        {displayValidationError && (
+          <Message negative data-testid="deck-submission-error">
+            <MessageHeader>Invalid input detected</MessageHeader>
+            <p>Enter valid input and try again</p>
+          </Message>
+        )}
+        {status.type === 'Success' && (
+          <Message positive data-testid="deck-submission-success">
+            <MessageHeader>Deck successfully created</MessageHeader>
+            <p>Click here to go to decks page</p>
+          </Message>
+        )}
+        {status.type === 'Failure' && (
+          <Message negative data-testid="deck-submission-failure">
+            <MessageHeader>There was an error creating the deck</MessageHeader>
+          </Message>
+        )}
         <Card fluid>
           <Card.Header textAlign="right"></Card.Header>
-          <Card.Content>
+          <Card.Content className="bt-none">
             <List>
               <List.Item>
                 <Input
+                  data-testid="deck-name"
                   placeholder="Enter name here"
                   className="w-full"
                   onChange={(e) => {
                     localDispatch({
                       type: 'UPDATE_DECK',
                       name: e.target.value,
-                      description: state.description,
+                      description: localState.description,
                     })
                   }}
-                ></Input>
+                />
               </List.Item>
               <List.Item>
                 <Input
+                  data-testid="deck-description"
                   placeholder="Enter description here"
                   className="w-full"
                   onChange={(e) => {
                     localDispatch({
                       type: 'UPDATE_DECK',
-                      name: state.name,
+                      name: localState.name,
                       description: e.target.value,
                     })
                   }}
@@ -151,11 +218,12 @@ export default function NewDeck(props: RouteProps) {
         </Card>
         <section className="flex-column w-inherit">
           <List>
-            {_.map(_.values(state.questions), (q) => (
+            {_.map(_.values(localState.questions), (q, index) => (
               <List.Item key={q.__key__}>
                 <Segment>
                   <QuestionForm
                     {...q}
+                    id={index}
                     onAddAnswer={() => {
                       localDispatch({
                         type: 'UPDATE_QUESTION',
