@@ -85,11 +85,13 @@ export function useDeckById(
   const updateDeck = (deck: any) => {
     dispatch({
       type: 'UpdateDeck',
+      id: deck.id
     })
 
     putDeck(deck).then((result) => {
       dispatch({
         type: 'DeckUpdated',
+        id: deck.id,
         result,
       })
     })
@@ -126,8 +128,7 @@ export type DeckFormAction =
       deck: NDecks.Deck
     }
 
-const getInitState = () => {
-  const deck = NDecks.Initial({})
+const getInitState = (deck: any) => {
   return {
     ...deck,
     questions: _.keyBy(deck.questions, '__key__'),
@@ -165,8 +166,8 @@ function reducer(state: DeckFormState, action: DeckFormAction) {
     case 'UPDATE_DECK': {
       return {
         ...state,
-        name: _.trim(action.name),
-        description: _.trim(action.description),
+        name: action.name,
+        description: action.description,
       }
     }
     
@@ -174,6 +175,6 @@ function reducer(state: DeckFormState, action: DeckFormAction) {
       return state
   }
 }
-export function useDeckFormReducer() {
-  return useReducer(reducer, getInitState())
+export function useDeckFormReducer(deck: any = NDecks.Initial({})) {
+  return useReducer(reducer, getInitState(deck))
 }

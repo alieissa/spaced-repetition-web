@@ -57,7 +57,7 @@ function DeckComponent(props: Props) {
   const navigate = useNavigate()
 
   const updateStatus = useSelector(Select.updateStatus(props.deck.id))
-  const [localState, localDispatch] = useDeckFormReducer()
+  const [localState, localDispatch] = useDeckFormReducer(props.deck)
   const [displayValidationError, setDisplayValidationError] = useState(false)
 
   return (
@@ -133,6 +133,7 @@ function DeckComponent(props: Props) {
                       data-testid="deck-name"
                       placeholder="Enter name here"
                       className="w-full"
+                      value={localState.name}
                       onChange={(e) => {
                         localDispatch({
                           type: 'UPDATE_DECK',
@@ -147,6 +148,7 @@ function DeckComponent(props: Props) {
                       data-testid="deck-description"
                       placeholder="Enter description here"
                       className="w-full"
+                      value={localState.description}
                       onChange={(e) => {
                         localDispatch({
                           type: 'UPDATE_DECK',
