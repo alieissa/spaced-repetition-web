@@ -67,10 +67,10 @@ describe('NewDeck', () => {
       await act(flushPromises)
 
       // Assert
-      const warningMessage = await screen.queryByTestId(
+      const successMessage = await screen.queryByTestId(
         'deck-submission-success',
       )
-      expect(warningMessage).toBeInTheDocument()
+      expect(successMessage).toBeInTheDocument()
     })
 
     it('shoudl display failure message when create deck fails', async () => {

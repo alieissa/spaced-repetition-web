@@ -34,6 +34,6 @@ export function deckByIdStatus(id: NDecks.Deck['id']) {
 
 export function updateStatus(id: NDecks.Deck['id']) {
   return (statue: RootState) => {
-    return statue.decks.updateStatus[id]
+    return statue.decks.updateStatus[id] ?? Untriggered()
   }
 }

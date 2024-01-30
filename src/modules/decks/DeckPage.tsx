@@ -1,189 +1,254 @@
 /** @format */
 
 import * as _ from 'lodash'
-import { MouseEventHandler, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { RouteProps } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
   Button,
   Card,
   Container,
-  Form,
   Icon,
+  Input,
   List,
+  Loader,
+  Message,
+  MessageHeader,
   Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
-import { DeckInfo } from 'src/components'
-import {
-  Question,
-  Questions,
-  SubmittableQuestionForm,
-} from 'src/modules/questions'
+import { QuestionForm } from 'src/modules/questions'
 import { styles } from 'src/styles'
+import * as Select from './decks.selectors'
+
+import { useSelector } from 'react-redux'
 import { async } from 'src/utils'
-import { useAuthRequest } from '../auth/auth.hooks'
-import { deckById, deckByIdStatus } from './decks.selectors'
+import { Answers } from '../answers'
+import { DeckFormState, useDeckById, useDeckFormReducer } from './decks.hooks'
 import { NDecks } from './decks.types'
 
+const isValidAnswer = (
+  answer: DeckFormState['questions'][number]['answers'][number],
+) => {
+  return _.trim(answer.content) !== ''
+}
+const isValidQuestion = (question: DeckFormState['questions'][number]) => {
+  const isValidContent = _.trim(question.content) !== ''
+  const areValidAnswers = _.every(question.answers, isValidAnswer)
+
+  return isValidContent && areValidAnswers
+}
+const isValidForm = (state: DeckFormState) => {
+  const isValidName = _.trim(state.name) != ''
+  const areValidQuestions = _.every(_.values(state.questions), isValidQuestion)
+
+  return isValidName && areValidQuestions
+}
+
+type Props = {
+  deck: NDecks.Deck
+  updateDeck: (deck: NDecks.Deck) => void
+}
 /**
  * Displays the deck information and a list of cards (questions) that belong to deck. User can
  * perform CRUD operation on individual cards (questions) and/or on entire deck
  */
-export function DeckPageComponent(props: NDecks.Deck) {
-  const [editing, setEditing] = useState(false)
-  const [newQuestions, setNewQuestions] = useState<
-    ReadonlyArray<Questions.Initial>
-  >([])
-  return (
-    <Container className="w-max-xl">
-      <Card fluid style={styles.boxShadowNone}>
-        <Card.Content
-          className="justify-space-between relative"
-          style={{ ...styles['px-0'], ...styles['pt-0'] }}
-        >
-          {editing ? (
-            <DeckEditInfoForm
-              deck={props}
-              onCancel={() => setEditing(false)}
-              onSubmitForm={({
-                name,
-                description,
-              }: Pick<NDecks.Deck, 'name' | 'description'>) =>
-                console.log(name)
-              }
-            />
-          ) : (
-            <DeckInfo
-              id={props.id}
-              name={props.name}
-              description={props.description}
-              questions={[]}
-              onEdit={() => setEditing(true)}
-              onSubmitSettings={() => console.log('submit settings')}
-            />
-          )}
-        </Card.Content>
-      </Card>
-      <List>
-        {_.map(props.questions, (q) => {
-          return (
-            <List.Item key={q.id}>
-              <Question {...q} />
-            </List.Item>
-          )
-        })}
-        {_.map(newQuestions, (nq) => {
-          return (
-            <List.Item key={nq.__key__} width={16}>
-              <Segment>
-                <SubmittableQuestionForm
-                  {...nq}
-                  id={nq.__key__}
-                  onSubmit={(question) => console.log('question')}
-                  onCancel={() =>
-                    setNewQuestions(
-                      _.filter(
-                        newQuestions,
-                        ({ __key__ }) => nq.__key__ !== __key__,
-                      ),
-                    )
-                  }
-                />
-              </Segment>
-            </List.Item>
-          )
-        })}
-      </List>
+function DeckComponent(props: Props) {
+  const navigate = useNavigate()
 
-      <Segment basic style={styles.p0} className="justify-flex-end">
+  const updateStatus = useSelector(Select.updateStatus(props.deck.id))
+  const [localState, localDispatch] = useDeckFormReducer()
+  const [displayValidationError, setDisplayValidationError] = useState(false)
+
+  return (
+    <Container data-testid="deck-success">
+      <Segment basic style={styles.p0}>
+        <header className="justify-space-between">
+          <h2>Update deck</h2>
+          <div>
+            <Button
+              className="mx-auto"
+              size="small"
+              onClick={() => {
+                navigate(-1)
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              data-testid="deck-save"
+              color="green"
+              size="small"
+              disabled={displayValidationError}
+              onClick={() => {
+                if (!isValidForm(localState)) {
+                  setDisplayValidationError(true)
+                  return
+                }
+
+                // TODO Get rid of casting once proper view and
+                // DTO are defined
+                const deckToUpdate = {
+                  id: props.deck.id,
+                  description: localState.description,
+                  name: localState.name!,
+                  questions: _.values(localState.questions),
+                } as unknown as NDecks.Deck
+
+                props.updateDeck(deckToUpdate)
+              }}
+            >
+              Done
+            </Button>
+          </div>
+        </header>
+      </Segment>
+      <main>
+        {displayValidationError && (
+          <Message negative data-testid="deck-submission-error">
+            <MessageHeader>Invalid input detected</MessageHeader>
+            <p>Enter valid input and try again</p>
+          </Message>
+        )}
+        {updateStatus.type === 'Success' && (
+          <Message positive data-testid="deck-submission-success">
+            <MessageHeader>Deck successfully updated</MessageHeader>
+          </Message>
+        )}
+        {updateStatus.type === 'Failure' && (
+          <Message negative data-testid="deck-submission-failure">
+            <MessageHeader>There was an error updating the deck</MessageHeader>
+          </Message>
+        )}
+        {updateStatus.type === 'Loading' ? (
+          <div>Loading</div>
+        ) : (
+          <>
+            <Card fluid>
+              <Card.Header textAlign="right"></Card.Header>
+              <Card.Content className="bt-none">
+                <List>
+                  <List.Item>
+                    <Input
+                      data-testid="deck-name"
+                      placeholder="Enter name here"
+                      className="w-full"
+                      onChange={(e) => {
+                        localDispatch({
+                          type: 'UPDATE_DECK',
+                          name: e.target.value,
+                          description: localState.description,
+                        })
+                      }}
+                    />
+                  </List.Item>
+                  <List.Item>
+                    <Input
+                      data-testid="deck-description"
+                      placeholder="Enter description here"
+                      className="w-full"
+                      onChange={(e) => {
+                        localDispatch({
+                          type: 'UPDATE_DECK',
+                          name: localState.name,
+                          description: e.target.value,
+                        })
+                      }}
+                    />
+                  </List.Item>
+                </List>
+              </Card.Content>
+            </Card>
+            <section className="flex-column w-inherit">
+              <List>
+                {_.map(_.values(localState.questions), (q, index) => (
+                  <List.Item key={q.__key__}>
+                    <Segment>
+                      <QuestionForm
+                        {...q}
+                        id={index}
+                        onAddAnswer={() => {
+                          localDispatch({
+                            type: 'UPDATE_QUESTION',
+                            question: {
+                              ...q,
+                              answers: [...q.answers, Answers.Initial({})],
+                            },
+                          })
+                        }}
+                        onChangeAnswer={(answer, newAnswerContent) => {
+                          localDispatch({
+                            type: 'UPDATE_QUESTION',
+                            question: {
+                              ...q,
+                              answers: _.map(q.answers, (a) => {
+                                if (a.__key__ === answer.__key__) {
+                                  return { ...a, content: newAnswerContent }
+                                } else {
+                                  return a
+                                }
+                              }),
+                            },
+                          })
+                        }}
+                        onChangeContent={(content) => {
+                          localDispatch({
+                            type: 'UPDATE_QUESTION',
+                            question: { ...q, content },
+                          })
+                        }}
+                        onDeleteAnswer={(answer) => {
+                          localDispatch({
+                            type: 'UPDATE_QUESTION',
+                            question: {
+                              ...q,
+                              answers: _.filter(
+                                q.answers,
+                                (a) => a.__key__ !== answer.__key__,
+                              ),
+                            },
+                          })
+                        }}
+                      />
+                    </Segment>
+                  </List.Item>
+                ))}
+              </List>
+            </section>
+          </>
+        )}
+      </main>
+      <Segment basic style={styles.p0} className="flex-row-reverse">
         <Button
+          icon
           color="green"
-          style={styles.bgWhite}
-          icon={<Icon name="plus" />}
-          onClick={() =>
-            setNewQuestions([...newQuestions, Questions.Initial({})])
-          }
-        />
+          onClick={() => {
+            localDispatch({
+              type: 'ADD_QUESTION',
+            })
+          }}
+        >
+          <Icon name="plus" />
+        </Button>
       </Segment>
     </Container>
   )
 }
 
-export default function DeckPage(props: RouteProps & { deckId: string }) {
-  const [deck, status] = useDeckById(props.deckId)
+export default function Deck() {
+  const params = useParams<{ deckId: string }>()
+  const [status, deck, updateDeck] = useDeckById(params.deckId!)
 
   return async.match(status)({
-    Untriggered: () => <div>Loading</div>,
-    Loading: () => <div>Loading</div>,
-    Failure: (failure) => <div>Failure</div>,
-    Success: () => {
-      return <DeckPageComponent {...deck} />
+    Untriggered: () => null,
+    Loading: () => (
+      <Segment data-testid="deck-loading">
+        <Loader active />
+      </Segment>
+    ),
+    Success: () => <DeckComponent deck={deck} updateDeck={updateDeck} />,
+    Failure: () => {
+      return <Segment data-testid="deck-failure" />
     },
   })
-}
-
-type DeckEditInfoFormProps = {
-  readonly deck: NDecks.Deck
-  readonly onCancel: MouseEventHandler
-  readonly onSubmitForm: (deck: NDecks.Deck) => void
-}
-/**
- * User can change name and description of a deck using this component
- */
-function DeckEditInfoForm(props: DeckEditInfoFormProps) {
-  const [deck, setDeck] = useState({ ...props.deck })
-  return (
-    <>
-      <Form onSubmit={() => props.onSubmitForm(deck)} className="w-full">
-        <Form.Input
-          label="Name"
-          defaultValue={props.deck.name}
-          value={deck.name}
-          onChange={(e) => setDeck({ ...deck, name: e.target.value })}
-        />
-        <Form.TextArea
-          label="Description"
-          value={deck.description}
-          defaultValue={props.deck.description}
-          onChange={(e) => setDeck({ ...deck, description: e.target.value })}
-        />
-        <Form.Group className="justify-flex-end">
-          <Form.Button basic onClick={props.onCancel}>
-            Cancel
-          </Form.Button>
-          <Form.Button type="submit" color="green">
-            Save
-          </Form.Button>
-        </Form.Group>
-      </Form>
-    </>
-  )
-}
-
-function useDeckById(
-  id: NDecks.Deck['id'],
-): [NDecks.Deck, async.Async<null, NDecks.RequestError, null>] {
-  const deck = useSelector(deckById(id))
-  const status = useSelector(deckByIdStatus(id))
-  const dispatch = useDispatch()
-  const getDeck = useAuthRequest({ url: `decks/${id}`, method: 'GET' })
-
-  useEffect(() => {
-    if (deck) {
-      return
-    }
-
-    dispatch({
-      type: 'GetDeck',
-      id,
-    })
-    getDeck().then((result: any) => {
-      dispatch({ type: 'DeckLoaded', result, id })
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return [deck, status]
 }
