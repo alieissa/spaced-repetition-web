@@ -12,6 +12,7 @@ const initialState: NDecks.State = {
   status: Untriggered(),
   getStatus: {},
   createStatus: Untriggered(),
+  updateStatus: {},
 }
 
 export default produce((draft: NDecks.State, action: DecksAction) => {
@@ -26,8 +27,8 @@ export default produce((draft: NDecks.State, action: DecksAction) => {
           draft.getStatus[action.id] = Failure(value)
         },
         Right: ({ value }) => {
-          draft.getStatus[value.id] = Success(null)
-          draft.decks[value.id] = value
+          draft.getStatus[action.id] = Success(value)
+          draft.decks[action.id] = value
         },
       })
       return
@@ -58,6 +59,22 @@ export default produce((draft: NDecks.State, action: DecksAction) => {
         Right: ({ value }) => {
           draft.createStatus = Success(null)
           draft.decks[value.id] = value
+        },
+      })
+      return
+    }
+    case 'UpdateDeck': {
+      draft.updateStatus[action.id] = Loading(null)
+      return
+    }
+    case 'DeckUpdated': {
+      either.match(action.result)({
+        Left: ({ value }) => {
+          draft.updateStatus[action.id] = Failure(value)
+        },
+        Right: ({ value }) => {
+          draft.updateStatus[action.id] = Success(null)
+          draft.decks[action.id] = value
         },
       })
       return
