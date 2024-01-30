@@ -68,17 +68,17 @@ export function useDeckById(
   const putDeck = api.request({ method: 'PUT', url: `decks/${id}` })
 
   useEffect(() => {
-    if (deck) {
-      return
-    }
-
     dispatch({
       type: 'GetDeck',
       id,
     })
     getDeck().then((result: any) => {
       dispatch({ type: 'DeckLoaded', result, id })
-    })
+    });
+
+    return () => {
+      dispatch({ type: 'DeckReset', id })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

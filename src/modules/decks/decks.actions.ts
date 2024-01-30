@@ -43,6 +43,11 @@ export type DeckUpdated = {
   readonly result: Either<NDecks.RequestError, NDecks.Deck>
 }
 
+export type DeckReset = {
+  readonly type: 'DeckReset'
+  readonly id: string
+}
+
 export type DecksAction =
   | GetDeck
   | DeckLoaded
@@ -52,3 +57,4 @@ export type DecksAction =
   | DeckCreated
   | UpdateDeck
   | DeckUpdated
+  | DeckReset
