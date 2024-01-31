@@ -37,11 +37,7 @@ const withRouter = (
     initialEntries: ['/'],
   },
 ) => {
-  const routes = [
-    { element: ui, path: routeOptions.path },
-    // { element: ui, path: 'decks/:deckId' },
-    // { element: <DecksListPage />, path: '/' },
-  ]
+  const routes = [{ element: ui, path: routeOptions.path }]
   const router = createMemoryRouter(routes, {
     initialEntries: routeOptions.initialEntries,
   })

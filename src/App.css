@@ -93,3 +93,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.bs-0 {
+  box-shadow: none;
+}

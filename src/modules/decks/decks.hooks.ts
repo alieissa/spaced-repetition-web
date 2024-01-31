@@ -32,6 +32,7 @@ export function useDecks() {
 
 export function useCreateDeck(): [
   NDecks.State['createStatus'],
+  // TODO in https://github.com/alieissa/Spaced_Repetition_Web/issues/21
   (deck: any) => void,
 ] {
   const dispatch = useDispatch()
@@ -41,7 +42,7 @@ export function useCreateDeck(): [
     method: 'POST',
   })
 
-  // TODO Update deck type
+  // TODO Update deck type in https://github.com/alieissa/Spaced_Repetition_Web/issues/21
   const createDeck = (deck: any) => {
     dispatch({
       type: 'CreateDeck',
@@ -60,6 +61,8 @@ export function useCreateDeck(): [
 
 export function useDeckById(
   id: NDecks.Deck['id'],
+  // TODO Update deck type in
+  // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
 ): [NDecks.State['getStatus'][string], NDecks.Deck, (deck: any) => void] {
   const deck = useSelector(Select.deckById(id))
   const status = useSelector(Select.deckByIdStatus(id))
@@ -74,7 +77,7 @@ export function useDeckById(
     })
     getDeck().then((result: any) => {
       dispatch({ type: 'DeckLoaded', result, id })
-    });
+    })
 
     return () => {
       dispatch({ type: 'DeckReset', id })
@@ -82,10 +85,12 @@ export function useDeckById(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // TODO Update deck type in
+  // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
   const updateDeck = (deck: any) => {
     dispatch({
       type: 'UpdateDeck',
-      id: deck.id
+      id: deck.id,
     })
 
     putDeck(deck).then((result) => {
@@ -128,6 +133,8 @@ export type DeckFormAction =
       deck: NDecks.Deck
     }
 
+// TODO Update deck type in 
+// https://github.com/alieissa/Spaced_Repetition_Web/issues/21
 const getInitState = (deck: any) => {
   return {
     ...deck,
@@ -170,11 +177,13 @@ function reducer(state: DeckFormState, action: DeckFormAction) {
         description: action.description,
       }
     }
-    
+
     default:
       return state
   }
 }
+// TODO Update deck type in 
+// https://github.com/alieissa/Spaced_Repetition_Web/issues/21
 export function useDeckFormReducer(deck: any = NDecks.Initial({})) {
   return useReducer(reducer, getInitState(deck))
 }
