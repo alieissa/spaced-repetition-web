@@ -31,3 +31,9 @@ export function deckByIdStatus(id: NDecks.Deck['id']) {
     return state.decks.getStatus[id] || Untriggered()
   }
 }
+
+export function updateStatus(id: NDecks.Deck['id']) {
+  return (state: RootState) => {
+    return state.decks.updateStatus[id] ?? Untriggered()
+  }
+}

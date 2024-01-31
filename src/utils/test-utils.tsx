@@ -30,17 +30,28 @@ const withRedux = (ui: React.ReactElement) => {
   const store = configureStore({ reducer: reducers })
   return <Provider store={store}>{ui}</Provider>
 }
-const withRouter = (ui: React.ReactElement) => {
-  const router = createMemoryRouter([{ element: ui, path: '/' }], {
+const withRouter = (
+  ui: React.ReactElement,
+  routeOptions: { path: string; initialEntries: string[] } = {
+    path: '/',
     initialEntries: ['/'],
-    initialIndex: 1,
+  },
+) => {
+  const routes = [{ element: ui, path: routeOptions.path }]
+  const router = createMemoryRouter(routes, {
+    initialEntries: routeOptions.initialEntries,
   })
-
   return <RouterProvider router={router} />
 }
-export function renderWithProviders(ui: React.ReactElement) {
+export function renderWithProviders(
+  ui: React.ReactElement,
+  routeOptions: { path: string; initialEntries: string[] } = {
+    path: '/',
+    initialEntries: ['/'],
+  },
+) {
   // Return an object with the store and all of RTL's query functions
-  return render(withRedux(withRouter(ui)))
+  return render(withRedux(withRouter(ui, routeOptions)))
 }
 
 export const flushPromises = () =>
