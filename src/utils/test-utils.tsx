@@ -8,7 +8,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 import decksReducer from 'src/modules/decks/decks.reducer'
 
 // As a basic setup, import your same slice reducers
-import { loginReducer } from 'src/modules/login'
+import { authReducer } from 'src/modules/auth'
 import { signupReducer } from 'src/modules/signup'
 import { verificationReducer } from 'src/modules/verification'
 
@@ -20,7 +20,7 @@ import { verificationReducer } from 'src/modules/verification'
 // }
 
 const reducers = combineReducers({
-  login: loginReducer,
+  auth: authReducer,
   signup: signupReducer,
   verification: verificationReducer,
   decks: decksReducer,

@@ -55,7 +55,7 @@ afterAll(() => server.close())
 describe('DeckPage', () => {
   describe('view', () => {
     it('should render correctly', () => {
-      const { asFragment } = renderWithProviders(<DeckPage />)
+      const { asFragment } = mountComponent()
       expect(asFragment()).toMatchSnapshot()
     })
 

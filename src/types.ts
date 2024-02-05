@@ -1,7 +1,7 @@
 /** @format */
 
+import { NAuth } from 'src/modules/auth'
 import { NDecks } from 'src/modules/decks/decks.types'
-import { NLogin } from 'src/modules/login'
 import { NSignup } from 'src/modules/signup'
 import { NVerification } from './modules/verification/verification.types'
 
@@ -21,7 +21,7 @@ export type WithSettings<T, V extends keyof Settings = keyof Settings> = T &
 
 export type RootState = {
   decks: NDecks.State
-  login: NLogin.State
+  auth: NAuth.State
   signup: NSignup.State
   verification: NVerification.State
 }

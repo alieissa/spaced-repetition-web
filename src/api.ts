@@ -71,6 +71,9 @@ export function request<D = {}>({
         if (url === 'users/verify') {
           return r.text()
         }
+        if (url === 'users/logout') {
+          return r.text()
+        }
         return r.json()
       })
       .then((data) => {
