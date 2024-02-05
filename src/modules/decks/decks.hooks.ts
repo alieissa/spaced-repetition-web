@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { useEffect, useReducer } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
-import { Questions } from '../questions'
+import { NCards } from '../cards'
 import * as Select from './decks.selectors'
 import { NDecks } from './decks.types'
 export function useDecks() {
@@ -108,20 +108,20 @@ export function useDeckById(
 // All Form related logic will eventually be moved
 // to a component that will be used to display both
 // DeckPage and NewDeck pages.
-export type DeckFormState = Omit<NDecks.Initial, 'questions'> & {
-  questions: _.Dictionary<Questions.Initial>
+export type DeckFormState = Omit<NDecks.Initial, 'cards'> & {
+  cards: _.Dictionary<NCards.Initial>
 }
 export type DeckFormAction =
   | {
-      type: 'ADD_QUESTION'
+      type: 'ADD_CARD'
     }
   | {
-      type: 'DELETE_QUESTION'
-      question: Questions.Initial
+      type: 'DELETE_CARD'
+      card: NCards.Initial
     }
   | {
-      type: 'UPDATE_QUESTION'
-      question: Questions.Initial
+      type: 'UPDATE_CARD'
+      card: NCards.Initial
     }
   | {
       type: 'UPDATE_DECK'
@@ -144,29 +144,29 @@ const getInitState = (deck: any) => {
 
 function reducer(state: DeckFormState, action: DeckFormAction) {
   switch (action.type) {
-    case 'ADD_QUESTION': {
-      const newQuestion = Questions.Initial({})
+    case 'ADD_CARD': {
+      const newCard = NCards.Initial({})
       return {
         ...state,
-        questions: {
-          ...state.questions,
-          [newQuestion.__key__]: newQuestion,
+        cards: {
+          ...state.cards,
+          [newCard.__key__]: newCard,
         },
       }
     }
-    case 'DELETE_QUESTION': {
+    case 'DELETE_CARD': {
       return {
         ...state,
-        questions: _.omit(state.questions, action.question.__key__),
+        cards: _.omit(state.cards, action.card.__key__),
       }
     }
-    case 'UPDATE_QUESTION': {
+    case 'UPDATE_CARD': {
       return {
         ...state,
-        questions: _.set(
-          state.questions,
-          action.question.__key__,
-          action.question,
+        cards: _.set(
+          state.cards,
+          action.card.__key__,
+          action.card,
         ),
       }
     }

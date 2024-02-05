@@ -16,25 +16,25 @@ import {
 } from 'semantic-ui-react'
 import 'src/App.css'
 import { Answers } from 'src/modules/answers'
-import { QuestionForm, Questions } from 'src/modules/questions'
+import { CardForm, NCards } from 'src/modules/cards'
 import { styles } from 'src/styles'
 import { useCreateDeck } from './decks.hooks'
 import { NDecks } from './decks.types'
 
-type State = Omit<NDecks.Initial, 'questions'> & {
-  questions: _.Dictionary<Questions.Initial>
+type State = Omit<NDecks.Initial, 'cards'> & {
+  cards: _.Dictionary<NCards.Initial>
 }
 type Action =
   | {
-      type: 'ADD_QUESTION'
+      type: 'ADD_CARD'
     }
   | {
-      type: 'DELETE_QUESTION'
-      question: Questions.Initial
+      type: 'DELETE_CARD'
+      card: NCards.Initial
     }
   | {
-      type: 'UPDATE_QUESTION'
-      question: Questions.Initial
+      type: 'UPDATE_CARD'
+      card: NCards.Initial
     }
   | {
       type: 'UPDATE_DECK'
@@ -46,36 +46,32 @@ const getInitState = () => {
   const deck = NDecks.Initial({})
   return {
     ...deck,
-    questions: _.keyBy(deck.questions, '__key__'),
+    cards: _.keyBy(deck.cards, '__key__'),
   }
 }
 
 function reducer(state: State, action: Action) {
   switch (action.type) {
-    case 'ADD_QUESTION': {
-      const newQuestion = Questions.Initial({})
+    case 'ADD_CARD': {
+      const newCard = NCards.Initial({})
       return {
         ...state,
-        questions: {
-          ...state.questions,
-          [newQuestion.__key__]: newQuestion,
+        cards: {
+          ...state.cards,
+          [newCard.__key__]: newCard,
         },
       }
     }
-    case 'DELETE_QUESTION': {
+    case 'DELETE_CARD': {
       return {
         ...state,
-        questions: _.omit(state.questions, action.question.__key__),
+        cards: _.omit(state.cards, action.card.__key__),
       }
     }
-    case 'UPDATE_QUESTION': {
+    case 'UPDATE_CARD': {
       return {
         ...state,
-        questions: _.set(
-          state.questions,
-          action.question.__key__,
-          action.question,
-        ),
+        cards: _.set(state.cards, action.card.__key__, action.card),
       }
     }
     case 'UPDATE_DECK': {
@@ -90,22 +86,20 @@ function reducer(state: State, action: Action) {
   }
 }
 
-const isValidAnswer = (
-  answer: State['questions'][number]['answers'][number],
-) => {
+const isValidAnswer = (answer: State['cards'][number]['answers'][number]) => {
   return _.trim(answer.content) !== ''
 }
-const isValidQuestion = (question: State['questions'][number]) => {
-  const isValidContent = _.trim(question.content) !== ''
-  const areValidAnswers = _.every(question.answers, isValidAnswer)
+const isValidCard = (card: State['cards'][number]) => {
+  const isValidQuestion = _.trim(card.question) !== ''
+  const areValidAnswers = _.every(card.answers, isValidAnswer)
 
-  return isValidContent && areValidAnswers
+  return isValidQuestion && areValidAnswers
 }
 const isValidForm = (state: State) => {
   const isValidName = _.trim(state.name) != ''
-  const areValidQuestions = _.every(_.values(state.questions), isValidQuestion)
+  const areValidCards = _.every(_.values(state.cards), isValidCard)
 
-  return isValidName && areValidQuestions
+  return isValidName && areValidCards
 }
 
 export default function NewDeck(props: RouteProps) {
@@ -153,7 +147,7 @@ export default function NewDeck(props: RouteProps) {
                   NDecks.toPostRequest({
                     description: localState.description,
                     name: localState.name,
-                    questions: _.values(localState.questions),
+                    cards: _.values(localState.cards),
                   }),
                 )
               }}
@@ -218,16 +212,16 @@ export default function NewDeck(props: RouteProps) {
         </Card>
         <section className="flex-column w-inherit">
           <List>
-            {_.map(_.values(localState.questions), (q, index) => (
+            {_.map(_.values(localState.cards), (q, index) => (
               <List.Item key={q.__key__}>
                 <Segment>
-                  <QuestionForm
+                  <CardForm
                     {...q}
                     id={index}
                     onAddAnswer={() => {
                       localDispatch({
-                        type: 'UPDATE_QUESTION',
-                        question: {
+                        type: 'UPDATE_CARD',
+                        card: {
                           ...q,
                           answers: [...q.answers, Answers.Initial({})],
                         },
@@ -235,8 +229,8 @@ export default function NewDeck(props: RouteProps) {
                     }}
                     onChangeAnswer={(answer, newAnswerContent) => {
                       localDispatch({
-                        type: 'UPDATE_QUESTION',
-                        question: {
+                        type: 'UPDATE_CARD',
+                        card: {
                           ...q,
                           answers: _.map(q.answers, (a) => {
                             if (a.__key__ === answer.__key__) {
@@ -248,16 +242,16 @@ export default function NewDeck(props: RouteProps) {
                         },
                       })
                     }}
-                    onChangeContent={(content) => {
+                    onChangeQuestion={(question) => {
                       localDispatch({
-                        type: 'UPDATE_QUESTION',
-                        question: { ...q, content },
+                        type: 'UPDATE_CARD',
+                        card: { ...q, question },
                       })
                     }}
                     onDeleteAnswer={(answer) => {
                       localDispatch({
-                        type: 'UPDATE_QUESTION',
-                        question: {
+                        type: 'UPDATE_CARD',
+                        card: {
                           ...q,
                           answers: _.filter(
                             q.answers,
@@ -279,7 +273,7 @@ export default function NewDeck(props: RouteProps) {
           color="green"
           onClick={() => {
             localDispatch({
-              type: 'ADD_QUESTION',
+              type: 'ADD_CARD',
             })
           }}
         >

@@ -17,7 +17,7 @@ import {
   Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
-import { QuestionForm } from 'src/modules/questions'
+import { CardForm } from 'src/modules/cards'
 import { styles } from 'src/styles'
 import * as Select from './decks.selectors'
 
@@ -28,21 +28,21 @@ import { DeckFormState, useDeckById, useDeckFormReducer } from './decks.hooks'
 import { NDecks } from './decks.types'
 
 const isValidAnswer = (
-  answer: DeckFormState['questions'][number]['answers'][number],
+  answer: DeckFormState['cards'][number]['answers'][number],
 ) => {
   return _.trim(answer.content) !== ''
 }
-const isValidQuestion = (question: DeckFormState['questions'][number]) => {
-  const isValidContent = _.trim(question.content) !== ''
-  const areValidAnswers = _.every(question.answers, isValidAnswer)
+const isValidCard = (card: DeckFormState['cards'][number]) => {
+  const isValidQuestion = _.trim(card.question) !== ''
+  const areValidAnswers = _.every(card.answers, isValidAnswer)
 
-  return isValidContent && areValidAnswers
+  return isValidQuestion && areValidAnswers
 }
 const isValidForm = (state: DeckFormState) => {
   const isValidName = _.trim(state.name) != ''
-  const areValidQuestions = _.every(_.values(state.questions), isValidQuestion)
+  const areValidCards = _.every(_.values(state.cards), isValidCard)
 
-  return isValidName && areValidQuestions
+  return isValidName && areValidCards
 }
 
 type Props = {
@@ -95,7 +95,7 @@ function DeckComponent(props: Props) {
                   id: props.deck.id,
                   description: localState.description,
                   name: localState.name!,
-                  questions: _.values(localState.questions),
+                  questions: _.values(localState.cards),
                 } as unknown as NDecks.Deck
 
                 props.updateDeck(deckToUpdate)
@@ -162,16 +162,16 @@ function DeckComponent(props: Props) {
           </Card>
           <section className="flex-column w-inherit test">
             <List>
-              {_.map(_.values(localState.questions), (q, index) => (
+              {_.map(_.values(localState.cards), (q, index) => (
                 <List.Item key={q.__key__}>
                   <Segment className="bs-0">
-                    <QuestionForm
+                    <CardForm
                       {...q}
                       id={index}
                       onAddAnswer={() => {
                         localDispatch({
-                          type: 'UPDATE_QUESTION',
-                          question: {
+                          type: 'UPDATE_CARD',
+                          card: {
                             ...q,
                             answers: [...q.answers, Answers.Initial({})],
                           },
@@ -179,8 +179,8 @@ function DeckComponent(props: Props) {
                       }}
                       onChangeAnswer={(answer, newAnswerContent) => {
                         localDispatch({
-                          type: 'UPDATE_QUESTION',
-                          question: {
+                          type: 'UPDATE_CARD',
+                          card: {
                             ...q,
                             answers: _.map(q.answers, (a) => {
                               if (a.__key__ === answer.__key__) {
@@ -192,16 +192,16 @@ function DeckComponent(props: Props) {
                           },
                         })
                       }}
-                      onChangeContent={(content) => {
+                      onChangeQuestion={(question) => {
                         localDispatch({
-                          type: 'UPDATE_QUESTION',
-                          question: { ...q, content },
+                          type: 'UPDATE_CARD',
+                          card: { ...q, question },
                         })
                       }}
                       onDeleteAnswer={(answer) => {
                         localDispatch({
-                          type: 'UPDATE_QUESTION',
-                          question: {
+                          type: 'UPDATE_CARD',
+                          card: {
                             ...q,
                             answers: _.filter(
                               q.answers,
@@ -222,7 +222,7 @@ function DeckComponent(props: Props) {
               color="green"
               onClick={() => {
                 localDispatch({
-                  type: 'ADD_QUESTION',
+                  type: 'ADD_CARD',
                 })
               }}
             >

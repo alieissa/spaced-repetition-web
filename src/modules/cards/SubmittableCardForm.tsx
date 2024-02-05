@@ -4,10 +4,10 @@ import * as _ from 'lodash'
 import { useReducer } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import 'src/App.css'
-import { QuestionForm } from 'src/components'
+import { CardForm } from 'src/components'
 import { Answers } from 'src/modules/answers'
-import { Questions } from '.'
-import { QuestionFormProps } from './QuestionForm'
+import { CardFormProps } from './CardForm'
+import { NCards } from './cards.types'
 
 type FormAnswer = Answers.Answer | Answers.PostRequest
 type Action =
@@ -20,17 +20,17 @@ type Action =
     }
   | {
       type: 'UPDATE_ANSWER'
+      question: string
       answer: FormAnswer
-      content: string
     }
   | {
       type: 'UPDATE_QUESTION_CONTENT'
-      content: string
+      question: string
     }
 
 type State = {
   readonly id: string
-  readonly content: string
+  readonly question: string
   readonly answers: ReadonlyArray<FormAnswer>
 }
 function reducer(state: State, action: Action): State {
@@ -55,7 +55,7 @@ function reducer(state: State, action: Action): State {
         ...state,
         answers: _.map(state.answers, (a) => {
           if (_.isEqual(a, action.answer)) {
-            return { ...a, content: action.content }
+            return { ...a, question: action.question }
           } else {
             return a
           }
@@ -63,16 +63,16 @@ function reducer(state: State, action: Action): State {
       }
     }
     case 'UPDATE_QUESTION_CONTENT': {
-      return { ...state, content: action.content }
+      return { ...state, question: action.question }
     }
     default: {
       return state
     }
   }
 }
-export default function SubmittableQuestionForm(
+export default function SubmittableCardForm(
   props: Required<
-    Pick<QuestionFormProps<FormAnswer>, 'onCancel' | 'content' | 'answers'> & {
+    Pick<CardFormProps<FormAnswer>, 'onCancel' | 'question' | 'answers'> & {
       id: string
       onSubmit: (data: State) => void
     }
@@ -80,12 +80,12 @@ export default function SubmittableQuestionForm(
 ) {
   const [state, dispatch] = useReducer(reducer, {
     id: props.id,
-    content: props.content,
+    question: props.question,
     answers: props.answers,
   })
 
   return (
-    <QuestionForm<FormAnswer>
+    <CardForm<FormAnswer>
       {...state}
       onSubmitForm={() => {
         props.onSubmit(state)
@@ -97,20 +97,20 @@ export default function SubmittableQuestionForm(
           answer,
         })
       }
-      onChangeContent={(newContent: Questions.Question['content']) => {
+      onChangeQuestion={(newContent: NCards.Card['question']) => {
         dispatch({
           type: 'UPDATE_QUESTION_CONTENT',
-          content: newContent,
+          question: newContent,
         })
       }}
       onAddAnswer={() => {
         dispatch({ type: 'ADD_ANSWER' })
       }}
-      onChangeAnswer={(answer, content) => {
+      onChangeAnswer={(answer, question) => {
         dispatch({
           type: 'UPDATE_ANSWER',
           answer,
-          content,
+          question,
         })
       }}
     />
