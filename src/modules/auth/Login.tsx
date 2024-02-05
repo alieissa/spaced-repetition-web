@@ -2,7 +2,7 @@
 
 import { FormikHelpers, FormikState, useFormik } from 'formik'
 import { noop } from 'lodash'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Button, Form, Loader, Message, Segment } from 'semantic-ui-react'
@@ -84,6 +84,13 @@ function Login() {
     onSubmit: handleLogin ?? noop,
   })
 
+  useEffect(() => {
+    if (status.type !== 'Success') {
+      return
+    }
+    navigate('/')
+  }, [status.type])
+
   const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     form.setFieldValue('email', e.target.value)
   }
@@ -120,7 +127,6 @@ function Login() {
       </Segment>
     ),
     Success: () => {
-      navigate('/')
       return null
     },
   })
