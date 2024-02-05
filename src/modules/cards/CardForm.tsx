@@ -7,22 +7,21 @@ import 'src/App.css'
 import { Answers } from 'src/modules/answers'
 import { styles } from 'src/styles'
 
-export type QuestionFormProps<A extends Answers.Answer | Answers.PostRequest> =
-  {
-    readonly id: number | string
-    readonly content: string
-    readonly answers: ReadonlyArray<A>
-    readonly onChangeContent: (content: string) => void
-    readonly onChangeAnswer: (answer: A, content: string) => void
-    readonly onDeleteAnswer: (answer: A) => void
-    readonly onAddAnswer: VoidFunction
-    readonly onSubmitForm?: any
-    readonly onCancel?: MouseEventHandler
-  }
+export type CardFormProps<A extends Answers.Answer | Answers.PostRequest> = {
+  readonly id: number | string
+  readonly question: string
+  readonly answers: ReadonlyArray<A>
+  readonly onChangeQuestion: (question: string) => void
+  readonly onChangeAnswer: (answer: A, question: string) => void
+  readonly onDeleteAnswer: (answer: A) => void
+  readonly onAddAnswer: VoidFunction
+  readonly onSubmitForm?: any
+  readonly onCancel?: MouseEventHandler
+}
 
-export default function QuestionForm<
+export default function CardForm<
   A extends Answers.Answer | Answers.PostRequest,
->(props: QuestionFormProps<A>) {
+>(props: CardFormProps<A>) {
   return (
     <Form className="w-full">
       <List horizontal className="flex" style={styles.flex}>
@@ -32,9 +31,9 @@ export default function QuestionForm<
             name="content"
             placeholder="Enter question here"
             className="w-full"
-            value={props.content}
+            value={props.question}
             onChange={(e) => {
-              props.onChangeContent(e.target.value)
+              props.onChangeQuestion(e.target.value)
             }}
           />
         </List.Item>

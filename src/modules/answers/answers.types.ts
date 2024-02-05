@@ -1,17 +1,13 @@
 /** @format */
 import * as _ from 'lodash'
-import { Settings } from 'src/types'
 
 export namespace Answers {
-  export type PostRequest = Settings & {
+  export type PostRequest =  {
     readonly content: string
   }
-  export function PostRequest(req: Partial<PostRequest>): PostRequest {
+  export function PostRequest(req: PostRequest): PostRequest {
     return {
-      easiness: req.easiness || 1,
-      quality: req.quality || 1,
-      interval: req.interval || 1,
-      content: req.content || 'new answer',
+      content: req.content,
     }
   }
   export type Initial = PostRequest & {
@@ -21,9 +17,6 @@ export namespace Answers {
   export function Initial(req: Partial<Initial>): Initial {
     return {
       __key__: _.uniqueId(),
-      easiness: req.easiness || 1,
-      quality: req.quality || 1,
-      interval: req.interval || 1,
       content: req.content || '',
     }
   }

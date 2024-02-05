@@ -1,12 +1,12 @@
 /** @format */
 
 import _ from 'lodash';
-import { Questions } from 'src/modules/questions';
+import { NCards } from 'src/modules/cards';
 import { Async } from 'src/utils/async';
 
 export namespace NDecks {
   export type RequestError = { message: string; cause?: number }
-  
+
   export type State = {
     decks: _.Dictionary<Deck>
     status: Async<null, RequestError, null>
@@ -18,13 +18,13 @@ export namespace NDecks {
   export type PostRequest = {
     readonly name: string
     readonly description?: string
-    readonly questions: ReadonlyArray<Questions.PostRequest>
+    readonly cards: ReadonlyArray<NCards.PostRequest>
   }
-  export function PostRequest(d: Partial<PostRequest>): PostRequest {
+  export function PostRequest(d: PostRequest): PostRequest {
     return {
-      name: d.name || 'new deck',
+      name: d.name,
       description: d.description,
-      questions: d.questions || [Questions.PostRequest({})],
+      cards: d.cards,
     }
   }
 
@@ -33,10 +33,10 @@ export namespace NDecks {
    * a __key__ is needed to differentiate them when
    * being displayed in the UI
    */
-  export type Initial = Omit<PostRequest, 'questions' | 'name'> & {
+  export type Initial = Omit<PostRequest, 'cards' | 'name'> & {
     readonly __key__: string
     readonly name?: string
-    readonly questions: ReadonlyArray<Questions.Initial>
+    readonly cards: ReadonlyArray<NCards.Initial>
   }
 
   export function Initial(d: Partial<Initial>): Initial {
@@ -44,21 +44,23 @@ export namespace NDecks {
       __key__: _.uniqueId(),
       name: d.name,
       description: d.description,
-      questions: d.questions || [Questions.Initial({})],
+      cards: d.cards || [NCards.Initial({})],
     }
   }
   // TODO instead of having this. Simply a type guard and use that type guard
   // to detect the content of the request before sending to backend.
-  export function toPostRequest(initial: Omit<Initial, '__key__'>): PostRequest {
+  export function toPostRequest(
+    initial: Omit<Initial, '__key__'>,
+  ): PostRequest {
     return {
       name: initial.name as string,
       description: initial.description,
-      questions: _.map(initial.questions, (q) => Questions.toPostRequest(q)),
+      cards: _.map(initial.cards, (q) => NCards.toPostRequest(q)),
     }
   }
 
-  export type Deck = Omit<PostRequest, 'questions'> & {
+  export type Deck = Omit<PostRequest, 'cards'> & {
     id: string
-    questions: ReadonlyArray<Questions.Question>
+    cards: ReadonlyArray<NCards.Card>
   }
 }

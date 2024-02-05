@@ -5,7 +5,7 @@ import 'semantic-ui-css/semantic.min.css'
 import { Card, Container } from 'semantic-ui-react'
 import 'src/App.css'
 import { DeckInfo } from 'src/components'
-import { TestQuestion } from 'src/modules/questions'
+import { TestCard } from 'src/modules/cards'
 import { styles } from 'src/styles'
 
 /**
@@ -24,11 +24,11 @@ export default function DeckTestPage(__: RouteProps) {
             id="dummyId2"
             name="Deck 2"
             description="Dummy deck description"
-            questions={[]}
+            cards={[]}
           />
         </Card.Content>
       </Card>
-      <TestQuestion />
+      <TestCard />
     </Container>
   )
 }

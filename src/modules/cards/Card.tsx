@@ -6,26 +6,26 @@ import { Button, Icon, Segment } from 'semantic-ui-react'
 import 'src/App.css'
 import { Settings } from 'src/components'
 import { styles } from 'src/styles'
-import { SubmittableQuestionForm } from '.'
-import { Questions } from './questions.types'
+import { SubmittableCardForm } from '.'
+import { NCards } from './cards.types'
 
 /**
  * Displays the card (question) content or edit form when user selects edit. User can
  * also delete or update settings of a card (question) in this component
  */
-export default function Question(props: Questions.Question) {
+export default function Card(props: NCards.Card) {
   const [editing, setEditing] = useState(false)
   return (
     <Segment className="justify-space-between align-center">
       {editing ? (
-        <SubmittableQuestionForm
+        <SubmittableCardForm
           {...props}
           onSubmit={(data) => console.log('question form data', data)}
           onCancel={() => setEditing(false)}
         />
       ) : (
-        <QuestionContent
-          content={props.content}
+        <Question
+          question={props.question}
           onEdit={() => setEditing(true)}
           onDelete={() => console.log('on delete')}
           onSubmitSettings={() => console.log('submitSettings')}
@@ -35,8 +35,8 @@ export default function Question(props: Questions.Question) {
   )
 }
 
-interface QuestionContentProps {
-  content: Questions.Question['content']
+interface QuestionProps {
+  question: NCards.Card['question']
   onEdit: MouseEventHandler
   onDelete: MouseEventHandler
   // TODO add type
@@ -46,11 +46,11 @@ interface QuestionContentProps {
  * Displays the content of the question and the delete, edit and settings buttons
  * from which user can delete, open edit form, or open settings menu
  */
-function QuestionContent(props: QuestionContentProps) {
+function Question(props: QuestionProps) {
   const [open, setOpen] = useState(false)
   return (
     <>
-      <span className="ellipsis">{props.content}</span>
+      <span className="ellipsis">{props.question}</span>
       <span>
         <Button
           style={styles.bgWhite}

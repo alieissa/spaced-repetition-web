@@ -2,19 +2,15 @@
 
 import * as _ from 'lodash'
 import { Answers } from 'src/modules/answers'
-import { Settings } from 'src/types'
-export namespace Questions {
-  export type PostRequest = Settings & {
-    readonly content: string
+export namespace NCards {
+  export type PostRequest =  {
+    readonly question: string
     readonly answers: ReadonlyArray<Answers.PostRequest>
   }
-  export function PostRequest(q: Partial<PostRequest>): PostRequest {
+  export function PostRequest(q: PostRequest): PostRequest {
     return {
-      easiness: 1,
-      quality: 1,
-      interval: 1,
-      content: q.content || 'new question',
-      answers: q.answers || [Answers.PostRequest({})],
+      question: q.question || 'new question',
+      answers: q.answers,
     }
   }
 
@@ -25,10 +21,7 @@ export namespace Questions {
   export function Initial(q: Partial<Initial>): Initial {
     return {
       __key__: _.uniqueId(),
-      easiness: 1,
-      quality: 1,
-      interval: 1,
-      content: q.content || '',
+      question: q.question || '',
       answers: q.answers || [Answers.Initial({})],
     }
   }
@@ -39,8 +32,9 @@ export namespace Questions {
     }
   }
 
-  export type Question = Omit<PostRequest, 'answers'> & {
+  export type Card = Omit<PostRequest, 'answers'> & {
     readonly id: string
+    readonly question: string
     readonly answers: ReadonlyArray<Answers.Answer>
   }
 }
