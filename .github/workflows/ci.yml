@@ -16,7 +16,7 @@ jobs:
     name: Test
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -34,7 +34,7 @@ jobs:
     name: Release
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build image
         run: docker build -t $REPO/$IMAGE_NAME $GITHUB_WORKSPACE
