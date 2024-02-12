@@ -2,11 +2,10 @@
 
 import _ from 'lodash';
 import { NCards } from 'src/modules/cards';
+import { RequestError } from 'src/types';
 import { Async } from 'src/utils/async';
 
 export namespace NDecks {
-  export type RequestError = { message: string; cause?: number }
-
   export type State = {
     decks: _.Dictionary<Deck>
     status: Async<null, RequestError, null>
