@@ -34,6 +34,7 @@ export function DeckTestPage(props: Props) {
           />
         </Card.Content>
       </Card>
+      {/* TODO display one by one */}
       {_.map(props.deck.cards, (card) => {
         return <TestCard {...card} deckId={props.deck.id} />
       })}

@@ -2,8 +2,15 @@
 
 import * as _ from 'lodash'
 import { Answers } from 'src/modules/answers'
+import { RequestError } from 'src/types'
+import { Async } from 'src/utils/async'
+
 export namespace NCards {
-  export type PostRequest =  {
+  export type State = {
+    checkStatus : Record<Card['id'], Async<null, RequestError, { distance: number, answer: any}>>
+    check: Record<Card['id'], { distance: number, answer: Answers.Answer}>
+  }
+  export type PostRequest = {
     readonly question: string
     readonly answers: ReadonlyArray<Answers.PostRequest>
   }
@@ -36,5 +43,6 @@ export namespace NCards {
     readonly id: string
     readonly question: string
     readonly answers: ReadonlyArray<Answers.Answer>
+    readonly deckId: string
   }
 }
