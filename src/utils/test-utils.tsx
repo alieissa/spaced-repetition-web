@@ -9,6 +9,7 @@ import decksReducer from 'src/modules/decks/decks.reducer'
 
 // As a basic setup, import your same slice reducers
 import { authReducer } from 'src/modules/auth'
+import { cardsReducer } from 'src/modules/cards'
 import { signupReducer } from 'src/modules/signup'
 import { verificationReducer } from 'src/modules/verification'
 
@@ -24,6 +25,7 @@ const reducers = combineReducers({
   signup: signupReducer,
   verification: verificationReducer,
   decks: decksReducer,
+  cards: cardsReducer,
 })
 
 const withRedux = (ui: React.ReactElement) => {

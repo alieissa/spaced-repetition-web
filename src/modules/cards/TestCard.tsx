@@ -2,7 +2,7 @@
 
 import { useFormik } from 'formik'
 import _ from 'lodash'
-import { useState } from 'react'
+import { PropsWithChildren, useEffect, useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Form, Icon, Segment, Card as SemCard } from 'semantic-ui-react'
 import 'src/App.css'
@@ -16,24 +16,32 @@ import { NCards } from './cards.types'
 const CheckAnswerSchema = Yup.object().shape({
   answer: Yup.string().min(3).required('Required'),
 })
-type Props = NCards.Card & {
+type Props = {
+  id: NCards.Card['id']
+  question: NCards.Card['question']
+  userAnswer: string
   deckId: NDecks.Deck['id']
+  onChange: (id: NCards.Card['id'], answer: string) => void
 }
-export default function Card(props: Props) {
-  const [status, check, checkAnswer] = useCardById(props.deckId, props.id)
+export default function Card(props: PropsWithChildren<Props>) {
+  const [_state, _check, checkAnswer] = useCardById(props.deckId, props.id)
   const [open, setOpen] = useState(false)
   const form = useFormik({
     initialValues: {
-      answer: '',
+      answer: props.userAnswer,
     },
     validationSchema: CheckAnswerSchema,
     onSubmit: checkAnswer,
   })
 
+  useEffect(() => {
+    form.setFieldValue('answer', props.userAnswer)
+  }, [props.userAnswer])
+
   const answerError = form.touched.answer && !!form.errors.answer
 
   return (
-    <SemCard fluid>
+    <SemCard fluid data-testid={`test-card-${props.id}`}>
       <SemCard.Header textAlign="right">
         <Settings
           id="dummyId2"
@@ -65,7 +73,9 @@ export default function Card(props: Props) {
               placeholder="Enter answer here"
               error={answerError}
               value={form.values.answer}
-              onChange={form.handleChange}
+              onChange={(e) => {
+                props.onChange(props.id, e.target.value)
+              }}
             />
             <Form.Button type="submit" className="justify-flex-end">
               Check
@@ -73,16 +83,14 @@ export default function Card(props: Props) {
           </Form.Field>
         </Form>
       </SemCard.Content>
-      <SemCard.Content
-        style={{ display: 'flex', flexDirection: 'row-reverse' }}
-      >
-        <Button icon>
-          <Icon name="arrow right" />
-        </Button>
-        <Button icon>
-          <Icon name="arrow left" />
-        </Button>
-      </SemCard.Content>
+      {props.children && (
+        <SemCard.Content
+          // TODO Use utility class
+          style={{ display: 'flex', flexDirection: 'row-reverse' }}
+        >
+          {props.children}
+        </SemCard.Content>
+      )}
     </SemCard>
   )
 }

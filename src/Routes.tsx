@@ -20,7 +20,7 @@ export default function AppRoutes() {
       <Route path="/decks" element={<DecksListPage />} />
       <Route path="/decks/new" element={<NewDeck />} />
       <Route path="/decks/:deckId" element={<DeckPage />} />
-      <Route path="/decks/:deckId/exam" element={<DeckTestPage />} />
+      <Route path="/decks/:deckId/test" element={<DeckTestPage />} />
       <Route path="/verify" element={<Verification />} />
       <Route path="/" element={<DecksListPage />} />
     </Routes>
