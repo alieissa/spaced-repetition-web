@@ -11,19 +11,24 @@ type Params = [
   NCards.State['checkStatus'][string],
   NCards.State['check'][string],
   (answer: { answer: string }) => void,
+  (quality: number) => void
 ]
-export function useCardById(
+export function useCard(
   deckId: NDecks.Deck['id'],
   id: NCards.Card['id'],
 ): Params {
   const dispatch = useDispatch()
+  const putCard = api.request({
+    method: 'PUT',
+    url: `decks/${deckId}/cards/${id}`,
+  })
   const postAnswerCheck = api.request({
     method: 'POST',
     url: `decks/${deckId}/cards/${id}/answers/check`,
   })
 
-  const status = useSelector(Select.checkStatus(id))
-  const check = useSelector(Select.check(id))
+  const checkAnswerStatus = useSelector(Select.checkStatus(id))
+  const checkAnswerResult = useSelector(Select.check(id))
 
   const checkAnswer = (answer: { answer: string }) => {
     dispatch({
@@ -40,10 +45,22 @@ export function useCardById(
     })
   }
 
-  return [status, check, checkAnswer]
+  const updateCardQuality = (quality: number) => {
+    dispatch({
+      type: 'UpdateCardQuality',
+      id,
+    })
+
+    putCard({ quality }).then((result: any) => {
+      dispatch({
+        type: 'CardQualityUpdated',
+        result
+      })
+    })
+  }
+
+  return [checkAnswerStatus, checkAnswerResult, checkAnswer, updateCardQuality]
 }
-
-
 
 type GetNextCard = {
   type: 'GET_NEXT_CARD'
@@ -98,8 +115,5 @@ const getInitialState = (cards: ReadonlyArray<NCards.Card>) => {
   }
 }
 export function useCardTestFormReducer(cards: ReadonlyArray<NCards.Card>) {
-  return useReducer(
-    cardTestFormReducer,
-    getInitialState(cards),
-  )
+  return useReducer(cardTestFormReducer, getInitialState(cards))
 }

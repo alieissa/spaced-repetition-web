@@ -4,7 +4,7 @@ import { NCards } from "./cards.types";
 
 export function check(id: NCards.Card['id']) {
   return (state: RootState) => {
-    return state.cards.check[id]
+    return state.cards.check[id] || { distance: 0, answer: ""}
   }
 }
 

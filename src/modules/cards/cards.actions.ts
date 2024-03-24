@@ -15,8 +15,19 @@ export type AnswerChecked = {
   readonly id: NCards.Card['id']
 }
 
+export type UpdateQuality = {
+  readonly type: 'UpdateCardQuality',
+  readonly id: NCards.Card['id'],
+}
 
+export type QualityUpdated = {
+  readonly type: 'QualityUpdated'
+  readonly result: Either<RequestError, NCards.State['check'][string]>
+  readonly id: NCards.Card['id']
+}
 
 export type CardsAction =
   | CheckAnswer
   | AnswerChecked
+  | UpdateQuality
+  | QualityUpdated

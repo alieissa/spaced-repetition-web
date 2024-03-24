@@ -10,9 +10,27 @@ import { Settings } from 'src/components'
 import { styles } from 'src/styles'
 import * as Yup from 'yup'
 import { NDecks } from '../decks/decks.types'
-import { useCardById } from './cards.hooks'
+import { useCard } from './cards.hooks'
 import { NCards } from './cards.types'
 
+const getQuality = (distance: number) => {
+  if (distance < 0.04) {
+    return 5
+  }
+  if (distance < 0.08) {
+    return 4
+  }
+  if (distance < 0.12) {
+    return 3
+  }
+  if (distance < 0.16) {
+    return 2
+  }
+  if (distance < 0.2) {
+    return 1
+  }
+  return 0
+}
 const CheckAnswerSchema = Yup.object().shape({
   answer: Yup.string().min(3).required('Required'),
 })
@@ -24,7 +42,8 @@ type Props = {
   onChange: (id: NCards.Card['id'], answer: string) => void
 }
 export default function Card(props: PropsWithChildren<Props>) {
-  const [_state, _check, checkAnswer] = useCardById(props.deckId, props.id)
+  const [checkAnswerStatus, checkAnswerResult, checkAnswer, updateCardQuality] =
+    useCard(props.deckId, props.id)
   const [open, setOpen] = useState(false)
   const form = useFormik({
     initialValues: {
@@ -35,10 +54,36 @@ export default function Card(props: PropsWithChildren<Props>) {
   })
 
   useEffect(() => {
+    form.setTouched({ answer: false })
     form.setFieldValue('answer', props.userAnswer)
-  }, [props.userAnswer])
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.userAnswer, props.id])
 
+  useEffect(() => {
+    if (checkAnswerStatus.type !== 'Success') {
+      return
+    }
+
+    updateCardQuality(getQuality(checkAnswerResult.distance))
+  }, [checkAnswerStatus.type, checkAnswerResult.distance, updateCardQuality])
+
+  console.log('checkAnswerResult', checkAnswerResult)
   const answerError = form.touched.answer && !!form.errors.answer
+  const getIcon = () => {
+    if (
+      checkAnswerStatus.type === 'Success' &&
+      checkAnswerResult.distance <= 0.2
+    ) {
+      return 'green check'
+    }
+
+    if (
+      checkAnswerStatus.type === 'Success' &&
+      checkAnswerResult.distance > 0.2
+    ) {
+      return 'red close'
+    }
+  }
 
   return (
     <SemCard fluid data-testid={`test-card-${props.id}`}>
@@ -70,6 +115,8 @@ export default function Card(props: PropsWithChildren<Props>) {
               id="answer"
               title="answer"
               type="text"
+              icon={getIcon()}
+              color="green"
               placeholder="Enter answer here"
               error={answerError}
               value={form.values.answer}
@@ -84,10 +131,7 @@ export default function Card(props: PropsWithChildren<Props>) {
         </Form>
       </SemCard.Content>
       {props.children && (
-        <SemCard.Content
-          // TODO Use utility class
-          style={{ display: 'flex', flexDirection: 'row-reverse' }}
-        >
+        <SemCard.Content className="flex-row-reverse">
           {props.children}
         </SemCard.Content>
       )}

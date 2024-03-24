@@ -16,7 +16,7 @@ export default function Deck(props: NDecks.Deck & CardProps) {
         <Button
           style={styles.bgWhite}
           icon={<i className="fas fa-dumbbell rotate_45" />}
-          onClick={() => navigate(`/decks/${props.id}/exam`)}
+          onClick={() => navigate(`/decks/${props.id}/test`)}
         />
       </Card.Header>
       <Card.Content onClick={() => navigate(`/decks/${props.id}`)}>
