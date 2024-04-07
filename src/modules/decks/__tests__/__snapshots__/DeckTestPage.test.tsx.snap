@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeckTestPage view should render correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="ui segment"
+    data-testid="deck-test-loading"
+  >
+    <div
+      class="ui active loader"
+    />
+  </div>
+</DocumentFragment>
+`;
