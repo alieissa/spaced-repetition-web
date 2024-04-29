@@ -1,7 +1,7 @@
 /** @format */
 
 import * as _ from 'lodash'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
@@ -15,7 +15,6 @@ import {
 import 'src/App.css'
 import { isUnauthorized } from 'src/api'
 import { CreateButton } from 'src/components'
-import ImportButton from 'src/components/ImportButton'
 import { async } from 'src/utils'
 import Deck from './Deck'
 import DecksUploadModal from './DecksUploadModal'
@@ -26,17 +25,15 @@ type Props = {
   readonly decks: Record<NDecks.Deck['id'], NDecks.Deck>
 }
 function DecksComponent(props: Props) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  // const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
     <Container data-testid="decks-list-success" className="w-max-xl">
       <section className="justify-space-between">
         <Header as="h2">Decks</Header>
         <CreateButton createLink="/decks/new" />
-        <ImportButton onClick={() => setIsModalOpen(true)} />
-        {isModalOpen && (
-          <DecksUploadModal onClose={() => setIsModalOpen(false)} />
-        )}
+
+        <DecksUploadModal />
       </section>
       {_.isEmpty(props.decks) ? (
         <Segment placeholder>

@@ -1,5 +1,6 @@
 /** @format */
 
+import _ from 'lodash'
 import { ChangeEvent, useRef } from 'react'
 import { Button } from 'semantic-ui-react'
 
@@ -14,13 +15,15 @@ export default function FileSelector(props: Props) {
         content="Select File"
         labelPosition="left"
         icon="file"
+        data-testid="file-selector"
         onClick={() => fileInputRef.current?.click()}
       />
       <input
-        type="file"
         hidden
+        type="file"
         ref={fileInputRef}
         onChange={props.onFileSelected}
+        {..._.omit(props, 'onFileSelected')}
       />
     </>
   )
