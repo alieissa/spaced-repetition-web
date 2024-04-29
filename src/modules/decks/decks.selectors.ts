@@ -37,3 +37,7 @@ export function updateStatus(id: NDecks.Deck['id']) {
     return state.decks.updateStatus[id] ?? Untriggered()
   }
 }
+
+export function uploadDecksStatus(state: RootState) {
+  return state.decks.uploadDecksStatus
+}

@@ -1,6 +1,6 @@
 /** @format */
 
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import {
   Button,
   Modal,
@@ -10,6 +10,7 @@ import {
   ModalHeader,
 } from 'semantic-ui-react'
 import FileSelector from 'src/components/FileSelector'
+import { useUploadDecks } from './decks.hooks'
 
 type Props = {
   onClose: VoidFunction
@@ -21,12 +22,23 @@ type Props = {
  * component is controlling open and close states.
  */
 export default function ImportButton(props: Props) {
-  const [file, setFile] = useState<string>()
-  const [isUploading, setIsUploading] = useState(false)
+  const [file, setFile] = useState<File | null>()
+  const [uploadDecksStatus, uploadDecks] = useUploadDecks()
+  const isUploading = uploadDecksStatus.type === 'Loading'
 
   const handleFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
-    setFile(e.target.files?.item(0)?.name)
+    setFile(e.target.files![0])
   }
+
+  const handleFileUpload = () => {
+    uploadDecks(file!)
+  }
+
+  useEffect(() => {
+    if (uploadDecksStatus.type === 'Success') {
+      props.onClose()
+    }
+  }, [uploadDecksStatus.type])
 
   return (
     // Open is true because parent mounts it when it wants to open it
@@ -43,14 +55,14 @@ export default function ImportButton(props: Props) {
         <ModalDescription style={{ paddingBottom: 10 }}>
           <p>Select file the file containing the decks</p>
         </ModalDescription>
-        <div style={{ paddingBottom: 10 }}>{file}</div>
+        <div style={{ paddingBottom: 10 }}>{file?.name}</div>
         <FileSelector onFileSelected={handleFileSelected} />
       </ModalContent>
       <ModalActions>
         <Button color="black" disabled={isUploading} onClick={props.onClose}>
           Cancel
         </Button>
-        <Button disabled={!file} onClick={() => setIsUploading(true)}>
+        <Button disabled={!file} onClick={handleFileUpload}>
           Confirm
         </Button>
       </ModalActions>

@@ -105,6 +105,35 @@ export function useDeckById(
   return [status, deck, updateDeck]
 }
 
+export function useUploadDecks(): [
+  NDecks.State['uploadDecksStatus'],
+  (file: File) => void,
+] {
+  const dispatch = useDispatch()
+  const uploadDecksStatus = useSelector(Select.uploadDecksStatus)
+
+  const upload = api.request({
+    method: 'POST',
+    url: 'decks/upload',
+    headers: {},
+  })
+  const uploadDecks = (file: File) => {
+    const formdata = new FormData()
+    formdata.append('filename', file, file.name)
+    
+    dispatch({
+      type: 'UploadDecks',
+    })
+
+    upload(formdata).then((result) => {
+      dispatch({
+        type: 'DecksUploaded',
+        result
+      })
+    })
+  }
+  return [uploadDecksStatus, uploadDecks]
+}
 // All Form related logic will eventually be moved
 // to a component that will be used to display both
 // DeckPage and NewDeck pages.

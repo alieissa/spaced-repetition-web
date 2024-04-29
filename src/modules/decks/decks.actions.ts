@@ -44,6 +44,15 @@ export type DeckUpdated = {
   readonly result: Either<RequestError, NDecks.Deck>
 }
 
+export type UploadDecks = {
+  readonly type: 'UploadDecks'
+}
+
+export type DecksUploaded = {
+  readonly type: 'DecksUploaded'
+  readonly result: Either<RequestError, null>
+}
+
 export type DeckReset = {
   readonly type: 'DeckReset'
   readonly id: string
@@ -56,6 +65,8 @@ export type DecksAction =
   | DecksLoaded
   | CreateDeck
   | DeckCreated
+  | UploadDecks
+  | DecksUploaded
   | UpdateDeck
   | DeckUpdated
   | DeckReset
