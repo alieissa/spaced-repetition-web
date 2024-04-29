@@ -95,6 +95,10 @@ export default produce((draft: NDecks.State, action: DecksAction) => {
       })
       return
     }
+    case 'ResetUploadDecks': {
+      draft.uploadDecksStatus = Untriggered()
+      return
+    }
     case 'DeckReset': {
       draft.updateStatus[action.id] = Untriggered()
       return

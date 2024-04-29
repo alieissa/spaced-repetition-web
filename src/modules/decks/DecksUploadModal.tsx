@@ -3,6 +3,8 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import {
   Button,
+  Loader,
+  Message,
   Modal,
   ModalActions,
   ModalContent,
@@ -10,6 +12,7 @@ import {
   ModalHeader,
 } from 'semantic-ui-react'
 import FileSelector from 'src/components/FileSelector'
+import { async } from 'src/utils'
 import { useUploadDecks } from './decks.hooks'
 
 type Props = {
@@ -23,7 +26,7 @@ type Props = {
  */
 export default function ImportButton(props: Props) {
   const [file, setFile] = useState<File | null>()
-  const [uploadDecksStatus, uploadDecks] = useUploadDecks()
+  const [uploadDecksStatus, uploadDecks, resetUploadDecks] = useUploadDecks()
   const isUploading = uploadDecksStatus.type === 'Loading'
 
   const handleFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +43,10 @@ export default function ImportButton(props: Props) {
     }
   }, [uploadDecksStatus.type])
 
+  useEffect(() => {
+    return () => resetUploadDecks()
+  }, [])
+
   return (
     // Open is true because parent mounts it when it wants to open it
     <Modal open={true} dimmer="inverted" onClose={props.onClose}>
@@ -52,6 +59,22 @@ export default function ImportButton(props: Props) {
           alignItems: 'center',
         }}
       >
+        {async.match(uploadDecksStatus)({
+          Untriggered: () => null,
+          Loading: () => <Loader active />,
+          Success: () => null,
+          Failure: () => (
+            <Message
+              negative
+              style={{ width: 'inherit' }}
+              data-testid="upload-error"
+            >
+              <Message.Header>Upload failed</Message.Header>
+              <p>Please try again.</p>
+            </Message>
+          ),
+        })}
+
         <ModalDescription style={{ paddingBottom: 10 }}>
           <p>Select file the file containing the decks</p>
         </ModalDescription>
@@ -59,10 +82,10 @@ export default function ImportButton(props: Props) {
         <FileSelector onFileSelected={handleFileSelected} />
       </ModalContent>
       <ModalActions>
-        <Button color="black" disabled={isUploading} onClick={props.onClose}>
+        <Button disabled={isUploading} onClick={props.onClose}>
           Cancel
         </Button>
-        <Button disabled={!file} onClick={handleFileUpload}>
+        <Button color="green" disabled={!file} onClick={handleFileUpload}>
           Confirm
         </Button>
       </ModalActions>

@@ -53,6 +53,10 @@ export type DecksUploaded = {
   readonly result: Either<RequestError, null>
 }
 
+export type ResetUploadDecks = {
+  readonly type: "ResetUploadDecks"
+}
+
 export type DeckReset = {
   readonly type: 'DeckReset'
   readonly id: string
@@ -67,6 +71,7 @@ export type DecksAction =
   | DeckCreated
   | UploadDecks
   | DecksUploaded
+  | ResetUploadDecks
   | UpdateDeck
   | DeckUpdated
   | DeckReset
