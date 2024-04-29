@@ -62,8 +62,8 @@ describe('DecksListPage', () => {
   })
 
   // TODO: Unstable test. Will address it in another ticket
-  describe.skip('interaction', () => {
-    it('should navigate to login on 401', async () => {
+  describe('interaction', () => {
+    it.skip('should navigate to login on 401', async () => {
       server.use(rest.get(decksUrl, (__, res, ctx) => res(ctx.status(401))))
 
       renderWithProviders(<DecksListPage />)

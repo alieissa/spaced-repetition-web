@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DecksUploadModal view should render correctly 1`] = `
+<DocumentFragment>
+  <button
+    class="ui button"
+    data-testid="decks-upload-modal-btn"
+  >
+    <i
+      aria-hidden="true"
+      class="upload icon"
+    />
+  </button>
+</DocumentFragment>
+`;
