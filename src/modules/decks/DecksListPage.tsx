@@ -17,6 +17,7 @@ import { isUnauthorized } from 'src/api'
 import { CreateButton } from 'src/components'
 import { async } from 'src/utils'
 import Deck from './Deck'
+import DecksUploadModal from './DecksUploadModal'
 import { useDecks } from './decks.hooks'
 import { NDecks } from './decks.types'
 
@@ -28,7 +29,10 @@ function DecksComponent(props: Props) {
     <Container data-testid="decks-list-success" className="w-max-xl">
       <section className="justify-space-between">
         <Header as="h2">Decks</Header>
-        <CreateButton createLink="/decks/new" />
+        <div>
+          <CreateButton createLink="/decks/new" />
+          <DecksUploadModal />
+        </div>
       </section>
       {_.isEmpty(props.decks) ? (
         <Segment placeholder>
