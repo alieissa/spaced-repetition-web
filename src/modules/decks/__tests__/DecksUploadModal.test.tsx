@@ -54,11 +54,6 @@ describe('DecksUploadModal', () => {
     // case we do e-2-e tesing.
     it.skip('should display loading when upload in progress', async () => {
       // Assemble
-      server.use(
-        rest.post(decksUploadUrl, async (__, res, ctx) => {
-          return res(ctx.delay(100))
-        }),
-      )
       renderWithProviders(<DecksUploadModal />)
       const deckImportBtn = screen.getByTestId('decks-upload-modal-btn')
       await act(() => user.click(deckImportBtn))
