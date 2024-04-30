@@ -25,15 +25,14 @@ type Props = {
   readonly decks: Record<NDecks.Deck['id'], NDecks.Deck>
 }
 function DecksComponent(props: Props) {
-  // const [isModalOpen, setIsModalOpen] = useState(false)
-
   return (
     <Container data-testid="decks-list-success" className="w-max-xl">
       <section className="justify-space-between">
         <Header as="h2">Decks</Header>
-        <CreateButton createLink="/decks/new" />
-
-        <DecksUploadModal />
+        <div>
+          <CreateButton createLink="/decks/new" />
+          <DecksUploadModal />
+        </div>
       </section>
       {_.isEmpty(props.decks) ? (
         <Segment placeholder>

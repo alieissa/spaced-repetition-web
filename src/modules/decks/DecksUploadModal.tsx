@@ -11,11 +11,11 @@ import {
   ModalDescription,
   ModalHeader,
 } from 'semantic-ui-react'
+import 'src/App.css'
 import FileSelector from 'src/components/FileSelector'
 import { async } from 'src/utils'
 import { ImportButton } from '../../components'
 import { useUploadDecks } from './decks.hooks'
-
 /**
  * This component contains the modal and the button that is used to toggle
  * the modal.
@@ -54,19 +54,13 @@ export default function UploadDecksModal() {
       />
       <Modal
         dimmer="inverted"
+        size="tiny"
         open={isModalOpen}
         data-testid="decks-upload-modal"
         onClose={handleCloseModal}
       >
         <ModalHeader>Upload decks</ModalHeader>
-        <ModalContent
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+        <ModalContent className="flex-column align-center justify-center">
           {async.match(uploadDecksStatus)({
             Untriggered: () => null,
             Loading: () => <Loader active data-testid="decks-upload-loader" />,
@@ -74,8 +68,8 @@ export default function UploadDecksModal() {
             Failure: () => (
               <Message
                 negative
+                className="w-inherit"
                 data-testid="decks-upload-error"
-                style={{ width: 'inherit' }}
               >
                 <Message.Header>Upload failed</Message.Header>
                 <p>Please try again.</p>
@@ -83,10 +77,10 @@ export default function UploadDecksModal() {
             ),
           })}
 
-          <ModalDescription style={{ paddingBottom: 10 }}>
+          <ModalDescription className="pb-10">
             <p>Select file the file containing the decks</p>
           </ModalDescription>
-          <div style={{ paddingBottom: 10 }}>{file?.name}</div>
+          <div className="pb-10">{file?.name}</div>
           <FileSelector
             data-testid="decks-upload-file-input"
             onFileSelected={handleFileSelected}

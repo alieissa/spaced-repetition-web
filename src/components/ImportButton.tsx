@@ -1,11 +1,8 @@
 /** @format */
 
-import { Button, ButtonProps, Icon } from 'semantic-ui-react'
+import { Button, ButtonProps } from 'semantic-ui-react'
+import './components.css'
 
 export default function ImportButton(props: ButtonProps) {
-  return (
-    <Button {...props}>
-      <Icon name="upload" />
-    </Button>
-  )
+  return <Button size="small" className="import-btn" icon="upload" {...props} />
 }
