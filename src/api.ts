@@ -102,7 +102,6 @@ export function request<D = {}>(params: UseRequestParams) {
       })
       .then((data) => Right<D>(data))
       .catch((error) => {
-        // console.log('error', error)
         return Left({ message: error.message, cause: error.cause })
       })
   }
