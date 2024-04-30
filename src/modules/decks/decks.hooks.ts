@@ -108,25 +108,23 @@ export function useDeckById(
 export function useUploadDecks(): [
   NDecks.State['uploadDecksStatus'],
   (file: File) => void,
-  VoidFunction
+  VoidFunction,
 ] {
   const dispatch = useDispatch()
   const uploadDecksStatus = useSelector(Select.uploadDecksStatus)
 
   const resetUploadDecks = () => {
     dispatch({
-      type: "ResetUploadDecks"
+      type: 'ResetUploadDecks',
     })
   }
-  const upload = api.request({
-    method: 'POST',
+  const upload = api.upload({
     url: 'decks/upload',
-    headers: {},
   })
   const uploadDecks = (file: File) => {
     const formdata = new FormData()
     formdata.append('filename', file, file.name)
-    
+
     dispatch({
       type: 'UploadDecks',
     })
@@ -134,7 +132,7 @@ export function useUploadDecks(): [
     upload(formdata).then((result) => {
       dispatch({
         type: 'DecksUploaded',
-        result
+        result,
       })
     })
   }
@@ -168,7 +166,7 @@ export type DeckFormAction =
       deck: NDecks.Deck
     }
 
-// TODO Update deck type in 
+// TODO Update deck type in
 // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
 const getInitState = (deck: any) => {
   return {

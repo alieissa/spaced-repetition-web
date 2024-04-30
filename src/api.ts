@@ -1,6 +1,6 @@
 /** @format */
 // TODO Add type guards to detect HTTP error type
-import _ from 'lodash'
+
 import { Left, Right } from './utils/either'
 
 type UseRequestParams = {
@@ -40,39 +40,49 @@ const isResponse5xx = (response: Response) => {
   return response
 }
 
+const getAuthHeader = (url: string, token: string | null) => {
+  return token || url !== 'users/login'
+    ? { Authorization: `Bearer ${token}` }
+    : undefined
+}
+
+const getToken = (token?: string) => {
+  return token || localStorage.getItem('token')
+}
+
+const getUrl = (url: string) => {
+  return `${process.env.REACT_APP_API_ENDPOINT}/${url}`
+}
+
+const getHeaders = (headers: Record<string, string>) => {
+  return Object.entries(headers).reduce<Headers>(
+    (headers, [headerKey, headerValue]: [string, string]) => {
+      headers.set(headerKey, headerValue)
+      return headers
+    },
+    new Headers(),
+  )
+}
+
 export function request<D = {}>(params: UseRequestParams) {
-  const token = params.token || localStorage.getItem('token')
-  const apiUrl = `${process.env.REACT_APP_API_ENDPOINT}/${params.url}`
+  const token = getToken(params.token)
+  const apiUrl = getUrl(params.url)
+  const authHeader = getAuthHeader(params.url, token)
 
-  const authHeader =
-    token || params.url !== 'users/login'
-      ? { Authorization: `Bearer ${token}` }
-      : undefined
-
-  const defaultHeaders =  _.isEmpty(params.headers) ? {
+  const headers = getHeaders({
     'Content-Type': 'application/json',
     Accept: 'application/json, plain/text',
-  }: params.headers
-
-  const updatedHeaders = Object.entries({
     ...authHeader,
-    ...defaultHeaders,
-  }).reduce<Headers>((headers, [headerKey, headerValue]: [string, string]) => {
-    headers.set(headerKey, headerValue)
-    return headers
-  }, new Headers())
+  })
 
   return (data?: D) => {
     const init = data
       ? {
+          headers,
           method: params.method,
-          headers: updatedHeaders,
-          body:
-            updatedHeaders.get('Content-Type') === 'application/json'
-              ? JSON.stringify(data)
-              : data,
+          body: JSON.stringify(data),
         }
-      : { method: params.method, headers: updatedHeaders }
+      : { method: params.method, headers }
 
     return fetch(apiUrl, init as RequestInit)
       .then(isResponse4xx)
@@ -88,9 +98,6 @@ export function request<D = {}>(params: UseRequestParams) {
         if (params.url === 'users/logout') {
           return r.text()
         }
-        if (params.url === 'decks/upload') {
-          return null
-        }
         return r.json()
       })
       .then((data) => {
@@ -104,5 +111,22 @@ export function request<D = {}>(params: UseRequestParams) {
       .catch((error) => {
         return Left({ message: error.message, cause: error.cause })
       })
+  }
+}
+
+export function upload<D = FormData>(params: Omit<UseRequestParams, 'method'>) {
+  const token = getToken(params.token)
+  const apiUrl = getUrl(params.url)
+  const authHeader = getAuthHeader(params.url, token)
+  const headers = getHeaders(authHeader!)
+
+  return (file: D) => {
+    const init = { method: "POST", headers, body: file }
+
+    return fetch(apiUrl, init as RequestInit)
+      .then(isResponse4xx)
+      .then(isResponse5xx)
+      .then(() => Right(null))
+      .catch((error) =>  Left({ message: error.message, cause: error.cause }))
   }
 }
