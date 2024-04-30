@@ -1,10 +1,12 @@
 /** @format */
 // TODO Add type guards to detect HTTP error type
+
 import { Left, Right } from './utils/either'
 
 type UseRequestParams = {
-  url: string
-  method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
+  url: Request['url']
+  method: RequestInit['method']
+  headers?: Record<string, string>
   token?: string
 }
 
@@ -38,29 +40,51 @@ const isResponse5xx = (response: Response) => {
   return response
 }
 
-export function request<D = {}>({
-  url,
-  method,
-  token: overridToken,
-}: UseRequestParams) {
-  const token = overridToken || localStorage.getItem('token')
+const getAuthHeader = (url: string, token: string | null) => {
+  return token || url !== 'users/login'
+    ? { Authorization: `Bearer ${token}` }
+    : undefined
+}
+
+const getToken = (token?: string) => {
+  return token || localStorage.getItem('token')
+}
+
+const getUrl = (url: string) => {
+  return `${process.env.REACT_APP_API_ENDPOINT}/${url}`
+}
+
+const getHeaders = (headers: Record<string, string>) => {
+  return Object.entries(headers).reduce<Headers>(
+    (headers, [headerKey, headerValue]: [string, string]) => {
+      headers.set(headerKey, headerValue)
+      return headers
+    },
+    new Headers(),
+  )
+}
+
+export function request<D = {}>(params: UseRequestParams) {
+  const token = getToken(params.token)
+  const apiUrl = getUrl(params.url)
+  const authHeader = getAuthHeader(params.url, token)
+
+  const headers = getHeaders({
+    'Content-Type': 'application/json',
+    Accept: 'application/json, plain/text',
+    ...authHeader,
+  })
+
   return (data?: D) => {
-    const authHeader =
-      token || url !== 'users/login'
-        ? { Authorization: `Bearer ${token}` }
-        : undefined
-
-    const apiUrl = `${process.env.REACT_APP_API_ENDPOINT}/${url}`
-    const headers = {
-      ...authHeader,
-      Accept: 'application/json, plain/text',
-      'Content-Type': 'application/json',
-    }
     const init = data
-      ? { method, headers, body: JSON.stringify(data) }
-      : { method, headers }
+      ? {
+          headers,
+          method: params.method,
+          body: JSON.stringify(data),
+        }
+      : { method: params.method, headers }
 
-    return fetch(apiUrl, init)
+    return fetch(apiUrl, init as RequestInit)
       .then(isResponse4xx)
       .then(isResponse5xx)
       .then((r) => {
@@ -68,17 +92,17 @@ export function request<D = {}>({
         // treat accordingly. To do that must update the
         // user management service to return Content-Type
         // in header response
-        if (url === 'users/verify') {
+        if (params.url === 'users/verify') {
           return r.text()
         }
-        if (url === 'users/logout') {
+        if (params.url === 'users/logout') {
           return r.text()
         }
         return r.json()
       })
       .then((data) => {
         // TODO Move this to login reducer
-        if (url === "users/login") {
+        if (params.url === 'users/login') {
           localStorage.setItem('token', data.token)
         }
         return data
@@ -87,5 +111,22 @@ export function request<D = {}>({
       .catch((error) => {
         return Left({ message: error.message, cause: error.cause })
       })
+  }
+}
+
+export function upload<D = FormData>(params: Omit<UseRequestParams, 'method'>) {
+  const token = getToken(params.token)
+  const apiUrl = getUrl(params.url)
+  const authHeader = getAuthHeader(params.url, token)
+  const headers = getHeaders(authHeader!)
+
+  return (file: D) => {
+    const init = { method: "POST", headers, body: file }
+
+    return fetch(apiUrl, init as RequestInit)
+      .then(isResponse4xx)
+      .then(isResponse5xx)
+      .then(() => Right(null))
+      .catch((error) =>  Left({ message: error.message, cause: error.cause }))
   }
 }

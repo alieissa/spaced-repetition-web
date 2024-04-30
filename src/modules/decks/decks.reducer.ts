@@ -13,6 +13,7 @@ const initialState: NDecks.State = {
   getStatus: {},
   createStatus: Untriggered(),
   updateStatus: {},
+  uploadDecksStatus: Untriggered()
 }
 
 export default produce((draft: NDecks.State, action: DecksAction) => {
@@ -77,6 +78,25 @@ export default produce((draft: NDecks.State, action: DecksAction) => {
           draft.decks[action.id] = value
         },
       })
+      return
+    }
+    case 'UploadDecks': {
+      draft.uploadDecksStatus = Loading(null)
+      return
+    }
+    case 'DecksUploaded': {
+      either.match(action.result)({
+        Left: ({ value }) => {
+          draft.uploadDecksStatus = Failure(value)
+        },
+        Right: () => {
+          draft.uploadDecksStatus = Success(null)
+        },
+      })
+      return
+    }
+    case 'ResetUploadDecks': {
+      draft.uploadDecksStatus = Untriggered()
       return
     }
     case 'DeckReset': {
