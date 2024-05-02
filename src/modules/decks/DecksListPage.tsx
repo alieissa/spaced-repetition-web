@@ -17,6 +17,7 @@ import { isUnauthorized } from 'src/api'
 import { CreateButton } from 'src/components'
 import { async } from 'src/utils'
 import Deck from './Deck'
+import DecksDownload from './DecksDownload'
 import DecksUploadModal from './DecksUploadModal'
 import { useDecks } from './decks.hooks'
 import { NDecks } from './decks.types'
@@ -32,6 +33,7 @@ function DecksComponent(props: Props) {
         <div>
           <CreateButton createLink="/decks/new" />
           <DecksUploadModal />
+          <DecksDownload />
         </div>
       </section>
       {_.isEmpty(props.decks) ? (
