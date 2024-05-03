@@ -8,12 +8,6 @@ import { setupServer } from 'msw/lib/node'
 import { renderWithProviders } from 'src/utils/test-utils'
 import DecksUploadModal from '../DecksUploadModal'
 
-const mockNavigate = jest.fn(() => ({}))
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}))
-
 const decksUploadUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/upload`
 
 export const handlers = [

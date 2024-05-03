@@ -9,12 +9,6 @@ import { setupServer } from 'msw/lib/node'
 import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
 import DecksDownload from '../DecksDownload'
 
-// const mockNavigate = jest.fn(() => ({}))
-// jest.mock('react-router-dom', () => ({
-//   ...jest.requireActual('react-router-dom'),
-//   useNavigate: () => mockNavigate,
-// }))
-
 const decksDownloadUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/download`
 
 const server = setupServer()
