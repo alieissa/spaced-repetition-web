@@ -63,7 +63,7 @@ export type DecksDownloaded = {
 }
 
 export type ResetUploadDecks = {
-  readonly type: "ResetUploadDecks"
+  readonly type: 'ResetUploadDecks'
 }
 
 export type DeckReset = {
