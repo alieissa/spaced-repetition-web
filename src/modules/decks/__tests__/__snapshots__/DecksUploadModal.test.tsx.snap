@@ -3,7 +3,7 @@
 exports[`DecksUploadModal view should render correctly 1`] = `
 <DocumentFragment>
   <button
-    class="ui small icon button import-btn"
+    class="ui small icon button"
     data-testid="decks-upload-modal-btn"
   >
     <i

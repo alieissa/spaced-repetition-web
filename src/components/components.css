@@ -1,4 +1,4 @@
 /* Overriding the default margins applied by semantic UI */
-.ui.button.import-btn {
+.ui.button.export-btn {
   margin: 0
 }

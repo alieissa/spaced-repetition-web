@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DecksDownload view should render correctly 1`] = `
+<DocumentFragment>
+  <button
+    class="ui small icon button export-btn"
+    data-testid="decks-download-btn"
+  >
+    <i
+      aria-hidden="true"
+      class="download icon"
+    />
+  </button>
+</DocumentFragment>
+`;
