@@ -23,8 +23,8 @@ export default function DecksDownload() {
     downloadAnchorRef.current?.click()
   }, [status])
 
-  // TODO display success or failure message in a popover.
-  // To do that must first create a popover component
+  // TODO display success or failure message component on page wher
+  // download button is displayed
   return (
     <>
       <ExportButton
@@ -34,7 +34,13 @@ export default function DecksDownload() {
       />
 
       {downloadDecksUrl && (
-        <a hidden download ref={downloadAnchorRef} href={downloadDecksUrl} />
+        <a
+          hidden
+          download
+          data-testid="decks-download-anchor"
+          ref={downloadAnchorRef}
+          href={downloadDecksUrl}
+        />
       )}
     </>
   )
