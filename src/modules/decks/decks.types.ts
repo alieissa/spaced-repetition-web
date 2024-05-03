@@ -13,6 +13,8 @@ export namespace NDecks {
     createStatus: Async<null, RequestError, null>
     updateStatus: _.Dictionary<Async<null, RequestError, null>>
     uploadDecksStatus: Async<null, RequestError, null>
+    downloadDecksUrl: string | null
+    downloadDecksStatus: Async<null, RequestError, null>
   }
 
   export type PostRequest = {

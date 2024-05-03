@@ -13,7 +13,9 @@ const initialState: NDecks.State = {
   getStatus: {},
   createStatus: Untriggered(),
   updateStatus: {},
-  uploadDecksStatus: Untriggered()
+  uploadDecksStatus: Untriggered(),
+  downloadDecksUrl: null,
+  downloadDecksStatus: Untriggered(),
 }
 
 export default produce((draft: NDecks.State, action: DecksAction) => {
@@ -91,6 +93,22 @@ export default produce((draft: NDecks.State, action: DecksAction) => {
         },
         Right: () => {
           draft.uploadDecksStatus = Success(null)
+        },
+      })
+      return
+    }
+    case 'DownloadDecks': {
+      draft.downloadDecksStatus = Loading(null)
+      return
+    }
+    case 'DecksDownloaded': {
+      either.match(action.result)({
+        Left: ({ value }) => {
+          draft.downloadDecksStatus = Failure(value)
+        },
+        Right: ({ value }) => {
+          draft.downloadDecksUrl = value
+          draft.downloadDecksStatus = Success(null)
         },
       })
       return

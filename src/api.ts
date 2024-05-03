@@ -98,6 +98,10 @@ export function request<D = {}>(params: UseRequestParams) {
         if (params.url === 'users/logout') {
           return r.text()
         }
+
+        if (params.url === 'decks/download') {
+          return r.text()
+        }
         return r.json()
       })
       .then((data) => {

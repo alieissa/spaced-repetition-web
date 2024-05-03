@@ -53,6 +53,15 @@ export type DecksUploaded = {
   readonly result: Either<RequestError, null>
 }
 
+export type DownloadDecks = {
+  readonly type: 'DownloadDecks'
+}
+
+export type DecksDownloaded = {
+  readonly type: 'DecksDownloaded'
+  readonly result: Either<RequestError, string>
+}
+
 export type ResetUploadDecks = {
   readonly type: "ResetUploadDecks"
 }
@@ -71,6 +80,8 @@ export type DecksAction =
   | DeckCreated
   | UploadDecks
   | DecksUploaded
+  | DownloadDecks
+  | DecksDownloaded
   | ResetUploadDecks
   | UpdateDeck
   | DeckUpdated

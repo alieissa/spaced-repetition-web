@@ -138,6 +138,35 @@ export function useUploadDecks(): [
   }
   return [uploadDecksStatus, uploadDecks, resetUploadDecks]
 }
+
+export function useDownloadDecks(): [
+  NDecks.State['downloadDecksUrl'],
+  NDecks.State['downloadDecksStatus'],
+  VoidFunction
+] {
+  const dispatch = useDispatch()
+  const downloadDecksStatus = useSelector(Select.downloadDecksStatus)
+  const downloadDecksUrl = useSelector(Select.downloadDecksUrl)
+  const download = api.request({
+    method: "GET",
+    url: 'decks/download',
+  })
+  const downloadDecks = () => {
+    dispatch({
+      type: 'DownloadDecks',
+    })
+
+    download().then((result) => {
+      dispatch({
+        type: 'DecksDownloaded',
+        result,
+      })
+    })
+  }
+  
+  return [downloadDecksUrl, downloadDecksStatus, downloadDecks]
+}
+
 // All Form related logic will eventually be moved
 // to a component that will be used to display both
 // DeckPage and NewDeck pages.
