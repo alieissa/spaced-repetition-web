@@ -5,11 +5,11 @@ import { useReducer } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import 'src/App.css'
 import { CardForm } from 'src/components'
-import { Answers } from 'src/modules/answers'
+import { NAnswers } from 'src/modules/answers'
 import { CardFormProps } from './CardForm'
 import { NCards } from './cards.types'
 
-type FormAnswer = Answers.Answer | Answers.PostRequest
+type FormAnswer = NAnswers.Answer | NAnswers.Initial
 type Action =
   | {
       type: 'ADD_ANSWER'
@@ -29,9 +29,9 @@ type Action =
     }
 
 type State = {
-  readonly id: string
-  readonly question: string
-  readonly answers: ReadonlyArray<FormAnswer>
+  id: string
+  question: string
+  answers: ReadonlyArray<FormAnswer>
 }
 function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -47,7 +47,7 @@ function reducer(state: State, action: Action): State {
     case 'ADD_ANSWER': {
       return {
         ...state,
-        answers: _.concat(state.answers, [Answers.Initial({})]),
+        answers: _.concat(state.answers, [NAnswers.Initial({})]),
       }
     }
     case 'UPDATE_ANSWER': {
@@ -94,7 +94,7 @@ export default function SubmittableCardForm(
       onDeleteAnswer={(answer) =>
         dispatch({
           type: 'DELETE_ANSWER',
-          answer,
+          answer: NAnswers.Initial({}),
         })
       }
       onChangeQuestion={(newContent: NCards.Card['question']) => {
@@ -109,7 +109,7 @@ export default function SubmittableCardForm(
       onChangeAnswer={(answer, question) => {
         dispatch({
           type: 'UPDATE_ANSWER',
-          answer,
+          answer: NAnswers.Initial({}),
           question,
         })
       }}

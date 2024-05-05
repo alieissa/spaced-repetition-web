@@ -23,7 +23,7 @@ import { useDecks } from './decks.hooks'
 import { NDecks } from './decks.types'
 
 type Props = {
-  readonly decks: Record<NDecks.Deck['id'], NDecks.Deck>
+  decks: Record<NDecks.Deck['id'], NDecks.Deck>
 }
 function DecksComponent(props: Props) {
   return (

@@ -15,7 +15,7 @@ import {
   Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
-import { Answers } from 'src/modules/answers'
+import { NAnswers } from 'src/modules/answers'
 import { CardForm, NCards } from 'src/modules/cards'
 import { styles } from 'src/styles'
 import { useCreateDeck } from './decks.hooks'
@@ -58,20 +58,20 @@ function reducer(state: State, action: Action) {
         ...state,
         cards: {
           ...state.cards,
-          [newCard.__key__]: newCard,
+          [newCard.id]: newCard,
         },
       }
     }
     case 'DELETE_CARD': {
       return {
         ...state,
-        cards: _.omit(state.cards, action.card.__key__),
+        cards: _.omit(state.cards, action.card.id),
       }
     }
     case 'UPDATE_CARD': {
       return {
         ...state,
-        cards: _.set(state.cards, action.card.__key__, action.card),
+        cards: _.set(state.cards, action.card.id, action.card),
       }
     }
     case 'UPDATE_DECK': {
@@ -141,15 +141,11 @@ export default function NewDeck(props: RouteProps) {
                   return
                 }
 
-                // TODO use type guard to make sure data
-                // is PostRequest before sending it to createDeck
-                createDeck(
-                  NDecks.toPostRequest({
-                    description: localState.description,
-                    name: localState.name,
-                    cards: _.values(localState.cards),
-                  }),
-                )
+                createDeck({
+                  description: localState.description,
+                  name: localState.name,
+                  cards: _.values(localState.cards),
+                })
               }}
             >
               Done
@@ -213,17 +209,17 @@ export default function NewDeck(props: RouteProps) {
         <section className="flex-column w-inherit">
           <List>
             {_.map(_.values(localState.cards), (q, index) => (
-              <List.Item key={q.__key__}>
+              <List.Item key={q.id}>
                 <Segment>
                   <CardForm
                     {...q}
-                    id={index}
+                    id={q.id}
                     onAddAnswer={() => {
                       localDispatch({
                         type: 'UPDATE_CARD',
                         card: {
                           ...q,
-                          answers: [...q.answers, Answers.Initial({})],
+                          answers: [...q.answers, NAnswers.Initial({})],
                         },
                       })
                     }}
@@ -233,7 +229,7 @@ export default function NewDeck(props: RouteProps) {
                         card: {
                           ...q,
                           answers: _.map(q.answers, (a) => {
-                            if (a.__key__ === answer.__key__) {
+                            if (a.id === answer) {
                               return { ...a, content: newAnswerContent }
                             } else {
                               return a
@@ -253,10 +249,7 @@ export default function NewDeck(props: RouteProps) {
                         type: 'UPDATE_CARD',
                         card: {
                           ...q,
-                          answers: _.filter(
-                            q.answers,
-                            (a) => a.__key__ !== answer.__key__,
-                          ),
+                          answers: _.filter(q.answers, (a) => a.id !== answer),
                         },
                       })
                     }}

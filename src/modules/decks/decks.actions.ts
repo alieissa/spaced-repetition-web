@@ -5,70 +5,70 @@ import { Either } from 'src/utils/either'
 import { NDecks } from './decks.types'
 
 export type GetDeck = {
-  readonly type: 'GetDeck'
-  readonly id: NDecks.Deck['id']
+  type: 'GetDeck'
+  id: NDecks.Deck['id']
 }
 
 export type DeckLoaded = {
-  readonly type: 'DeckLoaded'
-  readonly result: Either<RequestError, NDecks.Deck>
-  readonly id: NDecks.Deck['id']
+  type: 'DeckLoaded'
+  result: Either<RequestError, NDecks.Deck>
+  id: NDecks.Deck['id']
 }
 
 export type GetDecks = {
-  readonly type: 'GetDecks'
+  type: 'GetDecks'
 }
 
 export type DecksLoaded = {
-  readonly type: 'DecksLoaded'
-  readonly result: Either<RequestError, ReadonlyArray<NDecks.Deck>>
+  type: 'DecksLoaded'
+  result: Either<RequestError, ReadonlyArray<NDecks.Deck>>
 }
 
 export type CreateDeck = {
-  readonly type: 'CreateDeck'
+  type: 'CreateDeck'
 }
 
 export type DeckCreated = {
-  readonly type: 'DeckCreated'
-  readonly result: Either<RequestError, NDecks.Deck>
+  type: 'DeckCreated'
+  result: Either<RequestError, NDecks.Deck>
 }
 
 export type UpdateDeck = {
-  readonly type: 'UpdateDeck'
-  readonly id: string
+  type: 'UpdateDeck'
+  id: string
 }
 
 export type DeckUpdated = {
-  readonly type: 'DeckUpdated'
-  readonly id: string
-  readonly result: Either<RequestError, NDecks.Deck>
+  type: 'DeckUpdated'
+  id: string
+  result: Either<RequestError, NDecks.Deck>
 }
 
 export type UploadDecks = {
-  readonly type: 'UploadDecks'
+  type: 'UploadDecks'
 }
 
 export type DecksUploaded = {
-  readonly type: 'DecksUploaded'
-  readonly result: Either<RequestError, null>
+  type: 'DecksUploaded'
+  result: Either<RequestError, null>
 }
 
 export type DownloadDecks = {
-  readonly type: 'DownloadDecks'
+  type: 'DownloadDecks'
 }
 
 export type DecksDownloaded = {
-  readonly type: 'DecksDownloaded'
-  readonly result: Either<RequestError, string>
+  type: 'DecksDownloaded'
+  result: Either<RequestError, string>
 }
 
 export type ResetUploadDecks = {
-  readonly type: 'ResetUploadDecks'
+  type: 'ResetUploadDecks'
 }
 
 export type DeckReset = {
-  readonly type: 'DeckReset'
-  readonly id: string
+  type: 'DeckReset'
+  id: string
 }
 
 export type DecksAction =
