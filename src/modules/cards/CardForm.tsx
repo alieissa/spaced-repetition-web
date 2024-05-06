@@ -25,8 +25,7 @@ export default function CardForm(props: CardFormProps) {
       <List horizontal className="flex" style={styles.flex}>
         <List.Item className="flex-1">
           <Input
-            data-testid={`question-content-${props.id}`}
-            name="content"
+            name="question-content"
             placeholder="Enter question here"
             className="w-full"
             value={props.question}
@@ -37,13 +36,13 @@ export default function CardForm(props: CardFormProps) {
         </List.Item>
         <List.Item className="flex-1">
           <List style={styles.p0}>
-            {_.map(props.answers, (answer, index) => (
+            {_.map(props.answers, (answer) => (
               <List.Item key={answer.id} className="flex" style={styles.flex}>
                 <Input
-                  data-testid={`answer-content-${index}`}
                   value={answer.content}
                   placeholder="Enter answer here"
                   className="w-full"
+                  name="answer-content"
                   onChange={(e) => {
                     props.onChangeAnswer(answer.id, e.target.value || '')
                   }}

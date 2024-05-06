@@ -30,22 +30,18 @@ import {
 import { DeckFormState, FormCard, useDeckFormReducer } from './deckForm.reducer'
 import { getAnswersByCardId, getCards } from './deckForm.selectors'
 
-const isValidAnswer = (answer: NAnswers.Answer) => {
-  return _.trim(answer.content) !== ''
-}
-const isValidCard = (state: DeckFormState, card: FormCard) => {
-  const isValidQuestion = _.trim(card.question) !== ''
-  const areValidAnswers = _.every(
-    getAnswersByCardId(state, card.id),
-    isValidAnswer,
+const isValidCard = (card: FormCard, answers: NAnswers.Answer[]) => {
+  const isValidQuestion = card.question.trim() !== ''
+  const areValidAnswers = answers.every(
+    (answer) => answer.content.trim() !== '',
   )
 
   return isValidQuestion && areValidAnswers
 }
 const isValidForm = (state: DeckFormState) => {
-  const isValidName = _.trim(state.name) != ''
-  const areValidCards = _.every(getCards(state), (card) =>
-    isValidCard(state, card),
+  const isValidName = state.name.trim() != ''
+  const areValidCards = getCards(state).every((card) =>
+    isValidCard(card, getAnswersByCardId(state, card.id)),
   )
 
   return isValidName && areValidCards
@@ -54,6 +50,8 @@ const isValidForm = (state: DeckFormState) => {
 type Props = {
   header: string
   deck: NDecks.Deck
+  successMessage: string
+  failureMessage: string
   submitStatus: async.Async<null, RequestError, null>
   onCancel: VoidFunction
   onSubmit: (deck: any) => void
@@ -62,7 +60,7 @@ type Props = {
 export default function DeckForm(props: Props) {
   const [localState, localDispatch] = useDeckFormReducer(props.deck)
   const [displayValidationError, setDisplayValidationError] = useState(false)
-  console.log(localState)
+
   const isUpdating = props.submitStatus.type === 'Loading'
 
   const handleChangeDeckName = (e: any) => {
@@ -92,7 +90,6 @@ export default function DeckForm(props: Props) {
     cardId: string,
     newAnswerContent: string,
   ) => {
-    console.log(cardId)
     changeAnswer(localDispatch, {
       id,
       cardId,
@@ -126,20 +123,23 @@ export default function DeckForm(props: Props) {
               data-testid="deck-save"
               color="green"
               size="small"
-              disabled={!isValidForm(localState) || isUpdating}
+              disabled={isUpdating}
               onClick={() => {
                 if (!isValidForm(localState)) {
                   setDisplayValidationError(true)
                   return
                 }
+                const cards = getCards(localState)
+                const cardsForm = cards.map((card) => ({
+                  ...card,
+                  answers: getAnswersByCardId(localState, card.id),
+                }))
 
-                // TODO Get rid of casting once proper view and
-                // DTO are defined
                 const deckToUpdate = {
                   id: props.deck.id,
+                  name: localState.name,
                   description: localState.description,
-                  name: localState.name!,
-                  cards: getCards(localState),
+                  cards: cardsForm,
                 }
 
                 props.onSubmit(deckToUpdate)
@@ -157,16 +157,20 @@ export default function DeckForm(props: Props) {
             <p>Enter valid input and try again</p>
           </Message>
         )}
-        {props.submitStatus.type === 'Success' && (
-          <Message positive data-testid="deck-submission-success">
-            <MessageHeader>Deck successfully updated</MessageHeader>
-          </Message>
-        )}
-        {props.submitStatus.type === 'Failure' && (
-          <Message negative data-testid="deck-submission-failure">
-            <MessageHeader>There was an error updating the deck</MessageHeader>
-          </Message>
-        )}{' '}
+        {async.match(props.submitStatus)({
+          Untriggered: () => null,
+          Loading: () => null,
+          Success: () => (
+            <Message positive data-testid="deck-submission-success">
+              <MessageHeader>{props.successMessage}</MessageHeader>
+            </Message>
+          ),
+          Failure: () => (
+            <Message negative data-testid="deck-submission-failure">
+              <MessageHeader>{props.failureMessage}</MessageHeader>
+            </Message>
+          ),
+        })}
         <div>
           <Card fluid>
             <Card.Content style={styles.p0} className="bt-none">

@@ -26,6 +26,8 @@ export default function NewDeck() {
       header="Create deck"
       deck={NDecks.Initial({})}
       submitStatus={createDeckStatus}
+      successMessage="Deck successfully created"
+      failureMessage="Failed to create deck"
       onCancel={handleCancel}
       onSubmit={handleSubmit}
     />

@@ -45,6 +45,8 @@ export default function Deck() {
         <DeckForm
           header="Update deck"
           deck={formDeck}
+          successMessage="Deck successfully updated"
+          failureMessage="Failed to update deck"
           submitStatus={updateStatus}
           onCancel={handleCancel}
           onSubmit={updateDeck}
