@@ -1,10 +1,8 @@
 /** @format */
 
-import _ from 'lodash'
-import { useEffect, useReducer } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
-import { NCards } from '../cards'
 import * as Select from './decks.selectors'
 import { NDecks } from './decks.types'
 export function useDecks() {
@@ -142,13 +140,13 @@ export function useUploadDecks(): [
 export function useDownloadDecks(): [
   NDecks.State['downloadDecksUrl'],
   NDecks.State['downloadDecksStatus'],
-  VoidFunction
+  VoidFunction,
 ] {
   const dispatch = useDispatch()
   const downloadDecksStatus = useSelector(Select.downloadDecksStatus)
   const downloadDecksUrl = useSelector(Select.downloadDecksUrl)
   const download = api.request({
-    method: "GET",
+    method: 'GET',
     url: 'decks/download',
   })
   const downloadDecks = () => {
@@ -163,89 +161,9 @@ export function useDownloadDecks(): [
       })
     })
   }
-  
+
   return [downloadDecksUrl, downloadDecksStatus, downloadDecks]
 }
 
-// All Form related logic will eventually be moved
-// to a component that will be used to display both
-// DeckPage and NewDeck pages.
-export type DeckFormState = Omit<NDecks.Initial, 'cards'> & {
-  cards: _.Dictionary<NCards.Initial>
-}
-export type DeckFormAction =
-  | {
-      type: 'ADD_CARD'
-    }
-  | {
-      type: 'DELETE_CARD'
-      card: NCards.Initial
-    }
-  | {
-      type: 'UPDATE_CARD'
-      card: NCards.Initial
-    }
-  | {
-      type: 'UPDATE_DECK'
-      name: NDecks.Initial['name']
-      description: NDecks.Initial['description']
-    }
-  | {
-      type: 'SET_DECK'
-      deck: NDecks.Deck
-    }
-
 // TODO Update deck type in
 // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
-const getInitState = (deck: any) => {
-  return {
-    ...deck,
-    questions: _.keyBy(deck.questions, '__key__'),
-  }
-}
-
-function reducer(state: DeckFormState, action: DeckFormAction) {
-  switch (action.type) {
-    case 'ADD_CARD': {
-      const newCard = NCards.Initial({})
-      return {
-        ...state,
-        cards: {
-          ...state.cards,
-          [newCard.__key__]: newCard,
-        },
-      }
-    }
-    case 'DELETE_CARD': {
-      return {
-        ...state,
-        cards: _.omit(state.cards, action.card.__key__),
-      }
-    }
-    case 'UPDATE_CARD': {
-      return {
-        ...state,
-        cards: _.set(
-          state.cards,
-          action.card.__key__,
-          action.card,
-        ),
-      }
-    }
-    case 'UPDATE_DECK': {
-      return {
-        ...state,
-        name: action.name,
-        description: action.description,
-      }
-    }
-
-    default:
-      return state
-  }
-}
-// TODO Update deck type in 
-// https://github.com/alieissa/Spaced_Repetition_Web/issues/21
-export function useDeckFormReducer(deck: any = NDecks.Initial({})) {
-  return useReducer(reducer, getInitState(deck))
-}

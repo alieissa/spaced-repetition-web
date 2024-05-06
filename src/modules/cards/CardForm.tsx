@@ -4,31 +4,28 @@ import { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Form, Icon, Input, List } from 'semantic-ui-react'
 import 'src/App.css'
-import { Answers } from 'src/modules/answers'
+import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
 
-export type CardFormProps<A extends Answers.Answer | Answers.PostRequest> = {
-  readonly id: number | string
-  readonly question: string
-  readonly answers: ReadonlyArray<A>
-  readonly onChangeQuestion: (question: string) => void
-  readonly onChangeAnswer: (answer: A, question: string) => void
-  readonly onDeleteAnswer: (answer: A) => void
-  readonly onAddAnswer: VoidFunction
-  readonly onSubmitForm?: any
-  readonly onCancel?: MouseEventHandler
+export type CardFormProps = {
+  id: string
+  question: string
+  answers: NAnswers.Answer[]
+  onChangeQuestion: (question: string) => void
+  onChangeAnswer: (id: string, content: string) => void
+  onDeleteAnswer: (id: string) => void
+  onAddAnswer: VoidFunction
+  onSubmitForm?: any
+  onCancel?: MouseEventHandler
 }
 
-export default function CardForm<
-  A extends Answers.Answer | Answers.PostRequest,
->(props: CardFormProps<A>) {
+export default function CardForm(props: CardFormProps) {
   return (
     <Form className="w-full">
       <List horizontal className="flex" style={styles.flex}>
         <List.Item className="flex-1">
           <Input
-            data-testid={`question-content-${props.id}`}
-            name="content"
+            name="question-content"
             placeholder="Enter question here"
             className="w-full"
             value={props.question}
@@ -39,16 +36,15 @@ export default function CardForm<
         </List.Item>
         <List.Item className="flex-1">
           <List style={styles.p0}>
-            {/* TODO Use type guard to detect type and get key accordingly */}
-            {_.map(props.answers, (answer, index) => (
-              <List.Item key={index} className="flex" style={styles.flex}>
+            {props.answers.map((answer) => (
+              <List.Item key={answer.id} className="flex" style={styles.flex}>
                 <Input
-                  data-testid={`answer-content-${index}`}
                   value={answer.content}
                   placeholder="Enter answer here"
                   className="w-full"
+                  name="answer-content"
                   onChange={(e) => {
-                    props.onChangeAnswer(answer, e.target.value || '')
+                    props.onChangeAnswer(answer.id, e.target.value || '')
                   }}
                 />
 
@@ -58,7 +54,7 @@ export default function CardForm<
                   disabled={_.size(props.answers) === 1}
                   icon={<Icon name="x" />}
                   onClick={() => {
-                    props.onDeleteAnswer(answer)
+                    props.onDeleteAnswer(answer.id)
                   }}
                 />
               </List.Item>

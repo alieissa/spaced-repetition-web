@@ -1,0 +1,197 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeckForm view should render correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="ui container"
+    data-testid="deck-success"
+  >
+    <div
+      class="ui basic segment"
+      style="padding: 0px;"
+    >
+      <header
+        class="justify-space-between"
+      >
+        <h2>
+          Test Deck
+        </h2>
+        <div>
+          <button
+            class="ui small button mx-auto"
+          >
+            Cancel
+          </button>
+          <button
+            class="ui green small button"
+            data-testid="deck-save"
+          >
+            Save
+          </button>
+        </div>
+      </header>
+    </div>
+    <main>
+      <div>
+        <div
+          class="ui fluid card"
+        >
+          <div
+            class="content bt-none"
+            style="padding: 0px;"
+          >
+            <div
+              class="ui list"
+              role="list"
+            >
+              <div
+                class="item"
+                role="listitem"
+              >
+                <div
+                  class="ui input w-full"
+                  data-testid="deck-name"
+                >
+                  <input
+                    placeholder="Enter name here"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                class="item"
+                role="listitem"
+              >
+                <div
+                  class="ui input w-full"
+                  data-testid="deck-description"
+                >
+                  <input
+                    placeholder="Enter description here"
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section
+          class="flex-column w-inherit test"
+        >
+          <div
+            class="ui list"
+            role="list"
+          >
+            <div
+              class="item"
+              role="listitem"
+            >
+              <div
+                class="ui segment bs-0"
+              >
+                <form
+                  class="ui form w-full"
+                >
+                  <div
+                    class="ui horizontal list flex"
+                    role="list"
+                    style="display: flex;"
+                  >
+                    <div
+                      class="item flex-1"
+                      role="listitem"
+                    >
+                      <div
+                        class="ui input w-full"
+                      >
+                        <input
+                          name="question-content"
+                          placeholder="Enter question here"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="item flex-1"
+                      role="listitem"
+                    >
+                      <div
+                        class="ui list"
+                        role="list"
+                        style="padding: 0px;"
+                      >
+                        <div
+                          class="item flex"
+                          role="listitem"
+                          style="display: flex;"
+                        >
+                          <div
+                            class="ui input w-full"
+                          >
+                            <input
+                              name="answer-content"
+                              placeholder="Enter answer here"
+                              type="text"
+                              value=""
+                            />
+                          </div>
+                          <button
+                            class="ui small icon disabled button"
+                            disabled=""
+                            style="background-color: white;"
+                            tabindex="-1"
+                          >
+                            <i
+                              aria-hidden="true"
+                              class="x icon"
+                            />
+                          </button>
+                        </div>
+                        <div
+                          class="item"
+                          role="listitem"
+                          style="text-align: right;"
+                        >
+                          <button
+                            class="ui small icon button"
+                            style="background-color: white;"
+                          >
+                            <i
+                              aria-hidden="true"
+                              class="green plus icon"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="fields"
+                    style="justify-content: flex-end;"
+                  />
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div
+          class="ui basic segment flex-row-reverse test"
+          style="padding: 0px;"
+        >
+          <button
+            class="ui green icon button"
+          >
+            <i
+              aria-hidden="true"
+              class="plus icon"
+            />
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</DocumentFragment>
+`;

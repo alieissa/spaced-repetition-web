@@ -6,13 +6,14 @@ import { styles } from 'src/styles'
 import { Settings } from 'src/types'
 import { NDecks } from './decks.types'
 
-interface DeckInfoProps {
-  readonly onDelete?: (id: NDecks.Deck['id']) => void
-  readonly onEdit?: (id: NDecks.Deck['id']) => void
-  readonly onSubmitSettings?: (
-    id: NDecks.Deck['id'],
-    settings: Settings,
-  ) => void
+type Props = {
+  id: string
+  name: string
+  description?: string
+  cards: NDecks.Deck['cards']
+  onDelete?: (id: NDecks.Deck['id']) => void
+  onEdit?: (id: NDecks.Deck['id']) => void
+  onSubmitSettings?: (id: NDecks.Deck['id'], settings: Settings) => void
 }
 /**
  * Displays the name and description of a deck. User can
@@ -20,7 +21,7 @@ interface DeckInfoProps {
  *  2. Update settings of deck if onSubmitSettings callback is defined
  *  3. Edit name and description of deck if onEdit callback is defined
  */
-export default function DeckInfo(props: Partial<DeckInfoProps> & NDecks.Deck) {
+export default function DeckInfo(props: Partial<Props>) {
   return (
     <Card fluid style={styles.boxShadowNone}>
       <Card.Content

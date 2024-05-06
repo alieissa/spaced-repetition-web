@@ -119,6 +119,7 @@ export default produce((draft: NDecks.State, action: DecksAction) => {
     }
     case 'DeckReset': {
       draft.updateStatus[action.id] = Untriggered()
+      draft.getStatus[action.id] = Untriggered()
       return
     }
   }

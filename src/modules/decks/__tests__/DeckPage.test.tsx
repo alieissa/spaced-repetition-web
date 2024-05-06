@@ -31,14 +31,16 @@ const handlers = [
       ctx.json({
         id: deckId,
         name: faker.word.noun(),
-        questions: [
+        cards: [
           {
             id: faker.string.uuid(),
-            content: faker.lorem.sentence(5),
-            answers: {
-              id: faker.string.uuid(),
-              content: faker.lorem.sentence(5),
-            },
+            question: faker.lorem.sentence(5),
+            answers: [
+              {
+                id: faker.string.uuid(),
+                content: faker.lorem.sentence(5),
+              },
+            ],
           },
         ],
       }),
@@ -90,7 +92,4 @@ describe('DeckPage', () => {
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
   })
-
-  // NOTE: The interaction tests will be done for the component
-  // that will be common to NewDeck and Deck.
 })

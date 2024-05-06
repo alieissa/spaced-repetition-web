@@ -5,25 +5,25 @@ import { Either } from 'src/utils/either'
 import { NCards } from './cards.types'
 
 export type CheckAnswer = {
-  readonly type: 'CheckAnswer'
-  readonly id: NCards.Card['id']
+   type: 'CheckAnswer'
+   id: NCards.Card['id']
 }
 
 export type AnswerChecked = {
-  readonly type: 'AnswerChecked'
-  readonly result: Either<RequestError, NCards.State['check'][string]>
-  readonly id: NCards.Card['id']
+   type: 'AnswerChecked'
+   result: Either<RequestError, NCards.State['check'][string]>
+   id: NCards.Card['id']
 }
 
 export type UpdateQuality = {
-  readonly type: 'UpdateCardQuality',
-  readonly id: NCards.Card['id'],
+   type: 'UpdateCardQuality',
+   id: NCards.Card['id'],
 }
 
 export type QualityUpdated = {
-  readonly type: 'QualityUpdated'
-  readonly result: Either<RequestError, NCards.State['check'][string]>
-  readonly id: NCards.Card['id']
+   type: 'QualityUpdated'
+   result: Either<RequestError, NCards.State['check'][string]>
+   id: NCards.Card['id']
 }
 
 export type CardsAction =
