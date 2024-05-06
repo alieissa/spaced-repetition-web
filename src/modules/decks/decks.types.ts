@@ -17,12 +17,19 @@ export namespace NDecks {
     downloadDecksStatus: Async<null, RequestError, null>
   }
 
+  export type Deck = {
+    id: string
+    name: string
+    description?: string
+    cards: NCards.Card[]
+  }
+
   export type Initial = {
     __type__: 'INITIAL'
     id: string
     name: string
     description?: string
-    cards: ReadonlyArray<NCards.Initial>
+    cards: NCards.Initial[]
   }
 
   export function Initial(d: Partial<Initial>): Initial {
@@ -35,11 +42,11 @@ export namespace NDecks {
     }
   }
 
-  export type Deck = {
+  export type Formed = {
     __type__: 'FORMED'
     id: string
     name: string
     description?: string
-    cards: ReadonlyArray<NCards.Card>
+    cards: NCards.Card[]
   }
 }

@@ -2,6 +2,11 @@
 import * as _ from 'lodash'
 
 export namespace NAnswers {
+  export type Answer = {
+    id: string
+    content: string
+  }
+  
   export type Initial = {
     __type__: 'INITIAL'
     id: string
@@ -15,11 +20,11 @@ export namespace NAnswers {
     }
   }
 
-  export type Answer = {
-    __type__: 'FORMED'
-    id: string
-    content: string
-  }
+    export type Formed = {
+      __type__: 'FORMED'
+      id: string
+      content: string
+    }
 
   /**
    * If a has all the fields of an Answer and nothing else

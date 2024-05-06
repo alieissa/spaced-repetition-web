@@ -14,26 +14,35 @@ export namespace NCards {
     check: Record<Card['id'], { distance: number; answer: NAnswers.Answer }>
   }
 
+  export type Card = {
+    id: string
+    deckId: string
+    question: string
+    answers: NAnswers.Answer[]
+  }
+
   export type Initial = {
     __type__: 'INITIAL'
     id: string
+    deckId: string
     question: string
-    answers: ReadonlyArray<NAnswers.Initial>
+    answers: NAnswers.Initial[]
   }
   export function Initial(q: Partial<Initial>): Initial {
     return {
       __type__: 'INITIAL',
       id: _.uniqueId(),
+      deckId: q.deckId || _.uniqueId(),
       question: q.question || '',
       answers: q.answers || [NAnswers.Initial({})],
     }
   }
 
-  export type Card = {
+  export type Formed = {
     __type__: 'FORMED'
     id: string
     deckId: string
     question: string
-    answers: ReadonlyArray<NAnswers.Answer>
+    answers: NAnswers.Answer
   }
 }
