@@ -10,9 +10,9 @@ import { styles } from 'src/styles'
 export type CardFormProps = {
   id: string
   question: string
-  answers: ReadonlyArray<NAnswers.Answer>
+  answers: NAnswers.Answer[]
   onChangeQuestion: (question: string) => void
-  onChangeAnswer: (id: string, question: string) => void
+  onChangeAnswer: (id: string, content: string) => void
   onDeleteAnswer: (id: string) => void
   onAddAnswer: VoidFunction
   onSubmitForm?: any
@@ -36,7 +36,7 @@ export default function CardForm(props: CardFormProps) {
         </List.Item>
         <List.Item className="flex-1">
           <List style={styles.p0}>
-            {_.map(props.answers, (answer) => (
+            {props.answers.map((answer) => (
               <List.Item key={answer.id} className="flex" style={styles.flex}>
                 <Input
                   value={answer.content}
