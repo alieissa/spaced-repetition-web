@@ -140,13 +140,13 @@ export function useUploadDecks(): [
 export function useDownloadDecks(): [
   NDecks.State['downloadDecksUrl'],
   NDecks.State['downloadDecksStatus'],
-  VoidFunction
+  VoidFunction,
 ] {
   const dispatch = useDispatch()
   const downloadDecksStatus = useSelector(Select.downloadDecksStatus)
   const downloadDecksUrl = useSelector(Select.downloadDecksUrl)
   const download = api.request({
-    method: "GET",
+    method: 'GET',
     url: 'decks/download',
   })
   const downloadDecks = () => {
