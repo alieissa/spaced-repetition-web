@@ -72,7 +72,7 @@ function reducer(state: State, action: Action): State {
 }
 export default function SubmittableCardForm(
   props: Required<
-    Pick<CardFormProps<FormAnswer>, 'onCancel' | 'question' | 'answers'> & {
+    Pick<CardFormProps, 'onCancel' | 'question' | 'answers'> & {
       id: string
       onSubmit: (data: State) => void
     }
@@ -85,7 +85,7 @@ export default function SubmittableCardForm(
   })
 
   return (
-    <CardForm<FormAnswer>
+    <CardForm
       {...state}
       onSubmitForm={() => {
         props.onSubmit(state)

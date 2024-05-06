@@ -7,10 +7,10 @@ import 'src/App.css'
 import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
 
-export type CardFormProps<A extends NAnswers.Answer | NAnswers.Initial> = {
+export type CardFormProps = {
   id: string
   question: string
-  answers: ReadonlyArray<A>
+  answers: ReadonlyArray<NAnswers.Answer>
   onChangeQuestion: (question: string) => void
   onChangeAnswer: (id: string, question: string) => void
   onDeleteAnswer: (id: string) => void
@@ -19,9 +19,7 @@ export type CardFormProps<A extends NAnswers.Answer | NAnswers.Initial> = {
   onCancel?: MouseEventHandler
 }
 
-export default function CardForm<A extends NAnswers.Answer | NAnswers.Initial>(
-  props: CardFormProps<A>,
-) {
+export default function CardForm(props: CardFormProps) {
   return (
     <Form className="w-full">
       <List horizontal className="flex" style={styles.flex}>
