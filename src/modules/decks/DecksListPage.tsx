@@ -2,7 +2,7 @@
 
 import * as _ from 'lodash'
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
   Grid,
@@ -28,11 +28,14 @@ type Props = {
 
 function DecksHeader() {
   return (
-    <div className="justify-space-between">
-      <Header as="h2">Decks</Header>
+    <div
+      className="justify-space-between"
+      style={{ padding: '1rem', border: '1px solid' }}
+    >
+      <Header as="h1" style={{ margin: '0px' }}>
+        Decks
+      </Header>
       <CreateButton createLink="/decks/new" />
-      {/* <DecksUploadModal /> */}
-      {/* <DecksDownload /> */}
     </div>
   )
 }
@@ -51,28 +54,33 @@ function DecksEmpty() {
 
 function DecksComponent(props: Props) {
   return (
-    <div data-testid="decks-list-success" className="flex-column h-inherit">
+    <div
+      data-testid="decks-list-success"
+      className="flex-column h-inherit"
+      style={{ border: '1px solid' }}
+    >
       <DecksHeader />
       <Grid padded style={{ flexGrow: 1 }}>
-        {/* <GridRow>
-          <GridColumn></GridColumn>
-        </GridRow> */}
         <GridRow stretched>
           <GridColumn width={4}>
             {_.isEmpty(props.decks) ? (
-              <DecksEmpty></DecksEmpty>
+              <div style={{ border: '1px solid' }}>
+                <DecksEmpty />
+              </div>
             ) : (
-              <div>
+              <div style={{ border: '1px solid' }}>
                 <List divided relaxed>
                   {_.map(_.values(props.decks), (d) => (
-                    <DecksListItem {...d} />
+                    <DecksListItem {...d} key={d.id} />
                   ))}
                 </List>
               </div>
             )}
           </GridColumn>
           <GridColumn width={12}>
-            <div>Content Area</div>
+            <div style={{ border: '1px solid', padding: '1rem' }}>
+              <Outlet />
+            </div>
           </GridColumn>
         </GridRow>
       </Grid>

@@ -10,8 +10,8 @@ interface Props {
 export default function CreateButton(props: Props & ButtonProps) {
   return (
     <Link to={props.createLink}>
-      <Button color="green" {..._.omit(props, 'createLink')}>
-        Create
+      <Button color="blue" size="medium" icon {..._.omit(props, 'createLink')}>
+        Create New Deck
       </Button>
     </Link>
   )

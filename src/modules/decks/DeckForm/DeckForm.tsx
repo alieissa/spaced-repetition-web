@@ -1,7 +1,7 @@
 /** @format */
 
 import _ from 'lodash'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Container,
   Icon,
@@ -30,6 +30,7 @@ import {
   changeDeck,
   changeQuestion,
   deleteAnswer,
+  setDeck,
 } from './deckForm.actions'
 import { DeckFormState, FormCard, useDeckFormReducer } from './deckForm.reducer'
 import { getAnswersByCardId, getCards } from './deckForm.selectors'
@@ -64,6 +65,10 @@ type Props = {
 export default function DeckForm(props: Props) {
   const [localState, localDispatch] = useDeckFormReducer(props.deck)
   const [displayValidationError, setDisplayValidationError] = useState(false)
+
+  useEffect(() => {
+    setDeck(localDispatch, props.deck)
+  }, [props.deck])
 
   const isUpdating = props.submitStatus.type === 'Loading'
 

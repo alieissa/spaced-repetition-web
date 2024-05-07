@@ -126,6 +126,9 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
       }
     }
 
+    case 'SET_DECK': {
+      return getInitState(action.deck)
+    }
     default:
       return state
   }

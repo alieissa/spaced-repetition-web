@@ -61,7 +61,7 @@ export function useDeckById(
   id: NDecks.Deck['id'],
   // TODO Update deck type in
   // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
-): [NDecks.State['getStatus'][string], NDecks.Deck, (deck: any) => void] {
+): [NDecks.State['getStatus'][string], NDecks.Deck, VoidFunction, (deck: any) => void] {
   const deck = useSelector(Select.deckById(id))
   const status = useSelector(Select.deckByIdStatus(id))
   const dispatch = useDispatch()
@@ -83,6 +83,16 @@ export function useDeckById(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const loadDeck = () => {
+    dispatch({
+      type: 'GetDeck',
+      id,
+    })
+    getDeck().then((result: any) => {
+      dispatch({ type: 'DeckLoaded', result, id })
+    })
+  }
+
   // TODO Update deck type in
   // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
   const updateDeck = (deck: any) => {
@@ -100,7 +110,7 @@ export function useDeckById(
     })
   }
 
-  return [status, deck, updateDeck]
+  return [status, deck, loadDeck, updateDeck]
 }
 
 export function useUploadDecks(): [

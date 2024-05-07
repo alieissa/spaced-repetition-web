@@ -3,7 +3,6 @@
 exports[`DeckForm view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="ui container"
     data-testid="deck-success"
   >
     <div
