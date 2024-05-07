@@ -54,6 +54,9 @@
 .h-full {
   height: 100%;
 }
+.h-inherit {
+  height: inherit;
+}
 
 .w-inherit {
   width: inherit;

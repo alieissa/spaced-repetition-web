@@ -5,10 +5,12 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
-  Container,
   Grid,
+  GridColumn,
+  GridRow,
   Header,
   Icon,
+  List,
   Loader,
   Segment,
 } from 'semantic-ui-react'
@@ -16,44 +18,65 @@ import 'src/App.css'
 import { isUnauthorized } from 'src/api'
 import { CreateButton } from 'src/components'
 import { async } from 'src/utils'
-import Deck from './Deck'
-import DecksDownload from './DecksDownload'
-import DecksUploadModal from './DecksUploadModal'
+import DecksListItem from './DecksListItem'
 import { useDecks } from './decks.hooks'
 import { NDecks } from './decks.types'
 
 type Props = {
   decks: Record<NDecks.Deck['id'], NDecks.Deck>
 }
+
+function DecksHeader() {
+  return (
+    <div className="justify-space-between">
+      <Header as="h2">Decks</Header>
+      <CreateButton createLink="/decks/new" />
+      {/* <DecksUploadModal /> */}
+      {/* <DecksDownload /> */}
+    </div>
+  )
+}
+
+function DecksEmpty() {
+  return (
+    <Segment placeholder>
+      <Header icon>
+        <Icon name="file" />
+        No Decks created
+      </Header>
+      <CreateButton createLink="/decks/new" />
+    </Segment>
+  )
+}
+
 function DecksComponent(props: Props) {
   return (
-    <Container data-testid="decks-list-success" className="w-max-xl">
-      <section className="justify-space-between">
-        <Header as="h2">Decks</Header>
-        <div>
-          <CreateButton createLink="/decks/new" />
-          <DecksUploadModal />
-          <DecksDownload />
-        </div>
-      </section>
-      {_.isEmpty(props.decks) ? (
-        <Segment placeholder>
-          <Header icon>
-            <Icon name="file" />
-            No Decks created
-          </Header>
-          <CreateButton createLink="/decks/new" />
-        </Segment>
-      ) : (
-        <Grid doubling stackable>
-          {_.map(_.values(props.decks), (d) => (
-            <Grid.Column width={4} key={d.id}>
-              <Deck {...d} className="h-full" />
-            </Grid.Column>
-          ))}
-        </Grid>
-      )}
-    </Container>
+    <div data-testid="decks-list-success" className="flex-column h-inherit">
+      <DecksHeader />
+      <Grid padded style={{ flexGrow: 1 }}>
+        {/* <GridRow>
+          <GridColumn></GridColumn>
+        </GridRow> */}
+        <GridRow stretched>
+          <GridColumn width={4}>
+            {_.isEmpty(props.decks) ? (
+              <DecksEmpty></DecksEmpty>
+            ) : (
+              <div>
+                <List divided relaxed>
+                  {_.map(_.values(props.decks), (d) => (
+                    <DecksListItem {...d} />
+                  ))}
+                </List>
+              </div>
+            )}
+          </GridColumn>
+          <GridColumn width={12}>
+            <div>Content Area</div>
+          </GridColumn>
+        </GridRow>
+      </Grid>
+    </div>
   )
 }
 
