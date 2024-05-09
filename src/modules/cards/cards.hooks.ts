@@ -3,6 +3,8 @@
 import { useReducer } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
+import { RequestError } from 'src/types'
+import { Async } from 'src/utils/async'
 import { NDecks } from '../decks/decks.types'
 import * as Select from './cards.selectors'
 import { NCards } from './cards.types'
@@ -60,6 +62,34 @@ export function useCard(
   }
 
   return [checkAnswerStatus, checkAnswerResult, checkAnswer, updateCardQuality]
+}
+
+export function useCardCreate(deckId: string): [
+  Async<null, RequestError, NCards.Card>,
+  (card: NCards.Card) => void
+] {
+    const createCardStatus = useSelector(Select.createCardStatus)
+  
+    const dispatch = useDispatch()
+    const postCard = api.request({
+      method: 'POST',
+      url: `decks/${deckId}/cards`,
+    })
+  
+  const createCard = (card: NCards.Card) => {
+    dispatch({
+      type: "CreateCard"
+    })
+
+    postCard(card).then((result: any) => {
+      dispatch({
+        type: "CardCreated",
+        result
+      })
+    })
+  }
+
+  return [createCardStatus, createCard]
 }
 
 type GetNextCard = {

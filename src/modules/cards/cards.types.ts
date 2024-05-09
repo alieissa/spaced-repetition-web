@@ -12,6 +12,7 @@ export namespace NCards {
       Async<null, RequestError, { distance: number; answer: any }>
     >
     check: Record<Card['id'], { distance: number; answer: NAnswers.Answer }>
+    createCardStatus: Async<null, RequestError, NCards.Card>
   }
 
   export type Card = {
