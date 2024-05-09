@@ -2,13 +2,14 @@
 
 import produce from 'immer'
 import { either } from 'src/utils'
-import { Failure, Loading, Success } from 'src/utils/async'
+import { Failure, Loading, Success, Untriggered } from 'src/utils/async'
 import { CardsAction } from './cards.actions'
 import { NCards } from './cards.types'
 
 const initialState: NCards.State = {
   check: {},
-  checkStatus: {}
+  checkStatus: {},
+  createCardStatus: Untriggered(),
 }
 
 export default produce((draft: NCards.State, action: CardsAction) => {
@@ -25,6 +26,21 @@ export default produce((draft: NCards.State, action: CardsAction) => {
         Right: ({ value }) => {
           draft.checkStatus[action.id] = Success(value)
           draft.check[action.id] = value
+        },
+      })
+      return
+    }
+    case 'CreateCard': {
+      draft.createCardStatus = Loading(null)
+      return
+    }
+    case 'CardCreated': {
+      either.match(action.result)({
+        Left: ({ value }) => {
+          draft.createCardStatus = Failure(value)
+        },
+        Right: ({ value }) => {
+          draft.createCardStatus = Success(value)
         },
       })
       return

@@ -1,5 +1,6 @@
 /** @format */
 
+import { faker } from '@faker-js/faker'
 import '@testing-library/jest-dom'
 import { act, screen } from '@testing-library/react'
 import user from '@testing-library/user-event'
@@ -8,7 +9,8 @@ import { setupServer } from 'msw/lib/node'
 import { renderWithProviders } from 'src/utils/test-utils'
 import CardCreateModal from '../CardCreateModal'
 
-const cardCreateUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/cards`
+const deckId = faker.string.uuid()
+const cardCreateUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}/cards`
 
 export const handlers = [
   rest.post(cardCreateUrl, async (__, res, ctx) => {
@@ -24,33 +26,20 @@ afterAll(() => server.close())
 describe('CardCreateModal', () => {
   describe('view', () => {
     it('should render correctly', () => {
-      const { asFragment } = renderWithProviders(<CardCreateModal />)
+      const { asFragment } = renderWithProviders(
+        <CardCreateModal deckId={deckId} />,
+      )
       expect(asFragment()).toMatchSnapshot()
     })
   })
 
   describe('interaction', () => {
-    it.skip('should display loading when upload in progress', async () => {
-      // Assemble
-      renderWithProviders(<CardCreateModal />)
-      const deckImportBtn = screen.getByTestId('card-create-modal-btn')
-      await act(() => user.click(deckImportBtn))
-
-      // Act
-      const cardCreateSaveBtn = screen.getByTestId('card-create-save-btn')
-      await act(() => user.click(cardCreateSaveBtn))
-
-      // Assert
-      const decksUploadLoader = screen.queryByTestId('card-create-loader')
-      expect(decksUploadLoader).toBeInTheDocument()
-    })
-
-    it('should display error when upload fails', async () => {
+    it('should display error when card creation fails', async () => {
       // Assemble
       server.use(
         rest.post(cardCreateUrl, (__, res, ctx) => res(ctx.status(422))),
       )
-      renderWithProviders(<CardCreateModal />)
+      renderWithProviders(<CardCreateModal deckId={deckId} />)
       const deckImportBtn = screen.getByTestId('card-create-modal-btn')
       await act(() => user.click(deckImportBtn))
 
@@ -59,8 +48,8 @@ describe('CardCreateModal', () => {
       await act(() => user.click(cardCreateSaveBtn))
 
       // Assert
-      const decksUploadLoader = screen.queryByTestId('card-create-error')
-      expect(decksUploadLoader).toBeInTheDocument()
+      const cardCreateLoader = screen.queryByTestId('card-create-error')
+      expect(cardCreateLoader).toBeInTheDocument()
     })
   })
 })

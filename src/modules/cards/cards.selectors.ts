@@ -13,3 +13,7 @@ export function checkStatus(id: NCards.Card['id']) {
     return state.cards.checkStatus[id] || Untriggered()
   }
 }
+
+export function createCardStatus(state: RootState) {
+  return state.cards.createCardStatus
+}
