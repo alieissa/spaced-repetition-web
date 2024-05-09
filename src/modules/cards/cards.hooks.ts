@@ -66,7 +66,7 @@ export function useCard(
 
 export function useCardCreate(deckId: string): [
   Async<null, RequestError, NCards.Card>,
-  VoidFunction
+  (card: NCards.Card) => void
 ] {
     const createCardStatus = useSelector(Select.createCardStatus)
   
@@ -76,12 +76,12 @@ export function useCardCreate(deckId: string): [
       url: `decks/${deckId}/cards`,
     })
   
-  const createCard = () => {
+  const createCard = (card: NCards.Card) => {
     dispatch({
       type: "CreateCard"
     })
 
-    postCard().then((result: any) => {
+    postCard(card).then((result: any) => {
       dispatch({
         type: "CardCreated",
         result

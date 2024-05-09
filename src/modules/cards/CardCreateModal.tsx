@@ -1,41 +1,62 @@
 /** @format */
 
 import { useEffect, useState } from 'react'
+import { Loader, Message } from 'semantic-ui-react'
 import {
-  Button,
-  Loader,
-  Message,
-  Modal,
-  ModalActions,
-  ModalContent,
-  ModalDescription,
-  ModalHeader,
-} from 'semantic-ui-react'
-import { ImportButton } from 'src/components'
+  SPButton,
+  SPModal,
+  SPModalActions,
+  SPModalContent,
+  SPModalHeader,
+} from 'src/components'
 import { async } from 'src/utils'
+import { NAnswers } from '../answers'
+import CardForm from './CardForm'
 import { useCardCreate } from './cards.hooks'
+import { NCards } from './cards.types'
 
 type Props = {
   deckId: string
 }
 /**
- * This component contains the modal and the button that is used to toggle
+ * This component contains the create card modal and the button that is used to toggle
  * the modal.
  */
 export default function CardCreateModal(props: Props) {
+  const [card, setCard] = useState(NCards.Initial({ deckId: props.deckId }))
   const [isModalOpen, setIsModalOpen] = useState(false)
-  // const [createCardStatus, resetUploadDecks] = useUploadDecks()
   const [createCardStatus, createCard] = useCardCreate(props.deckId)
-  console.log(createCardStatus)
-  const isUploading = createCardStatus.type === 'Loading'
 
   const handleCloseModal = () => {
     setIsModalOpen(false)
   }
 
+  const handleChangeQuestion = (question: string) => {
+    setCard({ ...card, question })
+  }
+
+  const handleChangeAnswer = (answerId: string, content: string) => {
+    setCard({
+      ...card,
+      answers: card.answers.map((answer) =>
+        answer.id === answerId ? { ...answer, content } : answer,
+      ),
+    })
+  }
+
+  const handleAddAnswer = () => {
+    setCard({ ...card, answers: [...card.answers, NAnswers.Initial({})] })
+  }
+
+  const handleDeleteAnswer = (answerId: string) => {
+    setCard({
+      ...card,
+      answers: card.answers.filter((answer) => answer.id !== answerId),
+    })
+  }
+
   const handleCardCreate = () => {
-    console.log('clicked handle create')
-    createCard()
+    createCard(card)
   }
 
   useEffect(() => {
@@ -46,19 +67,19 @@ export default function CardCreateModal(props: Props) {
 
   return (
     <>
-      <ImportButton
+      <SPButton
         data-testid="card-create-modal-btn"
+        color="green"
+        icon="plus"
         onClick={() => setIsModalOpen(true)}
       />
-      <Modal
-        dimmer="inverted"
-        size="tiny"
-        open={isModalOpen}
+      <SPModal
         data-testid="card-create-modal"
+        open={isModalOpen}
         onClose={handleCloseModal}
       >
-        <ModalHeader>Create Card</ModalHeader>
-        <ModalContent className="flex-column align-center justify-center">
+        <SPModalHeader>Create Card</SPModalHeader>
+        <SPModalContent className="flex-column align-center justify-center">
           {async.match(createCardStatus)({
             Untriggered: () => null,
             Loading: () => <Loader active data-testid="card-create-loader" />,
@@ -74,23 +95,25 @@ export default function CardCreateModal(props: Props) {
             ),
           })}
 
-          <ModalDescription className="pb-10">
-            <p>Select file the file containing the decks</p>
-          </ModalDescription>
-        </ModalContent>
-        <ModalActions>
-          <Button disabled={isUploading} onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button
+          <CardForm
+            {...card}
+            onChangeQuestion={handleChangeQuestion}
+            onChangeAnswer={handleChangeAnswer}
+            onAddAnswer={handleAddAnswer}
+            onDeleteAnswer={handleDeleteAnswer}
+          />
+        </SPModalContent>
+        <SPModalActions>
+          <SPButton onClick={handleCloseModal}>Cancel</SPButton>
+          <SPButton
             data-testid="card-create-save-btn"
             color="green"
             onClick={handleCardCreate}
           >
             Save
-          </Button>
-        </ModalActions>
-      </Modal>
+          </SPButton>
+        </SPModalActions>
+      </SPModal>
     </>
   )
 }

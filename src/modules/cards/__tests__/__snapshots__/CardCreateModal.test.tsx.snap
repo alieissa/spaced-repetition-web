@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardCreateModal view should render correctly 1`] = `
+<DocumentFragment>
+  <button
+    class="ui green icon button"
+    data-testid="card-create-modal-btn"
+  >
+    <i
+      aria-hidden="true"
+      class="plus icon"
+    />
+  </button>
+</DocumentFragment>
+`;
