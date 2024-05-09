@@ -10,6 +10,8 @@ const initialState: NCards.State = {
   check: {},
   checkStatus: {},
   createCardStatus: Untriggered(),
+  loadCardStatus: {},
+  loadedCards: {},
 }
 
 export default produce((draft: NCards.State, action: CardsAction) => {
@@ -42,6 +44,22 @@ export default produce((draft: NCards.State, action: CardsAction) => {
         Right: ({ value }) => {
           draft.createCardStatus = Success(value)
         },
+      })
+      return
+    }
+    case 'LoadCard': {
+      draft.loadCardStatus[action.id] = Loading(null)
+      return
+    }
+    case 'CardLoaded': {
+      either.match(action.result)({
+        Left: ({ value }) => {
+          draft.loadCardStatus[action.id] = Failure(value)
+        },
+        Right: ({ value }) => {
+          draft.loadCardStatus[action.id] = Success(value)
+          draft.loadedCards[action.id] = value
+        }
       })
       return
     }

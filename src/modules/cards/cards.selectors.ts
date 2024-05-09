@@ -17,3 +17,15 @@ export function checkStatus(id: NCards.Card['id']) {
 export function createCardStatus(state: RootState) {
   return state.cards.createCardStatus
 }
+
+export function loadCardStatus(id: NCards.Card['id']) {
+  return (state: RootState) => {
+    return state.cards.loadCardStatus[id] || Untriggered()
+  }
+}
+
+export function loadedCardByID(id: NCards.Card['id']) {
+  return (state: RootState) => {
+    return state.cards.loadedCards[id]
+  }
+}
