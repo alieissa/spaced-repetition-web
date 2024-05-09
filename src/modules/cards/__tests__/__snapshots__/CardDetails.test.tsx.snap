@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardDetails view should render correctly 1`] = `
+<DocumentFragment>
+  <button
+    class="ui button"
+    data-testid="card-details-edit-btn"
+  />
+  <div>
+    <button
+      class="ui button"
+      data-testid="view-answers-btn"
+    />
+  </div>
+</DocumentFragment>
+`;
