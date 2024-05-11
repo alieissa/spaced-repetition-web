@@ -52,19 +52,17 @@ export default function CardDetailsModal() {
   }, [loadCardStatus.type])
 
   return (
-    <>
-      <SPModal
-        data-testid="card-details-modal"
-        open={isModalOpen}
-        onClose={handleCloseModal}
-      >
-        {isEditing ? (
-          <CardDetailsForm {...card} />
-        ) : (
-          <CardDetailsView {...card} onEdit={() => setIsEditing(true)} />
-        )}
-      </SPModal>
-    </>
+    <SPModal
+      data-testid="card-details-modal"
+      open={isModalOpen}
+      onClose={handleCloseModal}
+    >
+      {isEditing ? (
+        <CardDetailsForm {...card} />
+      ) : (
+        <CardDetailsView {...card} onEdit={() => setIsEditing(true)} />
+      )}
+    </SPModal>
   )
 }
 
@@ -90,11 +88,7 @@ function CardDetailsView(props: ViewProps) {
             onClick={() => setAreAnswersVisible(!areAnswersVisible)}
           />
         </div>
-        <List
-          horizontal
-          className="w-full"
-          style={{ ...styles.flex, marginTop: '1rem' }}
-        >
+        <List horizontal className="w-full" style={styles.flex}>
           <ListItem className="flex-1">
             <SPText className="w-full" value={props.question} />
           </ListItem>
