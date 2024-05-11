@@ -1,8 +1,10 @@
 /** @format */
 
+import { useFormik } from 'formik'
+import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Icon, List, ListItem } from 'semantic-ui-react'
+import { Form, Icon, List, ListItem } from 'semantic-ui-react'
 import 'src/App.css'
 import {
   SPButton,
@@ -12,6 +14,8 @@ import {
   SPText,
 } from 'src/components'
 import { styles } from 'src/styles'
+import * as Yup from 'yup'
+import { NAnswers } from '../answers'
 import { useCardDetails } from './cards.hooks'
 import { NCards } from './cards.types'
 
@@ -58,7 +62,11 @@ export default function CardDetailsModal() {
       onClose={handleCloseModal}
     >
       {isEditing ? (
-        <CardDetailsForm {...card} onBack={() => setIsEditing(false)} />
+        <CardDetailsForm
+          {...card}
+          onBack={() => setIsEditing(false)}
+          onSubmit={() => console.log('test')}
+        />
       ) : (
         <CardDetailsView {...card} onEdit={() => setIsEditing(true)} />
       )}
@@ -110,8 +118,64 @@ function CardDetailsView(props: ViewProps) {
   )
 }
 
-type FormProps = NCards.Card & { onBack: VoidFunction }
+const CardFormValidationSchema = Yup.object().shape({
+  question: Yup.string().min(3).required('Required'),
+  answers: Yup.array(
+    Yup.object().shape({
+      content: Yup.string().min(3).required('Required'),
+    }),
+  )
+    .min(1)
+    .required('Required'),
+})
+type FormProps = NCards.Card & { onBack: VoidFunction; onSubmit: VoidFunction }
 function CardDetailsForm(props: FormProps) {
+  const handleSubmit = (values: any) => {
+    return
+  }
+
+  const form = useFormik({
+    initialValues: {
+      question: props.question,
+      answers: props.answers,
+    },
+    validationSchema: CardFormValidationSchema,
+    onSubmit: handleSubmit,
+  })
+
+  const handleAddAnswer = () => {
+    const answers = [...form.values.answers, NAnswers.Initial({})]
+    form.setFieldValue('answers', answers)
+  }
+
+  const handleDeleteAnswer = (id: string) => {
+    const answers = form.values.answers.filter((answer) => answer.id !== id)
+    form.setFieldValue('answers', answers)
+  }
+
+  const handleChangeAnswer = (id: string, newAnswerContent: string) => {
+    const answers = form.values.answers.map((answer) =>
+      answer.id === id ? { ...answer, content: newAnswerContent } : answer,
+    )
+    form.setFieldValue('answers', answers)
+  }
+
+  const handleChangeQuestion = (question: string) => {
+    form.setFieldValue('question', question)
+  }
+
+  const getAnswerError = (index: number) => {
+    const answerErrors = form.errors.answers || []
+    const touched = !_.isEmpty(form.touched)
+    return !!answerErrors[index] && touched
+  }
+
+  const getQuestionError = () => {
+    const questionError = form.errors.question
+    const touched = !_.isEmpty(form.touched)
+    return questionError && touched
+  }
+
   return (
     <>
       <SPModalHeader data-testid="card-details-form">
@@ -122,7 +186,72 @@ function CardDetailsForm(props: FormProps) {
         />
       </SPModalHeader>
       <SPModalContent className="flex-column align-center justify-center">
-        <div>{props?.question}</div>
+        <Form className="w-full">
+          <List horizontal className="flex" style={styles.flex}>
+            <List.Item className="flex-1">
+              <Form.Input
+                name="question-content"
+                placeholder="Enter question here"
+                className="w-full"
+                error={getQuestionError()}
+                value={form.values.question}
+                onChange={(e) => {
+                  handleChangeQuestion(e.target.value)
+                }}
+              />
+            </List.Item>
+            <List.Item className="flex-1">
+              <List style={styles.p0}>
+                {form.values.answers.map((answer, index) => (
+                  <List.Item
+                    key={answer.id}
+                    className="flex"
+                    style={styles.flex}
+                  >
+                    <Form.Input
+                      value={answer.content}
+                      placeholder="Enter answer here"
+                      className="w-full"
+                      error={getAnswerError(index)}
+                      name="answer-content"
+                      onChange={(e) =>
+                        handleChangeAnswer(answer.id, e.target.value)
+                      }
+                    />
+
+                    <SPButton
+                      size="small"
+                      style={styles.bgWhite}
+                      disabled={form.values.answers.length === 1}
+                      icon={<Icon name="x" />}
+                      onClick={() => handleDeleteAnswer(answer.id)}
+                    />
+                  </List.Item>
+                ))}
+                <List.Item style={styles.textAlignRight}>
+                  <SPButton
+                    size="small"
+                    style={styles.bgWhite}
+                    icon={<Icon name="plus" color="green" />}
+                    onClick={handleAddAnswer}
+                  />
+                </List.Item>
+              </List>
+            </List.Item>
+          </List>
+
+          <div className="flex-row-reverse">
+            <SPButton
+              data-testid="card-details-form-save-btn"
+              size="small"
+              color="green"
+              type="submit"
+              onClick={form.submitForm}
+            >
+              Save
+            </SPButton>
+          </div>
+        </Form>
       </SPModalContent>
     </>
   )

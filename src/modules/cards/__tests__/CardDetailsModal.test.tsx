@@ -111,7 +111,7 @@ describe('CardDetailsModal', () => {
         await act(() => user.click(cardDetailsModalEditBtn))
 
         // Act
-        const saveBtn = await screen.findByTestId('save-btn')
+        const saveBtn = await screen.findByTestId('card-details-form-save-btn')
         await act(() => user.click(saveBtn))
 
         // Assert
