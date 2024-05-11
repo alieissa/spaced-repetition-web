@@ -58,7 +58,7 @@ export default function CardDetailsModal() {
       onClose={handleCloseModal}
     >
       {isEditing ? (
-        <CardDetailsForm {...card} />
+        <CardDetailsForm {...card} onBack={() => setIsEditing(false)} />
       ) : (
         <CardDetailsView {...card} onEdit={() => setIsEditing(true)} />
       )}
@@ -72,7 +72,7 @@ function CardDetailsView(props: ViewProps) {
 
   return (
     <>
-      <SPModalHeader>
+      <SPModalHeader data-testid="card-details-view">
         <div className="justify-space-between">
           <span>Card Details</span>
           <SPButton data-testid="card-details-edit-btn" onClick={props.onEdit}>
@@ -110,11 +110,16 @@ function CardDetailsView(props: ViewProps) {
   )
 }
 
-function CardDetailsForm(props: NCards.Card) {
+type FormProps = NCards.Card & { onBack: VoidFunction }
+function CardDetailsForm(props: FormProps) {
   return (
     <>
       <SPModalHeader data-testid="card-details-form">
         <div>Edit Card</div>
+        <SPButton
+          data-testid="card-details-form-back-btn"
+          onClick={props.onBack}
+        />
       </SPModalHeader>
       <SPModalContent className="flex-column align-center justify-center">
         <div>{props?.question}</div>

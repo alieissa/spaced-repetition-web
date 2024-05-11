@@ -79,5 +79,45 @@ describe('CardDetailsModal', () => {
         expect(answer).toBeInTheDocument()
       })
     })
+
+    describe.only('CardDetailsFrom', () => {
+      it('should display card detail when clicking on back button', async () => {
+        // Assemble
+        mountComponent()
+        await act(flushPromises)
+        const cardDetailsModalEditBtn = await screen.findByTestId(
+          'card-details-edit-btn',
+        )
+        await act(() => user.click(cardDetailsModalEditBtn))
+
+        // Act
+        const cardDetailsFormBackBTn = screen.getByTestId(
+          'card-details-form-back-btn',
+        )
+        await act(() => user.click(cardDetailsFormBackBTn))
+
+        // Assert
+        const cardDetailsView = await screen.findByTestId('card-details-view')
+        expect(cardDetailsView).toBeInTheDocument()
+      })
+
+      it('should display an error message when update fails', async () => {
+        // Assemble
+        mountComponent()
+        await act(flushPromises)
+        const cardDetailsModalEditBtn = await screen.findByTestId(
+          'card-details-edit-btn',
+        )
+        await act(() => user.click(cardDetailsModalEditBtn))
+
+        // Act
+        const saveBtn = await screen.findByTestId('save-btn')
+        await act(() => user.click(saveBtn))
+
+        // Assert
+        const cardSaveError = screen.findByTestId('card-save-error')
+        expect(cardSaveError).toBeInTheDocument()
+      })
+    })
   })
 })
