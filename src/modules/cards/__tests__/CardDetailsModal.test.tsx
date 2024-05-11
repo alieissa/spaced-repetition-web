@@ -61,7 +61,7 @@ describe('CardDetailsModal', () => {
         await act(() => user.click(cardDetailsModalEditBtn))
 
         // Assert
-        const cardDetailsForm = screen.queryByTestId('card-details-form')
+        const cardDetailsForm = await screen.findByTestId('card-details-form')
         expect(cardDetailsForm).toBeInTheDocument()
       })
 
@@ -71,7 +71,7 @@ describe('CardDetailsModal', () => {
         await act(flushPromises)
 
         // Act
-        const viewAnswersBtn = screen.getByTestId('view-answers-btn')
+        const viewAnswersBtn = await screen.findByTestId('view-answers-btn')
         await act(() => user.click(viewAnswersBtn))
 
         // Assert
