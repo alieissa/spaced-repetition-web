@@ -12,5 +12,6 @@ export { default as SPModalActions } from './ModalActions'
 export { default as SPModalContent } from './ModalContent'
 export { default as SPModalHeader } from './ModalHeader'
 export { default as Settings } from './Settings'
+export { default as SPText } from './Text'
 export { default as Tooltip } from './Tooltip'
 

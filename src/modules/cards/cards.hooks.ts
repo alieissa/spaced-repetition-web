@@ -92,6 +92,36 @@ export function useCardCreate(deckId: string): [
   return [createCardStatus, createCard]
 }
 
+export function useCardDetails(
+  deckId: string,
+  cardId: string
+): [Async<null, RequestError, NCards.Card>, NCards.Card, () => void] {
+  const loadCardStatus = useSelector(Select.loadCardStatus(cardId))
+  const card = useSelector(Select.loadedCardByID(cardId))
+
+  const dispatch = useDispatch()
+  const getCard = api.request({
+    method: 'GET',
+    url: `decks/${deckId}/cards/${cardId}`,
+  })
+
+  const loadCard = () => {
+    dispatch({
+      type: 'LoadCard',
+    })
+
+    getCard().then((result: any) => {
+      dispatch({
+        type: 'CardLoaded',
+        id: cardId,
+        result,
+      })
+    })
+  }
+
+  return [loadCardStatus, card, loadCard]
+}
+
 type GetNextCard = {
   type: 'GET_NEXT_CARD'
 }

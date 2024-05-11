@@ -67,7 +67,6 @@ export default function Card(props: PropsWithChildren<Props>) {
     updateCardQuality(getQuality(checkAnswerResult.distance))
   }, [checkAnswerStatus.type, checkAnswerResult.distance, updateCardQuality])
 
-  console.log('checkAnswerResult', checkAnswerResult)
   const answerError = form.touched.answer && !!form.errors.answer
   const getIcon = () => {
     if (

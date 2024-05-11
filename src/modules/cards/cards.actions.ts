@@ -35,6 +35,17 @@ export type CardCreated = {
   result: Either<RequestError, NCards.Card>
 }
 
+export type LoadCard = {
+  type: 'LoadCard'
+  id: NCards.Card['id']
+}
+
+export type CardLoaded = {
+  type: 'CardLoaded'
+  id: NCards.Card['id']
+  result: Either<RequestError, NCards.Card>
+}
+
 export type CardsAction =
   | CheckAnswer
   | AnswerChecked
@@ -42,3 +53,5 @@ export type CardsAction =
   | QualityUpdated
   | CreateCard
   | CardCreated
+  | LoadCard
+  | CardLoaded
