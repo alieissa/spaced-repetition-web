@@ -14,9 +14,10 @@ import {
   SPText,
 } from 'src/components'
 import { styles } from 'src/styles'
+import { async } from 'src/utils'
 import * as Yup from 'yup'
 import { NAnswers } from '../answers'
-import { useCardDetails } from './cards.hooks'
+import { useCardDetails, useCardForm } from './cards.hooks'
 import { NCards } from './cards.types'
 
 /**
@@ -130,8 +131,14 @@ const CardFormValidationSchema = Yup.object().shape({
 })
 type FormProps = NCards.Card & { onBack: VoidFunction; onSubmit: VoidFunction }
 function CardDetailsForm(props: FormProps) {
+  const params = useParams()
+  const [updateCardStatus, updateCard] = useCardForm(
+    params.deckId!,
+    params.cardId!,
+  )
+
   const handleSubmit = (values: any) => {
-    return
+    updateCard({ ...values, id: props.id, deckId: props.deckId })
   }
 
   const form = useFormik({
@@ -185,6 +192,14 @@ function CardDetailsForm(props: FormProps) {
           onClick={props.onBack}
         />
       </SPModalHeader>
+      <SPModalContent className="flex-column align-center justify-center">
+        {async.match(updateCardStatus)({
+          Untriggered: () => null,
+          Loading: () => null,
+          Success: () => <div data-testid="card-update-success">Success</div>,
+          Failure: () => <div data-testid="card-update-error">Failure</div>,
+        })}
+      </SPModalContent>
       <SPModalContent className="flex-column align-center justify-center">
         <Form className="w-full">
           <List horizontal className="flex" style={styles.flex}>

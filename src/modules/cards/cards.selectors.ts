@@ -29,3 +29,9 @@ export function loadedCardByID(id: NCards.Card['id']) {
     return state.cards.loadedCards[id]
   }
 }
+
+export function updateCardStatus(id: NCards.Card['id']) {
+  return (state: RootState) => {
+    return state.cards.updateCardStatus[id] || Untriggered()
+  }
+}

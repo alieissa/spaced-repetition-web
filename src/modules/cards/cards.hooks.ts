@@ -122,6 +122,36 @@ export function useCardDetails(
   return [loadCardStatus, card, loadCard]
 }
 
+export function useCardForm(
+  deckId: string,
+  cardId: string,
+): [Async<null, RequestError, NCards.Card>, (card: NCards.Card) => void] {
+  const updateCardStatus = useSelector(Select.updateCardStatus(cardId))
+
+  const dispatch = useDispatch()
+  const putCard = api.request({
+    method: 'PUT',
+    url: `decks/${deckId}/cards/${cardId}`,
+  })
+
+  const updateCard = (card: NCards.Card) => {
+    dispatch({
+      type: 'UpdateCard',
+      id: card.id
+    })
+
+    putCard(card).then((result: any) => {
+      dispatch({
+        type: 'CardUpdated',
+        id: cardId,
+        result,
+      })
+    })
+  }
+
+  return [updateCardStatus, updateCard]
+}
+
 type GetNextCard = {
   type: 'GET_NEXT_CARD'
 }
