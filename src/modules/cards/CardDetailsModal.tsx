@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Form, Icon, List, ListItem } from 'semantic-ui-react'
+import { Form, Icon, List, ListItem, Message } from 'semantic-ui-react'
 import 'src/App.css'
 import {
   SPButton,
@@ -63,11 +63,7 @@ export default function CardDetailsModal() {
       onClose={handleCloseModal}
     >
       {isEditing ? (
-        <CardDetailsForm
-          {...card}
-          onBack={() => setIsEditing(false)}
-          onSubmit={() => console.log('test')}
-        />
+        <CardDetailsForm {...card} onBack={() => setIsEditing(false)} />
       ) : (
         <CardDetailsView {...card} onEdit={() => setIsEditing(true)} />
       )}
@@ -129,7 +125,7 @@ const CardFormValidationSchema = Yup.object().shape({
     .min(1)
     .required('Required'),
 })
-type FormProps = NCards.Card & { onBack: VoidFunction; onSubmit: VoidFunction }
+type FormProps = NCards.Card & { onBack: VoidFunction }
 function CardDetailsForm(props: FormProps) {
   const params = useParams()
   const [updateCardStatus, updateCard] = useCardForm(
@@ -185,19 +181,28 @@ function CardDetailsForm(props: FormProps) {
 
   return (
     <>
-      <SPModalHeader data-testid="card-details-form">
-        <div>Edit Card</div>
-        <SPButton
+      <SPModalHeader data-testid="card-details-form" style={styles.flex}>
+        <Icon
           data-testid="card-details-form-back-btn"
+          name="arrow left"
           onClick={props.onBack}
         />
+        <div>Edit Card</div>
       </SPModalHeader>
       <SPModalContent className="flex-column align-center justify-center">
         {async.match(updateCardStatus)({
           Untriggered: () => null,
           Loading: () => null,
-          Success: () => <div data-testid="card-update-success">Success</div>,
-          Failure: () => <div data-testid="card-update-error">Failure</div>,
+          Success: () => (
+            <Message data-testid="card-update-success" success>
+              <Message.Header>Card has been updated</Message.Header>
+            </Message>
+          ),
+          Failure: () => (
+            <Message data-testid="card-update-error" negative>
+              <Message.Header>Error: Unable to update card</Message.Header>
+            </Message>
+          ),
         })}
       </SPModalContent>
       <SPModalContent className="flex-column align-center justify-center">
