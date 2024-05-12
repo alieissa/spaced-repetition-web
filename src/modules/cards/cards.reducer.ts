@@ -12,6 +12,7 @@ const initialState: NCards.State = {
   createCardStatus: Untriggered(),
   loadCardStatus: {},
   loadedCards: {},
+  updateCardStatus: {}
 }
 
 export default produce((draft: NCards.State, action: CardsAction) => {
@@ -59,7 +60,24 @@ export default produce((draft: NCards.State, action: CardsAction) => {
         Right: ({ value }) => {
           draft.loadCardStatus[action.id] = Success(value)
           draft.loadedCards[action.id] = value
-        }
+        },
+      })
+      return
+    }
+    case 'UpdateCard': {
+      console.log('updating card', action)
+      draft.updateCardStatus[action.id] = Loading(null)
+      return
+    }
+    case 'CardUpdated': {
+      either.match(action.result)({
+        Left: ({ value }) => {
+          draft.updateCardStatus[action.id] = Failure(value)
+        },
+        Right: ({ value }) => {
+          draft.updateCardStatus[action.id] = Success(value)
+          draft.loadedCards[action.id] = value
+        },
       })
       return
     }

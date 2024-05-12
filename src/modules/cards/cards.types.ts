@@ -15,6 +15,7 @@ export namespace NCards {
     createCardStatus: Async<null, RequestError, NCards.Card>
     loadCardStatus: Record<Card['id'], Async<null, RequestError, NCards.Card>>
     loadedCards: Record<Card['id'], NCards.Card>
+    updateCardStatus: Record<Card['id'], Async<null, RequestError, NCards.Card>>
   }
 
   export type Card = {

@@ -11,10 +11,20 @@ import CardDetailsModal from '../CardDetailsModal'
 
 const deckId = faker.string.uuid()
 const cardId = faker.string.uuid()
-const loadCardUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}/cards/${cardId}`
+const cardUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}/cards/${cardId}`
 
 export const handlers = [
-  rest.get(loadCardUrl, async (__, res, ctx) => {
+  rest.get(cardUrl, async (__, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        id: cardId,
+        question: faker.word.words(2),
+        answers: [{ id: faker.string.uuid(), content: faker.word.words(5) }],
+      }),
+    )
+  }),
+  rest.put(cardUrl, async (__, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -77,6 +87,72 @@ describe('CardDetailsModal', () => {
         // Assert
         const answer = screen.queryByTestId('answers-0')
         expect(answer).toBeInTheDocument()
+      })
+    })
+
+    describe('CardDetailsFrom', () => {
+      it('should display card detail when clicking on back button', async () => {
+        // Assemble
+        mountComponent()
+        await act(flushPromises)
+        const cardDetailsModalEditBtn = screen.getByTestId(
+          'card-details-edit-btn',
+        )
+        await act(() => user.click(cardDetailsModalEditBtn))
+
+        // Act
+        const cardDetailsFormBackBTn = screen.getByTestId(
+          'card-details-form-back-btn',
+        )
+        await act(() => user.click(cardDetailsFormBackBTn))
+
+        // Assert
+        const cardDetailsView = await screen.findByTestId('card-details-view')
+        expect(cardDetailsView).toBeInTheDocument()
+      })
+
+      it('should display a success message when update succeeds', async () => {
+        // Assemble
+
+        mountComponent()
+        await act(flushPromises)
+        const cardDetailsModalEditBtn = await screen.findByTestId(
+          'card-details-edit-btn',
+        )
+        await act(() => user.click(cardDetailsModalEditBtn))
+
+        // Act
+        const saveBtn = await screen.findByTestId('card-details-form-save-btn')
+        await act(() => user.click(saveBtn))
+        await act(flushPromises)
+
+        // Assert
+        const cardSaveError = await screen.findByTestId('card-update-success')
+        expect(cardSaveError).toBeInTheDocument()
+      })
+
+      it('should display an error message when update fails', async () => {
+        // Assemble
+        server.use(
+          rest.put(cardUrl, async (__, res, ctx) => {
+            return res(ctx.status(422))
+          }),
+        )
+        mountComponent()
+        await act(flushPromises)
+        const cardDetailsModalEditBtn = await screen.findByTestId(
+          'card-details-edit-btn',
+        )
+        await act(() => user.click(cardDetailsModalEditBtn))
+
+        // Act
+        const saveBtn = await screen.findByTestId('card-details-form-save-btn')
+        await act(() => user.click(saveBtn))
+        await act(flushPromises)
+
+        // Assert
+        const cardSaveError = await screen.findByTestId('card-update-error')
+        expect(cardSaveError).toBeInTheDocument()
       })
     })
   })
