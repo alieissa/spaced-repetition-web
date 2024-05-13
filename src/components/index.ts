@@ -3,6 +3,7 @@
 export { default as CardForm } from '../modules/cards/CardForm'
 export { default as DeckInfo } from '../modules/decks/DeckInfo'
 export { default as SPButton } from './Button'
+export { default as SPButtonIcon } from './ButtonIcon'
 export { default as SPCard } from './Card'
 export { default as SPCardContent } from './CardContent'
 export { default as CreateButton } from './CreateButton'
