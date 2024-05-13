@@ -1,0 +1,12 @@
+/** @format */
+
+import { Card, CardProps } from 'semantic-ui-react'
+
+const styles = {
+  boxShadow: 'none',
+  border: '1px solid',
+  borderRadius: 'unset',
+}
+export default function SPCard(props: CardProps) {
+  return <Card {...props} style={{ ...props.style, ...styles }} />
+}
