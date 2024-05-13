@@ -92,4 +92,24 @@ describe('DeckDetails', () => {
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
   })
+
+  describe('interaction', () => {
+    it('should display popup menu when clicking on hamburger menu', async () => {
+      // Assemble
+      mountComponent()
+      await act(flushPromises)
+
+      // Act
+      const deckDetailsMenuBtn = await screen.findByTestId(
+        'deck-details-dropdown',
+      )
+      await act(() => deckDetailsMenuBtn.click())
+
+      // Assert
+      const deckDetailsMenu = await screen.findByTestId(
+        'deck-details-dropdown-menu',
+      )
+      expect(deckDetailsMenu).toBeVisible()
+    })
+  })
 })

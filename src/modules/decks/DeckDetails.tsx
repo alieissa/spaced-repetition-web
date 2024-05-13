@@ -4,6 +4,10 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
   Container,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownProps,
   Loader,
   Message,
   MessageHeader,
@@ -36,6 +40,9 @@ export default function DeckDetails() {
 
   const handleEdit = () => navigate(`/decks/${params.deckId}/edit`)
 
+  const handleDelete = _.noop
+  const handleTest = _.noop
+
   const handleCardClick = (cardId: string) =>
     navigate(`/decks/${params.deckId}/cards/${cardId}`)
 
@@ -64,6 +71,7 @@ export default function DeckDetails() {
                   <SPButton data-testid="deck-edit-btn" onClick={handleEdit}>
                     Edit
                   </SPButton>
+                  <DeckMenu onDelete={handleDelete} onTest={handleTest} />
                 </div>
               </header>
             </Segment>
@@ -115,4 +123,19 @@ export default function DeckDetails() {
       )
     },
   })
+}
+
+type MenuProps = DropdownProps & {
+  onDelete: VoidFunction
+  onTest: VoidFunction
+}
+function DeckMenu(props: MenuProps) {
+  return (
+    <Dropdown data-testid="deck-details-dropdown" icon="ellipsis vertical">
+      <DropdownMenu data-testid="deck-details-dropdown-menu">
+        <DropdownItem text="Test" onClick={props.onTest} />
+        <DropdownItem text="Delete" onClick={props.onDelete} />
+      </DropdownMenu>
+    </Dropdown>
+  )
 }
