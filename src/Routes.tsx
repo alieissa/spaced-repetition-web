@@ -3,6 +3,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { Login, Logout } from 'src/modules/auth'
 import {
+  DeckDetails,
   DeckPage,
   DeckTestPage,
   DecksListPage,
@@ -20,7 +21,8 @@ export default function AppRoutes() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/decks" element={<DecksListPage />} />
       <Route path="/decks/new" element={<NewDeck />} />
-      <Route path="/decks/:deckId" element={<DeckPage />}>
+      <Route path="/decks/:deckId/edit" element={<DeckPage />} />
+      <Route path="/decks/:deckId" element={<DeckDetails />}>
         <Route path="cards/:cardId" element={<CardDetailsModal />} />
       </Route>
       <Route path="/decks/:deckId/test" element={<DeckTestPage />} />
