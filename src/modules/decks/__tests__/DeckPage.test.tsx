@@ -30,15 +30,15 @@ const handlers = [
     return res(
       ctx.json({
         id: deckId,
-        name: faker.word.noun(),
+        name: 'Test Name',
         cards: [
           {
-            id: faker.string.uuid(),
-            question: faker.lorem.sentence(5),
+            id: 'testUuid',
+            question: 'Test Question',
             answers: [
               {
-                id: faker.string.uuid(),
-                content: faker.lorem.sentence(5),
+                id: 'testUuid',
+                content: 'Test Content',
               },
             ],
           },

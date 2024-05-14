@@ -42,7 +42,9 @@ exports[`NewDeck view should render correctly 1`] = `
             />
           </div>
         </div>
-        <div>
+        <div
+          data-testid="deck-description"
+        >
           <label
             for="deck-textarea"
           >
@@ -52,6 +54,7 @@ exports[`NewDeck view should render correctly 1`] = `
             class="w-full"
             data-testid="deck-description"
             name="deck-textarea"
+            rows="5"
           />
         </div>
         <section

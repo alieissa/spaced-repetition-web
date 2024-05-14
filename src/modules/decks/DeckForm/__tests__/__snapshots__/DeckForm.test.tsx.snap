@@ -54,6 +54,7 @@ exports[`DeckForm view should render correctly 1`] = `
             class="w-full"
             data-testid="deck-description"
             name="deck-textarea"
+            rows="5"
           />
         </div>
         <section

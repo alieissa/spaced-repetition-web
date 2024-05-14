@@ -157,6 +157,7 @@ export default function DeckForm(props: Props) {
             <label htmlFor="deck-textarea">Description</label>
             <textarea
               data-testid="deck-description"
+              rows={5}
               className="w-full"
               name="deck-textarea"
               value={localState.description}
