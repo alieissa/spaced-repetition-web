@@ -62,7 +62,7 @@ describe('DeckForm', () => {
       const { container } = mountComponent()
       const user = userEvent.setup()
       const descriptionInput = container.querySelector(
-        '[data-testid="deck-description"] input',
+        '[data-testid="deck-description"] textarea',
       )
       expect(descriptionInput).not.toBeNull()
 
@@ -88,6 +88,9 @@ describe('DeckForm', () => {
       )
       expect(nameInput).not.toBeNull()
       await act(() => user.type(nameInput as Element, faker.lorem.lines(1)))
+
+      const viewAnswersBtn = await screen.findByTestId('view-answers-btn')
+      await act(() => viewAnswersBtn.click())
 
       const answerInput = container.querySelector('[name="answer-content"]')
       expect(answerInput).not.toBeNull()

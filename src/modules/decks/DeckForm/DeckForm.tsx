@@ -153,7 +153,7 @@ export default function DeckForm(props: Props) {
             />
           </div>
 
-          <div>
+          <div data-testid="deck-description">
             <label htmlFor="deck-textarea">Description</label>
             <textarea
               data-testid="deck-description"
