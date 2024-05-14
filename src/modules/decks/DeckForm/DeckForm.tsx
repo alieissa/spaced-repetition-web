@@ -167,22 +167,20 @@ export default function DeckForm(props: Props) {
             <SPList>
               {_.map(getCards(localState), (card) => (
                 <SPListItem key={card.id}>
-                  <Segment className="bs-0">
-                    <CardForm
-                      {...card}
-                      answers={getAnswersByCardId(localState, card.id)}
-                      onAddAnswer={() => handleAddAnswer(card.id)}
-                      onChangeAnswer={(id, content) =>
-                        handleChangeAnswer(id, card.id, content)
-                      }
-                      onChangeQuestion={(question: string) =>
-                        handleChangeQuestion(card.id, question)
-                      }
-                      onDeleteAnswer={(id: string) =>
-                        handleDeleteAnswer(id, card.id)
-                      }
-                    />
-                  </Segment>
+                  <CardForm
+                    {...card}
+                    answers={getAnswersByCardId(localState, card.id)}
+                    onAddAnswer={() => handleAddAnswer(card.id)}
+                    onChangeAnswer={(id, content) =>
+                      handleChangeAnswer(id, card.id, content)
+                    }
+                    onChangeQuestion={(question: string) =>
+                      handleChangeQuestion(card.id, question)
+                    }
+                    onDeleteAnswer={(id: string) =>
+                      handleDeleteAnswer(id, card.id)
+                    }
+                  />
                 </SPListItem>
               ))}
             </SPList>
