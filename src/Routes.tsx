@@ -3,6 +3,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { Login, Logout } from 'src/modules/auth'
 import {
+  DeckDetails,
   DeckPage,
   DeckTestPage,
   DecksListPage,
@@ -11,6 +12,7 @@ import {
 import { Signup } from 'src/modules/signup'
 import { Verification } from 'src/modules/verification'
 import SPSidebar from './modules/Sidebar'
+import { CardDetailsModal } from './modules/cards'
 
 const withSidebar = (Component: JSX.Element) => {
   return (
@@ -30,7 +32,10 @@ export default function AppRoutes() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/decks" element={withSidebar(<DecksListPage />)}>
         <Route path="new" element={<NewDeck />} />
-        <Route path=":deckId" element={<DeckPage />} />
+        <Route path=":deckId" element={<DeckDetails />}>
+          <Route path="cards/:cardId" element={<CardDetailsModal />} />
+        </Route>
+        <Route path=":deckId/edit" element={<DeckPage />} />
         <Route path=":deckId/test" element={<DeckTestPage />} />
       </Route>
       <Route path="/verify" element={<Verification />} />

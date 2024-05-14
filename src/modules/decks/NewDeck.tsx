@@ -28,7 +28,6 @@ export default function NewDeck() {
       submitStatus={createDeckStatus}
       successMessage="Deck successfully created"
       failureMessage="Failed to create deck"
-      onCancel={handleCancel}
       onSubmit={handleSubmit}
     />
   )

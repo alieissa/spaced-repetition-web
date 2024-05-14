@@ -2,13 +2,7 @@
 
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
-import {
-  Container,
-  Icon,
-  Message,
-  MessageHeader,
-  Segment,
-} from 'semantic-ui-react'
+import { Icon, Message, MessageHeader, Segment } from 'semantic-ui-react'
 import {
   CardForm,
   SPButton,
@@ -58,7 +52,7 @@ type Props = {
   successMessage: string
   failureMessage: string
   submitStatus: async.Async<null, RequestError, null>
-  onCancel: VoidFunction
+  onCancel?: VoidFunction
   onSubmit: (deck: any) => void
 }
 
@@ -115,13 +109,15 @@ export default function DeckForm(props: Props) {
   }
 
   return (
-    <Container data-testid="deck-success">
+    <div data-testid="deck-success">
       <div className="align-center" style={styles.p0}>
-        <SPButtonIcon
-          size="huge"
-          icon="chevron left"
-          onClick={props.onCancel}
-        />
+        {props.onCancel && (
+          <SPButtonIcon
+            size="huge"
+            icon="chevron left"
+            onClick={props.onCancel}
+          />
+        )}
         <SPHeader as="h2" className="flex">
           {props.header}
         </SPHeader>
@@ -228,6 +224,6 @@ export default function DeckForm(props: Props) {
           Save
         </SPButton>
       </footer>
-    </Container>
+    </div>
   )
 }

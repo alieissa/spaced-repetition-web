@@ -2,7 +2,7 @@
 
 import { useNavigate, useParams } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
-import { Container, Message } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 import 'src/App.css'
 import { SPButtonIcon, SPHeader } from 'src/components'
 import { TestCard, useCardTestFormReducer } from 'src/modules/cards'
@@ -50,7 +50,7 @@ export function DeckTestPage(props: Props) {
   const isFirstCard = state.currentCardIndex === 0
 
   return (
-    <Container className="w-max-xl" data-testid="deck-test-success">
+    <div className="w-max-xl" data-testid="deck-test-success">
       <div className="align-center" style={styles.p0}>
         <SPButtonIcon
           size="huge"
@@ -84,7 +84,7 @@ export function DeckTestPage(props: Props) {
           </>
         )}
       </TestCard>
-    </Container>
+    </div>
   )
 }
 

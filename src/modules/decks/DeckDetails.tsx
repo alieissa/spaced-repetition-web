@@ -3,12 +3,10 @@
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
-  Container,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownProps,
-  Loader,
   Message,
   MessageHeader,
   Segment,
@@ -26,6 +24,7 @@ import {
 } from 'src/components'
 
 import _ from 'lodash'
+import { useEffect } from 'react'
 import { styles } from 'src/styles'
 import { useDeckById } from './decks.hooks'
 
@@ -36,7 +35,11 @@ import { useDeckById } from './decks.hooks'
 export default function DeckDetails() {
   const navigate = useNavigate()
   const params = useParams<{ deckId: string }>()
-  const [loadDeckStatus, deck, __] = useDeckById(params.deckId!)
+  const [loadDeckStatus, deck, loadDeck] = useDeckById(params.deckId!)
+
+  useEffect(() => {
+    loadDeck()
+  }, [params.deckId])
 
   const handleEdit = () => navigate(`/decks/${params.deckId}/edit`)
 
@@ -50,11 +53,7 @@ export default function DeckDetails() {
 
   return async.match(loadDeckStatus)({
     Untriggered: () => null,
-    Loading: () => (
-      <Segment data-testid="deck-details-loading">
-        <Loader active />
-      </Segment>
-    ),
+    Loading: () => null,
     Success: () => {
       return (
         <>
@@ -63,7 +62,7 @@ export default function DeckDetails() {
               and card create modals are opened here
           */}
           <Outlet />
-          <Container data-testid="deck-details-success">
+          <div data-testid="deck-details-success">
             <Segment basic style={styles.p0}>
               <header className="justify-space-between">
                 <h2>{deck.name}</h2>
@@ -111,7 +110,7 @@ export default function DeckDetails() {
                 </section>
               </div>
             </main>
-          </Container>
+          </div>
         </>
       )
     },
