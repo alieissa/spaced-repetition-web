@@ -47,6 +47,10 @@
   margin-left: auto;
 }
 
+.mt-20 {
+  margin-top: 20px
+}
+
 .h-full {
   height: 100%;
 }

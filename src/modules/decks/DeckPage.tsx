@@ -2,7 +2,7 @@
 
 import { useNavigate, useParams } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
-import { Loader, Segment } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react'
 import 'src/App.css'
 import { async } from 'src/utils'
 import * as Select from './decks.selectors'
@@ -21,11 +21,7 @@ export default function Deck() {
 
   return async.match(status)({
     Untriggered: () => null,
-    Loading: () => (
-      <Segment data-testid="deck-loading">
-        <Loader active />
-      </Segment>
-    ),
+    Loading: () => null,
     Success: () => {
       // __type__ is used to discriminate if an entity is from backend
       // or new.This is important when updating/inserting the entities
@@ -43,7 +39,7 @@ export default function Deck() {
       const formDeck = { ...deck, cards: formCards }
       return (
         <DeckForm
-          header="Update deck"
+          header="Edit Deck"
           deck={formDeck}
           successMessage="Deck successfully updated"
           failureMessage="Failed to update deck"

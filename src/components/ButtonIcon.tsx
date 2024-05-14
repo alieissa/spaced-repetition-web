@@ -6,6 +6,8 @@ import { Button, ButtonOrProps } from 'semantic-ui-react'
 const styles = {
   paddingLeft: 0,
   paddingRight: 0,
+  background: 'none',
+  color: 'unset',
 }
 export default function SPButtonIcon(props: ButtonOrProps) {
   return (
