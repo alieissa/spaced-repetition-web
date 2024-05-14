@@ -3,12 +3,139 @@
 exports[`DeckPage view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="ui segment"
-    data-testid="deck-loading"
+    class="ui container"
+    data-testid="deck-success"
   >
     <div
-      class="ui active loader"
-    />
+      class="align-center"
+      style="padding: 0px;"
+    >
+      <button
+        class="ui huge icon button"
+        style="padding-left: 0px; padding-right: 0px; background: none;"
+      >
+        <i
+          aria-hidden="true"
+          class="chevron left icon"
+        />
+      </button>
+      <h2
+        class="ui header flex"
+        style="margin-top: 0px;"
+      >
+        Edit Deck
+      </h2>
+    </div>
+    <main>
+      <div>
+        <div>
+          <div
+            class="ui input w-full"
+            data-testid="deck-name"
+            style="opacity: 1;"
+          >
+            <input
+              placeholder="Enter name here"
+              style="border-radius: unset;"
+              type="text"
+              value="Test Name"
+            />
+          </div>
+        </div>
+        <div
+          data-testid="deck-description"
+        >
+          <label
+            for="deck-textarea"
+          >
+            Description
+          </label>
+          <textarea
+            class="w-full"
+            data-testid="deck-description"
+            name="deck-textarea"
+            rows="5"
+          />
+        </div>
+        <section
+          class="flex-column w-inherit test"
+        >
+          <div
+            class="ui list"
+            role="list"
+          >
+            <div
+              class="item"
+              role="listitem"
+            >
+              <form
+                class="ui form w-full"
+              >
+                <div
+                  class="flex-row-reverse"
+                >
+                  <i
+                    aria-hidden="true"
+                    class="arrow down icon"
+                    data-testid="view-answers-btn"
+                  />
+                </div>
+                <div
+                  class="ui horizontal list flex"
+                  role="list"
+                  style="display: flex;"
+                >
+                  <div
+                    class="item flex-1"
+                    role="listitem"
+                  >
+                    <div
+                      class="ui input w-full"
+                      style="opacity: 1;"
+                    >
+                      <input
+                        name="question-content"
+                        placeholder="Enter question here"
+                        style="border-radius: unset;"
+                        type="text"
+                        value="Test Question"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="item flex-1"
+                    role="listitem"
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+        <div
+          class="ui basic segment flex-row-reverse test"
+          style="padding: 0px;"
+        >
+          <button
+            class="ui green icon button"
+          >
+            <i
+              aria-hidden="true"
+              class="plus icon"
+            />
+          </button>
+        </div>
+      </div>
+    </main>
+    <footer
+      class="flex-row-reverse mt-20"
+    >
+      <button
+        class="ui green small button"
+        data-testid="deck-save"
+      >
+        Save
+      </button>
+    </footer>
   </div>
 </DocumentFragment>
 `;

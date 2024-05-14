@@ -1,9 +1,10 @@
 /** @format */
 import * as _ from 'lodash'
-import { MouseEventHandler } from 'react'
+import { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Button, Form, Icon, Input, List } from 'semantic-ui-react'
+import { Form, Icon } from 'semantic-ui-react'
 import 'src/App.css'
+import { SPButtonIcon, SPInput, SPList, SPListItem } from 'src/components'
 import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
 
@@ -15,16 +16,23 @@ export type CardFormProps = {
   onChangeAnswer: (id: string, content: string) => void
   onDeleteAnswer: (id: string) => void
   onAddAnswer: VoidFunction
-  onSubmitForm?: any
-  onCancel?: MouseEventHandler
 }
 
 export default function CardForm(props: CardFormProps) {
+  const [areAnswersVisible, setAreAnswersVisible] = useState(false)
+
   return (
     <Form className="w-full">
-      <List horizontal className="flex" style={styles.flex}>
-        <List.Item className="flex-1">
-          <Input
+      <div className="flex-row-reverse">
+        <Icon
+          data-testid="view-answers-btn"
+          name={!areAnswersVisible ? 'arrow down' : 'arrow up'}
+          onClick={() => setAreAnswersVisible(!areAnswersVisible)}
+        />
+      </div>
+      <SPList horizontal className="flex" style={styles.flex}>
+        <SPListItem className="flex-1">
+          <SPInput
             name="question-content"
             placeholder="Enter question here"
             className="w-full"
@@ -33,63 +41,51 @@ export default function CardForm(props: CardFormProps) {
               props.onChangeQuestion(e.target.value)
             }}
           />
-        </List.Item>
-        <List.Item className="flex-1">
-          <List style={styles.p0}>
-            {props.answers.map((answer) => (
-              <List.Item key={answer.id} className="flex" style={styles.flex}>
-                <Input
-                  value={answer.content}
-                  placeholder="Enter answer here"
-                  className="w-full"
-                  name="answer-content"
-                  onChange={(e) => {
-                    props.onChangeAnswer(answer.id, e.target.value || '')
-                  }}
-                />
+        </SPListItem>
+        <SPListItem className="flex-1">
+          {areAnswersVisible && (
+            <SPList style={styles.p0}>
+              {props.answers.map((answer) => (
+                <SPListItem
+                  key={answer.id}
+                  className="flex"
+                  style={styles.flex}
+                >
+                  <SPInput
+                    value={answer.content}
+                    placeholder="Enter answer here"
+                    className="w-full"
+                    name="answer-content"
+                    onChange={(e) => {
+                      props.onChangeAnswer(answer.id, e.target.value || '')
+                    }}
+                  />
 
-                <Button
+                  <SPButtonIcon
+                    size="small"
+                    style={styles.bgWhite}
+                    disabled={_.size(props.answers) === 1}
+                    icon="x"
+                    onClick={() => {
+                      props.onDeleteAnswer(answer.id)
+                    }}
+                  />
+                </SPListItem>
+              ))}
+              <SPListItem style={styles.textAlignRight}>
+                <SPButtonIcon
                   size="small"
                   style={styles.bgWhite}
-                  disabled={_.size(props.answers) === 1}
-                  icon={<Icon name="x" />}
+                  icon="plus"
                   onClick={() => {
-                    props.onDeleteAnswer(answer.id)
+                    props.onAddAnswer()
                   }}
                 />
-              </List.Item>
-            ))}
-            <List.Item style={styles.textAlignRight}>
-              <Button
-                size="small"
-                style={styles.bgWhite}
-                icon={<Icon name="plus" color="green" />}
-                onClick={() => {
-                  props.onAddAnswer()
-                }}
-              />
-            </List.Item>
-          </List>
-        </List.Item>
-      </List>
-
-      <Form.Group style={styles.justifyEnd}>
-        {props.onCancel && (
-          <Form.Button basic size="small" onClick={props.onCancel}>
-            Cancel
-          </Form.Button>
-        )}
-        {props.onSubmitForm && (
-          <Form.Button
-            icon
-            size="small"
-            color="green"
-            onClick={props.onSubmitForm}
-          >
-            Save
-          </Form.Button>
-        )}
-      </Form.Group>
+              </SPListItem>
+            </SPList>
+          )}
+        </SPListItem>
+      </SPList>
     </Form>
   )
 }

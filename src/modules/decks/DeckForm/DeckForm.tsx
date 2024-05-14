@@ -3,17 +3,21 @@
 import _ from 'lodash'
 import { useState } from 'react'
 import {
-  Button,
-  Card,
   Container,
   Icon,
-  Input,
-  List,
   Message,
   MessageHeader,
   Segment,
 } from 'semantic-ui-react'
-import { CardForm } from 'src/components'
+import {
+  CardForm,
+  SPButton,
+  SPButtonIcon,
+  SPHeader,
+  SPInput,
+  SPList,
+  SPListItem,
+} from 'src/components'
 import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
 import { RequestError } from 'src/types'
@@ -107,49 +111,16 @@ export default function DeckForm(props: Props) {
 
   return (
     <Container data-testid="deck-success">
-      <Segment basic style={styles.p0}>
-        <header className="justify-space-between">
-          <h2>{props.header}</h2>
-          <div>
-            <Button
-              className="mx-auto"
-              size="small"
-              disabled={isUpdating}
-              onClick={props.onCancel}
-            >
-              Cancel
-            </Button>
-            <Button
-              data-testid="deck-save"
-              color="green"
-              size="small"
-              disabled={isUpdating}
-              onClick={() => {
-                if (!isValidForm(localState)) {
-                  setDisplayValidationError(true)
-                  return
-                }
-                const cards = getCards(localState)
-                const cardsForm = cards.map((card) => ({
-                  ...card,
-                  answers: getAnswersByCardId(localState, card.id),
-                }))
-
-                const deckToUpdate = {
-                  id: props.deck.id,
-                  name: localState.name,
-                  description: localState.description,
-                  cards: cardsForm,
-                }
-
-                props.onSubmit(deckToUpdate)
-              }}
-            >
-              Save
-            </Button>
-          </div>
-        </header>
-      </Segment>
+      <div className="align-center" style={styles.p0}>
+        <SPButtonIcon
+          size="huge"
+          icon="chevron left"
+          onClick={props.onCancel}
+        />
+        <SPHeader as="h2" className="flex">
+          {props.header}
+        </SPHeader>
+      </div>
       <main>
         {displayValidationError && (
           <Message negative data-testid="deck-submission-error">
@@ -172,61 +143,86 @@ export default function DeckForm(props: Props) {
           ),
         })}
         <div>
-          <Card fluid>
-            <Card.Content style={styles.p0} className="bt-none">
-              <List>
-                <List.Item>
-                  <Input
-                    data-testid="deck-name"
-                    placeholder="Enter name here"
-                    className="w-full"
-                    value={localState.name}
-                    onChange={handleChangeDeckName}
-                  />
-                </List.Item>
-                <List.Item>
-                  <Input
-                    data-testid="deck-description"
-                    placeholder="Enter description here"
-                    className="w-full"
-                    value={localState.description}
-                    onChange={handleDeckDescriptionChange}
-                  />
-                </List.Item>
-              </List>
-            </Card.Content>
-          </Card>
+          <div>
+            <SPInput
+              data-testid="deck-name"
+              placeholder="Enter name here"
+              className="w-full"
+              value={localState.name}
+              onChange={handleChangeDeckName}
+            />
+          </div>
+
+          <div data-testid="deck-description">
+            <label htmlFor="deck-textarea">Description</label>
+            <textarea
+              data-testid="deck-description"
+              rows={5}
+              className="w-full"
+              name="deck-textarea"
+              value={localState.description}
+              onChange={handleDeckDescriptionChange}
+            />
+          </div>
           <section className="flex-column w-inherit test">
-            <List>
+            <SPList>
               {_.map(getCards(localState), (card) => (
-                <List.Item key={card.id}>
-                  <Segment className="bs-0">
-                    <CardForm
-                      {...card}
-                      answers={getAnswersByCardId(localState, card.id)}
-                      onAddAnswer={() => handleAddAnswer(card.id)}
-                      onChangeAnswer={(id, content) =>
-                        handleChangeAnswer(id, card.id, content)
-                      }
-                      onChangeQuestion={(question: string) =>
-                        handleChangeQuestion(card.id, question)
-                      }
-                      onDeleteAnswer={(id: string) =>
-                        handleDeleteAnswer(id, card.id)
-                      }
-                    />
-                  </Segment>
-                </List.Item>
+                <SPListItem key={card.id}>
+                  <CardForm
+                    {...card}
+                    answers={getAnswersByCardId(localState, card.id)}
+                    onAddAnswer={() => handleAddAnswer(card.id)}
+                    onChangeAnswer={(id, content) =>
+                      handleChangeAnswer(id, card.id, content)
+                    }
+                    onChangeQuestion={(question: string) =>
+                      handleChangeQuestion(card.id, question)
+                    }
+                    onDeleteAnswer={(id: string) =>
+                      handleDeleteAnswer(id, card.id)
+                    }
+                  />
+                </SPListItem>
               ))}
-            </List>
+            </SPList>
           </section>
           <Segment basic style={styles.p0} className="flex-row-reverse test">
-            <Button icon color="green" onClick={handleAddCard}>
+            <SPButton icon color="green" onClick={handleAddCard}>
               <Icon name="plus" />
-            </Button>
+            </SPButton>
           </Segment>
         </div>
       </main>
+      <footer className="flex-row-reverse mt-20">
+        <SPButton
+          data-testid="deck-save"
+          color="green"
+          size="small"
+          disabled={isUpdating}
+          onClick={() => {
+            if (!isValidForm(localState)) {
+              setDisplayValidationError(true)
+              return
+            }
+            const cards = getCards(localState)
+            const cardsForm = cards.map((card) => ({
+              ...card,
+              answers: getAnswersByCardId(localState, card.id),
+            }))
+
+            const deckToUpdate = {
+              id: props.deck.id,
+              name: localState.name,
+              description: localState.description,
+              cards: cardsForm,
+            }
+
+            props.onSubmit(deckToUpdate)
+          }}
+        >
+          Save
+        </SPButton>
+      </footer>
     </Container>
   )
 }

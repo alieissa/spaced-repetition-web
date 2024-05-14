@@ -4,10 +4,14 @@ import { useFormik } from 'formik'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Form, Icon, List, ListItem, Message } from 'semantic-ui-react'
+import { Form, Icon, List, Message } from 'semantic-ui-react'
 import 'src/App.css'
 import {
   SPButton,
+  SPButtonIcon,
+  SPFormInput,
+  SPList,
+  SPListItem,
   SPModal,
   SPModalContent,
   SPModalHeader,
@@ -93,23 +97,26 @@ function CardDetailsView(props: ViewProps) {
             onClick={() => setAreAnswersVisible(!areAnswersVisible)}
           />
         </div>
-        <List horizontal className="w-full" style={styles.flex}>
-          <ListItem className="flex-1">
+        <SPList horizontal className="w-full" style={styles.flex}>
+          <SPListItem className="flex-1">
             <SPText className="w-full" value={props.question} />
-          </ListItem>
-          <ListItem className="flex-1">
+          </SPListItem>
+          <SPListItem className="flex-1">
             <List style={styles.p0}>
               {areAnswersVisible &&
                 props.answers.map((answer, index) => {
                   return (
-                    <ListItem key={answer.id} data-testid={`answers-${index}`}>
+                    <SPListItem
+                      key={answer.id}
+                      data-testid={`answers-${index}`}
+                    >
                       <SPText className="w-full" value={answer.content} />
-                    </ListItem>
+                    </SPListItem>
                   )
                 })}
             </List>
-          </ListItem>
-        </List>
+          </SPListItem>
+        </SPList>
       </SPModalContent>
     </>
   )
@@ -207,58 +214,59 @@ function CardDetailsForm(props: FormProps) {
       </SPModalContent>
       <SPModalContent className="flex-column align-center justify-center">
         <Form className="w-full">
-          <List horizontal className="flex" style={styles.flex}>
-            <List.Item className="flex-1">
-              <Form.Input
+          <SPList horizontal className="flex" style={styles.flex}>
+            <SPListItem className="flex-1">
+              <SPFormInput
                 name="question-content"
                 placeholder="Enter question here"
                 className="w-full"
                 error={getQuestionError()}
                 value={form.values.question}
-                onChange={(e) => {
+                onChange={(e: any) => {
                   handleChangeQuestion(e.target.value)
                 }}
               />
-            </List.Item>
-            <List.Item className="flex-1">
-              <List style={styles.p0}>
+            </SPListItem>
+            <SPListItem className="flex-1">
+              <SPList style={styles.p0}>
                 {form.values.answers.map((answer, index) => (
-                  <List.Item
+                  <SPListItem
                     key={answer.id}
                     className="flex"
                     style={styles.flex}
                   >
-                    <Form.Input
+                    <SPFormInput
                       value={answer.content}
                       placeholder="Enter answer here"
                       className="w-full"
                       error={getAnswerError(index)}
                       name="answer-content"
-                      onChange={(e) =>
+                      onChange={(e: any) =>
                         handleChangeAnswer(answer.id, e.target.value)
                       }
                     />
 
-                    <SPButton
+                    <SPButtonIcon
                       size="small"
                       style={styles.bgWhite}
                       disabled={form.values.answers.length === 1}
-                      icon={<Icon name="x" />}
+                      icon="x"
                       onClick={() => handleDeleteAnswer(answer.id)}
                     />
-                  </List.Item>
+                  </SPListItem>
                 ))}
-                <List.Item style={styles.textAlignRight}>
-                  <SPButton
+                <SPListItem style={styles.textAlignRight}>
+                  <SPButtonIcon
                     size="small"
                     style={styles.bgWhite}
-                    icon={<Icon name="plus" color="green" />}
+                    icon="plus"
+                    color="green"
                     onClick={handleAddAnswer}
                   />
-                </List.Item>
-              </List>
-            </List.Item>
-          </List>
+                </SPListItem>
+              </SPList>
+            </SPListItem>
+          </SPList>
 
           <div className="flex-row-reverse">
             <SPButton
