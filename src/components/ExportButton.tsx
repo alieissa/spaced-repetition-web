@@ -1,10 +1,11 @@
 /** @format */
 
-import { Button, ButtonProps } from 'semantic-ui-react'
+import { ButtonProps } from 'semantic-ui-react'
+import { SPButton } from '.'
 import './components.css'
 
 export default function ExportButton(props: ButtonProps) {
   return (
-    <Button size="small" className="export-btn" icon="download" {...props} />
+    <SPButton size="small" className="export-btn" icon="download" {...props} />
   )
 }

@@ -3,12 +3,117 @@
 exports[`DeckDetails view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="ui segment"
-    data-testid="deck-details-loading"
+    data-testid="deck-details-success"
   >
     <div
-      class="ui active loader"
-    />
+      class="ui basic segment"
+      style="padding: 0px;"
+    >
+      <header
+        class="justify-space-between"
+      >
+        <h2>
+          retrospect
+        </h2>
+        <div>
+          <button
+            class="ui button"
+            data-testid="deck-edit-btn"
+            style="border-radius: 0;"
+          >
+            Edit
+          </button>
+          <div
+            aria-expanded="false"
+            class="ui dropdown"
+            data-testid="deck-details-dropdown"
+            role="listbox"
+            tabindex="0"
+          >
+            <i
+              aria-hidden="true"
+              class="ellipsis vertical icon"
+            />
+            <div
+              class="menu transition"
+              data-testid="deck-details-dropdown-menu"
+            >
+              <div
+                class="item"
+                role="option"
+              >
+                <span
+                  class="text"
+                >
+                  Test
+                </span>
+              </div>
+              <div
+                class="item"
+                role="option"
+              >
+                <span
+                  class="text"
+                >
+                  Delete
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+    <main>
+      <div>
+        <section
+          class="flex-column w-inherit test"
+        >
+          <div>
+            <span
+              style="font-weight: 600;"
+            >
+              Cards
+            </span>
+          </div>
+          <div
+            class="ui celled horizontal list"
+            role="list"
+          >
+            <div
+              class="item"
+              role="listitem"
+            >
+              <div
+                class="ui card pointer"
+                data-testid="deck-details-card-0"
+                style="box-shadow: none; border: 1px solid; border-radius: unset;"
+              >
+                <div
+                  class="content"
+                >
+                  Somnus timor aspernatur ademptio enim.
+                </div>
+              </div>
+            </div>
+            <div
+              class="item"
+              role="listitem"
+            >
+              <div
+                class="ui card pointer"
+                style="box-shadow: none; border: 1px solid; border-radius: unset;"
+              >
+                <div
+                  class="content"
+                >
+                  Add card
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
   </div>
 </DocumentFragment>
 `;

@@ -2,7 +2,7 @@
 
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
-import { Icon, Message, MessageHeader, Segment } from 'semantic-ui-react'
+import { Message, MessageHeader, Segment } from 'semantic-ui-react'
 import {
   CardForm,
   SPButton,
@@ -155,7 +155,9 @@ export default function DeckForm(props: Props) {
           </div>
 
           <div data-testid="deck-description">
-            <label htmlFor="deck-textarea">Description</label>
+            <label htmlFor="deck-textarea" style={{ fontWeight: 600 }}>
+              Description
+            </label>
             <textarea
               data-testid="deck-description"
               rows={5}
@@ -165,7 +167,8 @@ export default function DeckForm(props: Props) {
               onChange={handleDeckDescriptionChange}
             />
           </div>
-          <section className="flex-column w-inherit test">
+          <section className="flex-column w-inherit">
+            <div style={{ fontWeight: 600 }}>Cards</div>
             <SPList>
               {_.map(getCards(localState), (card) => (
                 <SPListItem key={card.id}>
@@ -187,10 +190,8 @@ export default function DeckForm(props: Props) {
               ))}
             </SPList>
           </section>
-          <Segment basic style={styles.p0} className="flex-row-reverse test">
-            <SPButton icon color="green" onClick={handleAddCard}>
-              <Icon name="plus" />
-            </SPButton>
+          <Segment basic style={styles.p0} className="flex-row-reverse">
+            <SPButtonIcon color="green" icon="plus" onClick={handleAddCard} />
           </Segment>
         </div>
       </main>

@@ -3,7 +3,7 @@
 exports[`DeckTestPage view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="ui container w-max-xl"
+    class="w-max-xl"
     data-testid="deck-test-success"
   >
     <div
@@ -70,6 +70,7 @@ exports[`DeckTestPage view should render correctly 1`] = `
           >
             <button
               class="ui button"
+              style="border-radius: 0;"
               type="submit"
             >
               Check

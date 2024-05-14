@@ -27,8 +27,10 @@ afterAll(() => server.close())
 
 describe('DecksListPage', () => {
   describe('view', () => {
-    it('should render correctly', () => {
+    it('should render correctly', async () => {
       const { asFragment } = renderWithProviders(<DecksListPage />)
+      await act(flushPromises)
+
       expect(asFragment()).toMatchSnapshot()
     })
     it('should display loading', async () => {

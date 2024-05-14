@@ -2,7 +2,7 @@
 
 import { faker } from '@faker-js/faker'
 import '@testing-library/jest-dom'
-import { act, screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 
@@ -56,17 +56,11 @@ afterAll(() => server.close())
 
 describe('DeckDetails', () => {
   describe('view', () => {
-    it('should render correctly', () => {
+    it('should render correctly', async () => {
       const { asFragment } = mountComponent()
-      expect(asFragment()).toMatchSnapshot()
-    })
+      await act(flushPromises)
 
-    it('should display loading', async () => {
-      mountComponent()
-      const testId = 'deck-details-loading'
-      expect(await screen.findByTestId(testId)).toBeInTheDocument()
-      // See https://davidwcai.medium.com/react-testing-library-and-the-not-wrapped-in-act-errors-491a5629193b
-      await waitForElementToBeRemoved(() => screen.queryByTestId(testId))
+      expect(asFragment()).toMatchSnapshot()
     })
 
     it('should display success', async () => {

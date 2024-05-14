@@ -20,7 +20,6 @@ import {
   SPCardContent,
   SPList,
   SPListItem,
-  SPText,
 } from 'src/components'
 
 import _ from 'lodash'
@@ -77,13 +76,22 @@ export default function DeckDetails() {
             <main>
               <div>
                 {deck.description && (
-                  <SPText
-                    data-testid="deck-details-description"
-                    className="w-full"
-                    value={deck.description}
-                  />
+                  <>
+                    <div style={{ display: 'flex' }}>
+                      <span style={{ fontWeight: 600 }}>Description</span>
+                    </div>
+                    <span
+                      data-testid="deck-details-description"
+                      className="w-full"
+                    >
+                      {deck.description}
+                    </span>
+                  </>
                 )}
                 <section className="flex-column w-inherit test">
+                  <div>
+                    <span style={{ fontWeight: 600 }}>Cards</span>
+                  </div>
                   <SPList horizontal celled divided={false}>
                     {deck.cards.map((card, index) => (
                       <SPListItem key={card.id}>

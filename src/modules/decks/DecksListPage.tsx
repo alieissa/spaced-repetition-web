@@ -56,7 +56,7 @@ function DecksComponent(props: Props) {
   return (
     <div
       data-testid="decks-list-success"
-      className="flex-column h-inherit"
+      className="flex-column"
       style={{ border: '1px solid' }}
     >
       <DecksHeader />
