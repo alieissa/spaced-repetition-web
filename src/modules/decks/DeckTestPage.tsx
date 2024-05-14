@@ -1,17 +1,10 @@
 /** @format */
 
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
-import {
-  Button,
-  Card,
-  Container,
-  Icon,
-  Loader,
-  Segment,
-} from 'semantic-ui-react'
+import { Container, Message } from 'semantic-ui-react'
 import 'src/App.css'
-import { DeckInfo } from 'src/components'
+import { SPButtonIcon, SPHeader } from 'src/components'
 import { TestCard, useCardTestFormReducer } from 'src/modules/cards'
 import { styles } from 'src/styles'
 import { async } from 'src/utils'
@@ -25,7 +18,12 @@ type Props = {
   deck: NDecks.Deck
 }
 export function DeckTestPage(props: Props) {
+  const navigate = useNavigate()
   const [state, dispatch] = useCardTestFormReducer(props.deck.cards)
+
+  const handleBackClick = () => {
+    navigate(-1)
+  }
 
   const handleAnswerChange = (id: string, userAnswer: string) => {
     dispatch({
@@ -53,19 +51,16 @@ export function DeckTestPage(props: Props) {
 
   return (
     <Container className="w-max-xl" data-testid="deck-test-success">
-      <Card fluid style={styles.boxShadowNone}>
-        <Card.Content
-          className="justify-space-between relative"
-          style={{ ...styles['px-0'], ...styles['pt-0'] }}
-        >
-          <DeckInfo
-            id="dummyId2"
-            name="Deck 2"
-            description="Dummy deck description"
-            cards={props.deck.cards}
-          />
-        </Card.Content>
-      </Card>
+      <div className="align-center" style={styles.p0}>
+        <SPButtonIcon
+          size="huge"
+          icon="chevron left"
+          onClick={handleBackClick}
+        />
+        <SPHeader as="h2" className="flex">
+          {props.deck.name}
+        </SPHeader>
+      </div>
 
       <TestCard
         {...currentCard}
@@ -74,22 +69,18 @@ export function DeckTestPage(props: Props) {
       >
         {state.cards.length > 1 && (
           <>
-            <Button
-              icon
+            <SPButtonIcon
               data-testid="next-card-btn"
+              icon="arrow right"
               disabled={isLastCard}
               onClick={handleNext}
-            >
-              <Icon name="arrow right" />
-            </Button>
-            <Button
-              icon
+            />
+            <SPButtonIcon
               data-testid="previous-card-btn"
+              icon="arrow left"
               disabled={isFirstCard}
               onClick={handlePrevious}
-            >
-              <Icon name="arrow left" />
-            </Button>
+            />
           </>
         )}
       </TestCard>
@@ -103,14 +94,14 @@ export default function DeckTest() {
 
   return async.match(status)({
     Untriggered: () => null,
-    Loading: () => (
-      <Segment data-testid="deck-test-loading">
-        <Loader active />
-      </Segment>
-    ),
+    Loading: () => null,
     Success: ({ value }) => <DeckTestPage deck={value} />,
-    Failure: () => {
-      return <Segment data-testid="deck-test-failure" />
-    },
+    Failure: () => (
+      <Message data-testid="deck-test-failure" negative className="w-inherit">
+        <Message.Header>
+          Error: Unable to retrieve deck information
+        </Message.Header>
+      </Message>
+    ),
   })
 }

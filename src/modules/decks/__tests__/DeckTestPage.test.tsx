@@ -2,7 +2,7 @@
 
 import { faker } from '@faker-js/faker'
 import '@testing-library/jest-dom'
-import { act, screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 
@@ -30,11 +30,11 @@ const mountComponent = () =>
 const createCardHandler = (numCards: number = 1) => {
   const createCard = (index: number) => ({
     id: index,
-    question: faker.lorem.sentence(5),
+    question: `Test Question ${index}`,
     answers: [
       {
-        id: faker.string.uuid(),
-        content: faker.lorem.sentence(5),
+        id: `testAnswerId${index}`,
+        content: `Test Answer ${index}`,
       },
     ],
   })
@@ -43,7 +43,7 @@ const createCardHandler = (numCards: number = 1) => {
     return res(
       ctx.json({
         id: deckId,
-        name: faker.word.noun(),
+        name: 'Test Deck',
         cards: _.times(numCards, createCard),
       }),
       ctx.status(200),
@@ -61,38 +61,33 @@ describe('DeckTestPage', () => {
   const user = userEvent.setup()
 
   describe('view', () => {
-    it('should render correctly', () => {
+    it('should render correctly', async () => {
       const { asFragment } = mountComponent()
+      await act(flushPromises)
       expect(asFragment()).toMatchSnapshot()
     })
 
-    it('should display loading', async () => {
-      mountComponent()
-      const testId = 'deck-test-loading'
-      expect(await screen.findByTestId(testId)).toBeInTheDocument()
-      // See https://davidwcai.medium.com/react-testing-library-and-the-not-wrapped-in-act-errors-491a5629193b
-      await waitForElementToBeRemoved(() => screen.queryByTestId(testId))
-    })
-
     it('should display success', async () => {
+      //Assemble
       mountComponent()
-
       await act(flushPromises)
 
+      //Assert
       const testId = 'deck-test-success'
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
 
     it('should display failure', async () => {
+      //Assemble
       server.use(
         rest.get(decksUrl, (__, res, ctx) => {
           return res(ctx.status(500))
         }),
       )
       mountComponent()
-
       await act(flushPromises)
 
+      //Assert
       const testId = 'deck-test-failure'
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
@@ -119,7 +114,7 @@ describe('DeckTestPage', () => {
       await act(flushPromises)
 
       // Act
-      const nextCardBtn = screen.getByTestId('next-card-btn')
+      const nextCardBtn = await screen.findByTestId('next-card-btn')
       await act(() => user.click(nextCardBtn))
       await act(() => user.click(nextCardBtn))
       await act(() => user.click(nextCardBtn))
