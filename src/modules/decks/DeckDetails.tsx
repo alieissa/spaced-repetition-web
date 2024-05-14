@@ -40,8 +40,8 @@ export default function DeckDetails() {
 
   const handleEdit = () => navigate(`/decks/${params.deckId}/edit`)
 
+  const handleTest = () => navigate(`/decks/${params.deckId}/test`)
   const handleDelete = _.noop
-  const handleTest = _.noop
 
   const handleCardClick = (cardId: string) =>
     navigate(`/decks/${params.deckId}/cards/${cardId}`)

@@ -3,12 +3,81 @@
 exports[`DeckTestPage view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="ui segment"
-    data-testid="deck-test-loading"
+    class="ui container w-max-xl"
+    data-testid="deck-test-success"
   >
     <div
-      class="ui active loader"
-    />
+      class="align-center"
+      style="padding: 0px;"
+    >
+      <button
+        class="ui huge icon button"
+        style="padding-left: 0px; padding-right: 0px; background: none;"
+      >
+        <i
+          aria-hidden="true"
+          class="chevron left icon"
+        />
+      </button>
+      <h2
+        class="ui header flex"
+        style="margin-top: 0px;"
+      >
+        Test Deck
+      </h2>
+    </div>
+    <div
+      class="ui fluid card"
+      data-testid="test-card-0"
+      style="box-shadow: none; border: 1px solid; border-radius: unset;"
+    >
+      <div
+        class="content"
+      >
+        <div
+          class="ui basic segment"
+        >
+          <h3
+            class="ui header"
+            style="margin-top: 0px;"
+          >
+            Test Question 0
+          </h3>
+        </div>
+        <form
+          class="ui form"
+        >
+          <div
+            class="field"
+          >
+            <div
+              class="ui input"
+              color="green"
+              style="opacity: 1;"
+            >
+              <input
+                id="answer"
+                placeholder="Enter answer here"
+                style="border-radius: unset;"
+                title="answer"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            class="flex-row-reverse"
+          >
+            <button
+              class="ui button"
+              type="submit"
+            >
+              Check
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </DocumentFragment>
 `;

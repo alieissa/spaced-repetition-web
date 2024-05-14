@@ -1,13 +1,17 @@
 /** @format */
 
 import { useFormik } from 'formik'
-import _ from 'lodash'
 import { PropsWithChildren, useEffect, useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Button, Form, Icon, Segment, Card as SemCard } from 'semantic-ui-react'
+import { Form, Segment } from 'semantic-ui-react'
 import 'src/App.css'
-import { Settings } from 'src/components'
-import { styles } from 'src/styles'
+import {
+  SPButton,
+  SPCard,
+  SPCardContent,
+  SPFormInput,
+  SPHeader,
+} from 'src/components'
 import * as Yup from 'yup'
 import { NDecks } from '../decks/decks.types'
 import { useCard } from './cards.hooks'
@@ -85,55 +89,35 @@ export default function Card(props: PropsWithChildren<Props>) {
   }
 
   return (
-    <SemCard fluid data-testid={`test-card-${props.id}`}>
-      <SemCard.Header textAlign="right">
-        <Settings
-          id="dummyId2"
-          open={open}
-          easiness={1}
-          quality={1}
-          interval={1}
-          trigger={
-            <Button
-              circular
-              style={styles.bgWhite}
-              icon={<Icon name="setting" onClick={() => setOpen(true)} />}
-            />
-          }
-          onCancel={() => setOpen(false)}
-          onSave={_.noop}
-        />
-      </SemCard.Header>
-      <SemCard.Content>
+    <SPCard fluid data-testid={`test-card-${props.id}`}>
+      <SPCardContent>
         <Segment basic>
-          <span>{props.question}</span>
+          <SPHeader as="h3">{props.question}</SPHeader>
         </Segment>
         <Form onSubmit={form.handleSubmit}>
-          <Form.Field>
-            <Form.Input
-              id="answer"
-              title="answer"
-              type="text"
-              icon={getIcon()}
-              color="green"
-              placeholder="Enter answer here"
-              error={answerError}
-              value={form.values.answer}
-              onChange={(e) => {
-                props.onChange(props.id, e.target.value)
-              }}
-            />
-            <Form.Button type="submit" className="justify-flex-end">
-              Check
-            </Form.Button>
-          </Form.Field>
+          <SPFormInput
+            id="answer"
+            title="answer"
+            type="text"
+            icon={getIcon()}
+            color="green"
+            placeholder="Enter answer here"
+            error={answerError}
+            value={form.values.answer}
+            onChange={(e: any) => {
+              props.onChange(props.id, e.target.value)
+            }}
+          />
+          <div className="flex-row-reverse">
+            <SPButton type="submit">Check</SPButton>
+          </div>
         </Form>
-      </SemCard.Content>
+      </SPCardContent>
       {props.children && (
-        <SemCard.Content className="flex-row-reverse">
+        <SPCardContent className="flex-row-reverse">
           {props.children}
-        </SemCard.Content>
+        </SPCardContent>
       )}
-    </SemCard>
+    </SPCard>
   )
 }
