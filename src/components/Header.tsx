@@ -7,5 +7,5 @@ const styles = {
 }
 
 export default function SPHeader(props: HeaderProps) {
-  return <Header {...props} style={{ ...props.styles, ...styles }} />
+  return <Header {...props} style={{ ...props.style, ...styles }} />
 }
