@@ -9,7 +9,6 @@ import {
   DropdownProps,
   Message,
   MessageHeader,
-  Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
 import { async } from 'src/utils'
@@ -20,11 +19,12 @@ import {
   SPCardContent,
   SPList,
   SPListItem,
+  SPSection,
+  SPSectionHeader,
 } from 'src/components'
 
 import _ from 'lodash'
 import { useEffect } from 'react'
-import { styles } from 'src/styles'
 import { useDeckById } from './decks.hooks'
 
 /**
@@ -62,61 +62,54 @@ export default function DeckDetails() {
           */}
           <Outlet />
           <div data-testid="deck-details-success">
-            <Segment basic style={styles.p0}>
-              <header className="justify-space-between">
-                <h2>{deck.name}</h2>
-                <div>
+            <SPSectionHeader
+              className="bordered"
+              title={deck.name}
+              actions={
+                <>
                   <SPButton data-testid="deck-edit-btn" onClick={handleEdit}>
                     Edit
                   </SPButton>
                   <DeckMenu onDelete={handleDelete} onTest={handleTest} />
-                </div>
-              </header>
-            </Segment>
-            <main>
-              <div>
-                {deck.description && (
-                  <>
-                    <div style={{ display: 'flex' }}>
-                      <span style={{ fontWeight: 600 }}>Description</span>
-                    </div>
-                    <span
-                      data-testid="deck-details-description"
-                      className="w-full"
-                    >
-                      {deck.description}
-                    </span>
-                  </>
-                )}
-                <section className="flex-column w-inherit test">
-                  <div>
-                    <span style={{ fontWeight: 600 }}>Cards</span>
-                  </div>
-                  <SPList horizontal celled divided={false}>
-                    {deck.cards.map((card, index) => (
-                      <SPListItem key={card.id}>
-                        <SPCard
-                          data-testid={`deck-details-card-${index}`}
-                          className="pointer"
-                          as="div"
-                          onClick={() => handleCardClick(card.id)}
-                        >
-                          <SPCardContent>{card.question}</SPCardContent>
-                        </SPCard>
-                      </SPListItem>
-                    ))}
-                    <SPListItem>
+                </>
+              }
+            />
+            <main style={{ paddingLeft: '2rem', paddingRight: '2rem' }}>
+              {deck.description && (
+                <SPSection title="Description">
+                  <span
+                    data-testid="deck-details-description"
+                    className="w-full"
+                  >
+                    {deck.description}
+                  </span>
+                </SPSection>
+              )}
+              <SPSection title="Cards">
+                <SPList horizontal celled divided={false}>
+                  {deck.cards.map((card, index) => (
+                    <SPListItem key={card.id}>
                       <SPCard
-                        as="div"
+                        data-testid={`deck-details-card-${index}`}
                         className="pointer"
-                        onClick={handleAddCard}
+                        as="div"
+                        onClick={() => handleCardClick(card.id)}
                       >
-                        <SPCardContent>Add card</SPCardContent>
+                        <SPCardContent>{card.question}</SPCardContent>
                       </SPCard>
                     </SPListItem>
-                  </SPList>
-                </section>
-              </div>
+                  ))}
+                  <SPListItem>
+                    <SPCard
+                      as="div"
+                      className="pointer"
+                      onClick={handleAddCard}
+                    >
+                      <SPCardContent>Add card</SPCardContent>
+                    </SPCard>
+                  </SPListItem>
+                </SPList>
+              </SPSection>
             </main>
           </div>
         </>

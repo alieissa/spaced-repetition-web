@@ -22,7 +22,7 @@ export default function CardForm(props: CardFormProps) {
   const [areAnswersVisible, setAreAnswersVisible] = useState(false)
 
   return (
-    <Form className="w-full">
+    <Form className="w-full bordered">
       <div className="flex-row-reverse">
         <Icon
           data-testid="view-answers-btn"

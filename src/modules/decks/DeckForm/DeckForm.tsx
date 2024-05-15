@@ -7,10 +7,9 @@ import {
   CardForm,
   SPButton,
   SPButtonIcon,
-  SPHeader,
   SPInput,
-  SPList,
-  SPListItem,
+  SPSection,
+  SPSectionHeader,
 } from 'src/components'
 import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
@@ -109,20 +108,19 @@ export default function DeckForm(props: Props) {
   }
 
   return (
-    <div data-testid="deck-success">
-      <div className="align-center" style={styles.p0}>
-        {props.onCancel && (
+    <div data-testid="deck-success" className="bordered">
+      <SPSectionHeader
+        title={props.header}
+        navIcon={
           <SPButtonIcon
             size="huge"
             icon="chevron left"
             onClick={props.onCancel}
           />
-        )}
-        <SPHeader as="h2" className="flex">
-          {props.header}
-        </SPHeader>
-      </div>
-      <main>
+        }
+        className="bordered"
+      />
+      <main style={{ paddingLeft: '2rem', paddingRight: '2rem' }}>
         {displayValidationError && (
           <Message negative data-testid="deck-submission-error">
             <MessageHeader>Invalid input detected</MessageHeader>
@@ -147,17 +145,16 @@ export default function DeckForm(props: Props) {
           <div>
             <SPInput
               data-testid="deck-name"
+              size="huge"
               placeholder="Enter name here"
               className="w-full"
               value={localState.name}
+              style={{ fontWeight: 400, paddingLeft: 0 }}
               onChange={handleChangeDeckName}
             />
           </div>
 
-          <div data-testid="deck-description">
-            <label htmlFor="deck-textarea" style={{ fontWeight: 600 }}>
-              Description
-            </label>
+          <SPSection data-testid="deck-description" title="Description">
             <textarea
               data-testid="deck-description"
               rows={5}
@@ -166,36 +163,37 @@ export default function DeckForm(props: Props) {
               value={localState.description}
               onChange={handleDeckDescriptionChange}
             />
-          </div>
-          <section className="flex-column w-inherit">
-            <div style={{ fontWeight: 600 }}>Cards</div>
-            <SPList>
-              {_.map(getCards(localState), (card) => (
-                <SPListItem key={card.id}>
-                  <CardForm
-                    {...card}
-                    answers={getAnswersByCardId(localState, card.id)}
-                    onAddAnswer={() => handleAddAnswer(card.id)}
-                    onChangeAnswer={(id, content) =>
-                      handleChangeAnswer(id, card.id, content)
-                    }
-                    onChangeQuestion={(question: string) =>
-                      handleChangeQuestion(card.id, question)
-                    }
-                    onDeleteAnswer={(id: string) =>
-                      handleDeleteAnswer(id, card.id)
-                    }
-                  />
-                </SPListItem>
-              ))}
-            </SPList>
-          </section>
-          <Segment basic style={styles.p0} className="flex-row-reverse">
-            <SPButtonIcon color="green" icon="plus" onClick={handleAddCard} />
-          </Segment>
+          </SPSection>
+          <SPSection title="Cards">
+            {_.map(getCards(localState), (card) => (
+              <CardForm
+                {...card}
+                key={card.id}
+                answers={getAnswersByCardId(localState, card.id)}
+                onAddAnswer={() => handleAddAnswer(card.id)}
+                onChangeAnswer={(id, content) =>
+                  handleChangeAnswer(id, card.id, content)
+                }
+                onChangeQuestion={(question: string) =>
+                  handleChangeQuestion(card.id, question)
+                }
+                onDeleteAnswer={(id: string) => handleDeleteAnswer(id, card.id)}
+              />
+            ))}
+            <Segment basic style={styles.p0} className="flex-row-reverse">
+              <SPButtonIcon color="green" icon="plus" onClick={handleAddCard} />
+            </Segment>
+          </SPSection>
         </div>
       </main>
-      <footer className="flex-row-reverse mt-20">
+      <footer
+        className="flex-row-reverse"
+        style={{
+          paddingLeft: '2rem',
+          paddingBottom: '2rem',
+          paddingRight: '2rem',
+        }}
+      >
         <SPButton
           data-testid="deck-save"
           color="green"

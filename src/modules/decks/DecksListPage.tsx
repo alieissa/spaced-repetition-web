@@ -63,22 +63,20 @@ function DecksComponent(props: Props) {
       <Grid padded style={{ flexGrow: 1 }}>
         <GridRow stretched>
           <GridColumn width={4}>
-            {_.isEmpty(props.decks) ? (
-              <div style={{ border: '1px solid' }}>
+            <div className="bordered">
+              {_.isEmpty(props.decks) ? (
                 <DecksEmpty />
-              </div>
-            ) : (
-              <div style={{ border: '1px solid' }}>
+              ) : (
                 <List divided relaxed>
                   {_.map(_.values(props.decks), (d) => (
                     <DecksListItem {...d} key={d.id} />
                   ))}
                 </List>
-              </div>
-            )}
+              )}
+            </div>
           </GridColumn>
           <GridColumn width={12}>
-            <div style={{ border: '1px solid', padding: '1rem' }}>
+            <div className="bordered">
               <Outlet />
             </div>
           </GridColumn>
