@@ -11,7 +11,7 @@ export default function SPSidebar() {
       visible={true}
       icon="labeled"
       vertical
-      style={{ boxShadow: 'none', border: '1px solid' }}
+      className="bordered bs-none"
     >
       <MenuItem as="a" onClick={() => navigate('/')}>
         <Icon name="home" />

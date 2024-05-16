@@ -90,7 +90,7 @@ export function DeckTestPage(props: Props) {
 
 export default function DeckTest() {
   const params = useParams<{ deckId: string }>()
-  const [status, _deck, _updateDeck] = useDeckById(params.deckId!)
+  const { status } = useDeckById(params.deckId!)
 
   return async.match(status)({
     Untriggered: () => null,

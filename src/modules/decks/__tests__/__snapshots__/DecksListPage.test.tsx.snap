@@ -3,17 +3,15 @@
 exports[`DecksListPage view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="flex-column"
+    class="flex-column bordered"
     data-testid="decks-list-success"
-    style="border: 1px solid;"
   >
     <div
-      class="justify-space-between"
-      style="padding: 1rem; border: 1px solid;"
+      class="justify-space-between bordered p-1r"
     >
       <h1
         class="ui header"
-        style="margin: 0px;"
+        style="margin-top: 0px; margin-bottom: 0px;"
       >
         Decks
       </h1>
@@ -39,7 +37,7 @@ exports[`DecksListPage view should render correctly 1`] = `
           class="four wide column"
         >
           <div
-            style="border: 1px solid;"
+            class="bordered"
           >
             <div
               class="ui placeholder segment"
@@ -70,7 +68,7 @@ exports[`DecksListPage view should render correctly 1`] = `
           class="twelve wide column"
         >
           <div
-            style="border: 1px solid; padding: 1rem;"
+            class="bordered"
           />
         </div>
       </div>

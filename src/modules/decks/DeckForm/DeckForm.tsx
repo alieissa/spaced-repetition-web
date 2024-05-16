@@ -120,7 +120,7 @@ export default function DeckForm(props: Props) {
         }
         className="bordered"
       />
-      <main style={{ paddingLeft: '2rem', paddingRight: '2rem' }}>
+      <main className="px-2r">
         {displayValidationError && (
           <Message negative data-testid="deck-submission-error">
             <MessageHeader>Invalid input detected</MessageHeader>
@@ -186,14 +186,7 @@ export default function DeckForm(props: Props) {
           </SPSection>
         </div>
       </main>
-      <footer
-        className="flex-row-reverse"
-        style={{
-          paddingLeft: '2rem',
-          paddingBottom: '2rem',
-          paddingRight: '2rem',
-        }}
-      >
+      <footer className="flex-row-reverse px-2r pb-2r">
         <SPButton
           data-testid="deck-save"
           color="green"

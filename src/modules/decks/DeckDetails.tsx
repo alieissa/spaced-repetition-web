@@ -34,7 +34,7 @@ import { useDeckById } from './decks.hooks'
 export default function DeckDetails() {
   const navigate = useNavigate()
   const params = useParams<{ deckId: string }>()
-  const [loadDeckStatus, deck, loadDeck] = useDeckById(params.deckId!)
+  const { status: loadDeckStatus, deck, loadDeck } = useDeckById(params.deckId!)
 
   useEffect(() => {
     loadDeck()
@@ -74,7 +74,7 @@ export default function DeckDetails() {
                 </>
               }
             />
-            <main style={{ paddingLeft: '2rem', paddingRight: '2rem' }}>
+            <main className="px-2r">
               {deck.description && (
                 <SPSection title="Description">
                   <span

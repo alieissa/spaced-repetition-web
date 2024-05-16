@@ -6,75 +6,83 @@ exports[`DeckDetails view should render correctly 1`] = `
     data-testid="deck-details-success"
   >
     <div
-      class="ui basic segment"
-      style="padding: 0px;"
+      actions="[object Object]"
+      class="justify-space-between bordered"
+      style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem;"
+      title="train"
     >
-      <header
-        class="justify-space-between"
+      <div
+        class="align-center"
       >
-        <h2>
-          retrospect
-        </h2>
-        <div>
-          <button
-            class="ui button"
-            data-testid="deck-edit-btn"
-            style="border-radius: 0;"
-          >
-            Edit
-          </button>
+        <div
+          class="ui header"
+          style="font-size: 1.5rem; margin-top: 0px; margin-bottom: 0px;"
+        >
+          train
+        </div>
+      </div>
+      <div>
+        <button
+          class="ui button"
+          data-testid="deck-edit-btn"
+          style="border-radius: 0;"
+        >
+          Edit
+        </button>
+        <div
+          aria-expanded="false"
+          class="ui dropdown"
+          data-testid="deck-details-dropdown"
+          role="listbox"
+          tabindex="0"
+        >
+          <i
+            aria-hidden="true"
+            class="ellipsis vertical icon"
+          />
           <div
-            aria-expanded="false"
-            class="ui dropdown"
-            data-testid="deck-details-dropdown"
-            role="listbox"
-            tabindex="0"
+            class="menu transition"
+            data-testid="deck-details-dropdown-menu"
           >
-            <i
-              aria-hidden="true"
-              class="ellipsis vertical icon"
-            />
             <div
-              class="menu transition"
-              data-testid="deck-details-dropdown-menu"
+              class="item"
+              role="option"
             >
-              <div
-                class="item"
-                role="option"
+              <span
+                class="text"
               >
-                <span
-                  class="text"
-                >
-                  Test
-                </span>
-              </div>
-              <div
-                class="item"
-                role="option"
+                Test
+              </span>
+            </div>
+            <div
+              class="item"
+              role="option"
+            >
+              <span
+                class="text"
               >
-                <span
-                  class="text"
-                >
-                  Delete
-                </span>
-              </div>
+                Delete
+              </span>
             </div>
           </div>
         </div>
-      </header>
+      </div>
     </div>
-    <main>
-      <div>
-        <section
-          class="flex-column w-inherit test"
+    <main
+      class="px-2r"
+    >
+      <div
+        class="flex-column"
+        style="margin-top: 1.5rem;"
+        title="Cards"
+      >
+        <div
+          class="ui small header"
+          style="margin-bottom: 0px; margin-top: 0px;"
         >
-          <div>
-            <span
-              style="font-weight: 600;"
-            >
-              Cards
-            </span>
-          </div>
+          Cards
+        </div>
+        <div>
           <div
             class="ui celled horizontal list"
             role="list"
@@ -82,6 +90,7 @@ exports[`DeckDetails view should render correctly 1`] = `
             <div
               class="item"
               role="listitem"
+              style="padding: 0px;"
             >
               <div
                 class="ui card pointer"
@@ -91,13 +100,14 @@ exports[`DeckDetails view should render correctly 1`] = `
                 <div
                   class="content"
                 >
-                  Somnus timor aspernatur ademptio enim.
+                  Theatrum tepidus vigilo subseco quisquam.
                 </div>
               </div>
             </div>
             <div
               class="item"
               role="listitem"
+              style="padding: 0px;"
             >
               <div
                 class="ui card pointer"
@@ -111,7 +121,7 @@ exports[`DeckDetails view should render correctly 1`] = `
               </div>
             </div>
           </div>
-        </section>
+        </div>
       </div>
     </main>
   </div>

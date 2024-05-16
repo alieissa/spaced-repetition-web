@@ -57,15 +57,24 @@ export function useCreateDeck(): [
   return [status, createDeck]
 }
 
+type DeckByIdReturnType = {
+  status: NDecks.State['getStatus'][string]
+  deck: NDecks.Deck
+  loadDeck: VoidFunction
+  updateDeck: (deck: NDecks.Deck) => void
+}
 export function useDeckById(
   id: NDecks.Deck['id'],
   // TODO Update deck type in
   // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
-): [NDecks.State['getStatus'][string], NDecks.Deck, VoidFunction, (deck: any) => void] {
+): DeckByIdReturnType {
   const deck = useSelector(Select.deckById(id))
   const status = useSelector(Select.deckByIdStatus(id))
   const dispatch = useDispatch()
-  const getDeck = api.request({ method: 'GET', url: `decks/${id}` })
+  const getDeck = api.request<NDecks.Deck>({
+    method: 'GET',
+    url: `decks/${id}`,
+  })
   const putDeck = api.request({ method: 'PUT', url: `decks/${id}` })
 
   useEffect(() => {
@@ -88,7 +97,7 @@ export function useDeckById(
       type: 'GetDeck',
       id,
     })
-    getDeck().then((result: any) => {
+    getDeck().then((result) => {
       dispatch({ type: 'DeckLoaded', result, id })
     })
   }
@@ -110,7 +119,7 @@ export function useDeckById(
     })
   }
 
-  return [status, deck, loadDeck, updateDeck]
+  return { status, deck, loadDeck, updateDeck }
 }
 
 export function useUploadDecks(): [

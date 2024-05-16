@@ -14,12 +14,17 @@ import { useDeckById } from './decks.hooks'
 
 export default function Deck() {
   const params = useParams<{ deckId: string }>()
-  const [status, deck, loadDeck, updateDeck] = useDeckById(params.deckId!)
-  const updateStatus = useSelector(Select.updateStatus(params.deckId!))
   const navigate = useNavigate()
+  const {
+    status: loadDeckStatus,
+    deck,
+    updateDeck,
+  } = useDeckById(params.deckId!)
+  const updateStatus = useSelector(Select.updateStatus(params.deckId!))
+
   const handleCancel = () => navigate(-1)
 
-  return async.match(status)({
+  return async.match(loadDeckStatus)({
     Untriggered: () => null,
     Loading: () => null,
     Success: () => {
@@ -30,7 +35,7 @@ export default function Deck() {
         __type__: 'FORMED',
       })
 
-      if (status.type === 'Failure') {
+      if (loadDeckStatus.type === 'Failure') {
         return <Segment data-testid="deck-failure" />
       }
 

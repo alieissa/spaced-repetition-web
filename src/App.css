@@ -1,4 +1,7 @@
 /** @format */
+:root {
+  --sidebar-width: 86px;
+}
 
 .App {
   text-align: center;
@@ -75,8 +78,14 @@
 .p-0 {
   padding: 0;
 }
+.p-1r {
+  padding: 1rem;
+}
 .pb-10 {
   padding-bottom: 10px;
+}
+.pb-2r {
+  padding-bottom: 2rem;
 }
 .p-20 {
   padding: 20px;
@@ -84,6 +93,11 @@
 .px-0 {
   padding-left: 0px;
   padding-right: 0px;
+}
+
+.px-2r {
+  padding-left: 2rem; 
+  padding-right: 2rem;
 }
 
 .relative {
@@ -110,4 +124,8 @@
 
 .bs-0 {
   box-shadow: none;
+}
+
+.main {
+  padding-left: var(--sidebar-width);
 }

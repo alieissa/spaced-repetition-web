@@ -18,9 +18,7 @@ const withSidebar = (Component: JSX.Element) => {
   return (
     <div style={{ height: '100vh' }}>
       <SPSidebar />
-      <div className="h-full" style={{ paddingLeft: 86 }}>
-        {Component}
-      </div>
+      <div className="h-full main">{Component}</div>
     </div>
   )
 }

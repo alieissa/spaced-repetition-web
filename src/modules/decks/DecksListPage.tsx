@@ -10,13 +10,12 @@ import {
   GridRow,
   Header,
   Icon,
-  List,
   Loader,
   Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
 import { isUnauthorized } from 'src/api'
-import { CreateButton } from 'src/components'
+import { CreateButton, SPHeader, SPList } from 'src/components'
 import { async } from 'src/utils'
 import DecksListItem from './DecksListItem'
 import { useDecks } from './decks.hooks'
@@ -28,13 +27,8 @@ type Props = {
 
 function DecksHeader() {
   return (
-    <div
-      className="justify-space-between"
-      style={{ padding: '1rem', border: '1px solid' }}
-    >
-      <Header as="h1" style={{ margin: '0px' }}>
-        Decks
-      </Header>
+    <div className="justify-space-between bordered p-1r">
+      <SPHeader as="h1">Decks</SPHeader>
       <CreateButton createLink="/decks/new" />
     </div>
   )
@@ -54,11 +48,7 @@ function DecksEmpty() {
 
 function DecksComponent(props: Props) {
   return (
-    <div
-      data-testid="decks-list-success"
-      className="flex-column"
-      style={{ border: '1px solid' }}
-    >
+    <div data-testid="decks-list-success" className="flex-column bordered">
       <DecksHeader />
       <Grid padded style={{ flexGrow: 1 }}>
         <GridRow stretched>
@@ -67,11 +57,11 @@ function DecksComponent(props: Props) {
               {_.isEmpty(props.decks) ? (
                 <DecksEmpty />
               ) : (
-                <List divided relaxed>
+                <SPList divided relaxed>
                   {_.map(_.values(props.decks), (d) => (
                     <DecksListItem {...d} key={d.id} />
                   ))}
-                </List>
+                </SPList>
               )}
             </div>
           </GridColumn>
