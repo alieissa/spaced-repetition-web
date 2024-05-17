@@ -6,11 +6,29 @@ on:
     types: [opened, synchronize, closed]
     branches:
       - main
+  push:
+    branches: 
+    - 38-add-linter-to-ci
 env:
   IMAGE_NAME: spaced-repetition-web
   REPO: 079829475258.dkr.ecr.us-east-1.amazonaws.com
 
 jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    name: Lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '18.17.x'
+      - name: Install packages
+        run: npm install
+      - name: lint
+        run: npm run lint
+      
   tests:
     runs-on: ubuntu-22.04
     name: Test
