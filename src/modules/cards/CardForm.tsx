@@ -33,7 +33,7 @@ export default function CardForm(props: CardFormProps) {
       <SPList horizontal className="flex" style={styles.flex}>
         <SPListItem className="flex-1">
           <SPInput
-            name="question-content"
+            data-testid="question-content"
             placeholder="Enter question here"
             className="w-full"
             value={props.question}
@@ -45,17 +45,17 @@ export default function CardForm(props: CardFormProps) {
         <SPListItem className="flex-1">
           {areAnswersVisible && (
             <SPList style={styles.p0}>
-              {props.answers.map((answer) => (
+              {props.answers.map((answer, index) => (
                 <SPListItem
                   key={answer.id}
                   className="flex"
                   style={styles.flex}
                 >
                   <SPInput
+                    data-testid={`answer-content-${index}`}
                     value={answer.content}
                     placeholder="Enter answer here"
                     className="w-full"
-                    name="answer-content"
                     onChange={(e) => {
                       props.onChangeAnswer(answer.id, e.target.value || '')
                     }}

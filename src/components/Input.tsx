@@ -1,5 +1,6 @@
 /** @format */
 
+import _ from 'lodash'
 import { Input, InputProps } from 'semantic-ui-react'
 
 const inputStyles = {
@@ -12,9 +13,14 @@ const containerStyles = { opacity: 1 }
 export default function SPInput(props: InputProps) {
   return (
     <Input
-      {...props}
+      {..._.omit(props, 'data-testid')}
       style={containerStyles}
-      input={<input style={{ ...inputStyles, ...props.style }} />}
+      input={
+        <input
+          data-testid={props['data-testid']}
+          style={{ ...inputStyles, ...props.style }}
+        />
+      }
     />
   )
 }

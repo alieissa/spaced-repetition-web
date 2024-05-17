@@ -84,20 +84,20 @@ describe('Login', () => {
     })
 
     test('display success', async () => {
+      // Assemble
       renderWithProviders(<Login />)
-
       const user = userEvent.setup()
       const emailInput = screen.getByRole('textbox', { name: 'email' })
       const passwordInput = screen.getByTitle('password')
       await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
       await act(() => user.type(passwordInput, 'heythere!'))
 
-      await act(() =>
-        fireEvent.click(screen.getByRole('button', { name: 'Login' })),
-      )
-
+      // Act
+      const loginBtn = await screen.findByRole('button', { name: 'Login' })
+      await act(() => loginBtn.click())
       await act(flushPromises)
 
+      // Assert
       expect(mockNavigate).toBeCalledWith('/')
     })
   })

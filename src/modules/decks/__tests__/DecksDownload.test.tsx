@@ -3,7 +3,6 @@
 import { faker } from '@faker-js/faker'
 import '@testing-library/jest-dom'
 import { act, screen } from '@testing-library/react'
-import user from '@testing-library/user-event'
 import { rest } from 'msw'
 import { setupServer } from 'msw/lib/node'
 import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
@@ -33,10 +32,10 @@ describe('DecksDownload', () => {
         }),
       )
       renderWithProviders(<DecksDownload />)
-      const decksDownloadBtn = screen.getByTestId('decks-download-btn')
+      const decksDownloadBtn = await screen.findByTestId('decks-download-btn')
 
       // Act
-      await act(() => user.click(decksDownloadBtn))
+      await act(() => decksDownloadBtn.click())
 
       // Assert
       expect(decksDownloadBtn).toBeDisabled()
@@ -48,10 +47,10 @@ describe('DecksDownload', () => {
         rest.get(decksDownloadUrl, (__, res, ctx) => res(ctx.status(422))),
       )
       renderWithProviders(<DecksDownload />)
-      const decksDownloadBtn = screen.getByTestId('decks-download-btn')
+      const decksDownloadBtn = await screen.findByTestId('decks-download-btn')
 
       // Act
-      await act(() => user.click(decksDownloadBtn))
+      await act(() => decksDownloadBtn.click())
       await act(flushPromises)
 
       // Assert
@@ -61,17 +60,16 @@ describe('DecksDownload', () => {
     it('should add download url to download anchor', async () => {
       // Assemble
       const anchorHref = faker.internet.url()
-      faker.internet.url()
       server.use(
         rest.get(decksDownloadUrl, async (__, res, ctx) => {
           return res(ctx.status(200), ctx.text(anchorHref))
         }),
-      ),
-        renderWithProviders(<DecksDownload />)
-      const decksDownloadBtn = screen.getByTestId('decks-download-btn')
+      )
+      renderWithProviders(<DecksDownload />)
+      const decksDownloadBtn = await screen.findByTestId('decks-download-btn')
 
       // Act
-      await act(() => user.click(decksDownloadBtn))
+      await act(() => decksDownloadBtn.click())
       await act(flushPromises)
 
       // Assert

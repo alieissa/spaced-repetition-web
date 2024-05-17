@@ -26,6 +26,7 @@ export function useLogout():[NAuth.State['logoutStatus'], VoidFunction] {
       return
     }
     navigate('/login')
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.type])
 
   const logout = () => {
