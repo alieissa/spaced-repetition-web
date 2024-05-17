@@ -17,6 +17,15 @@ export default function SPSidebar() {
         <Icon name="home" />
         Decks
       </MenuItem>
+      <MenuItem
+        // Override very specific semantic ui css rule
+        style={{ position: 'absolute', bottom: 0 }}
+        as="a"
+        onClick={() => navigate('/logout')}
+      >
+        <Icon name="log out" />
+        Logout
+      </MenuItem>
     </Sidebar>
   )
 }
