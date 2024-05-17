@@ -89,7 +89,7 @@ describe('CardDetailsModal', () => {
       })
     })
 
-    describe('CardDetailsFrom', () => {
+    describe('CardDetailsForm', () => {
       it('should display card detail when clicking on back button', async () => {
         // Assemble
         mountComponent()

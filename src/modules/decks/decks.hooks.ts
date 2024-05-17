@@ -1,19 +1,21 @@
 /** @format */
 
+import { Dispatch } from '@reduxjs/toolkit'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
+import { DecksAction } from './decks.actions'
 import * as Select from './decks.selectors'
 import { NDecks } from './decks.types'
 export function useDecks() {
   const status = useSelector(Select.status)
   const decks = useSelector(Select.decks)
-  const dispatch = useDispatch()
-  const getDecks = api.request({ method: 'GET', url: 'decks' })
+  const dispatch = useDispatch<Dispatch<DecksAction>>()
+  const getDecks = api.request<NDecks.Deck[]>({ method: 'GET', url: 'decks' })
 
   useEffect(() => {
     dispatch({
-      type: 'GetDecks',
+      type: 'LoadDecks',
     })
     getDecks().then((result) =>
       dispatch({
@@ -58,7 +60,7 @@ export function useCreateDeck(): [
 }
 
 type DeckByIdReturnType = {
-  status: NDecks.State['getStatus'][string]
+  status: NDecks.State['loadStatus'][string]
   deck: NDecks.Deck
   loadDeck: VoidFunction
   updateDeck: (deck: NDecks.Deck) => void
@@ -68,18 +70,18 @@ export function useDeckById(
   // TODO Update deck type in
   // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
 ): DeckByIdReturnType {
-  const deck = useSelector(Select.deckById(id))
-  const status = useSelector(Select.deckByIdStatus(id))
-  const dispatch = useDispatch()
+  const deck = useSelector(Select.deck(id))
+  const status = useSelector(Select.loadStatus(id))
+  const dispatch = useDispatch<Dispatch<DecksAction>>()
   const getDeck = api.request<NDecks.Deck>({
     method: 'GET',
     url: `decks/${id}`,
   })
-  const putDeck = api.request({ method: 'PUT', url: `decks/${id}` })
+  const putDeck = api.request<NDecks.Deck>({ method: 'PUT', url: `decks/${id}` })
 
   useEffect(() => {
     dispatch({
-      type: 'GetDeck',
+      type: 'LoadDeck',
       id,
     })
     getDeck().then((result: any) => {
@@ -94,7 +96,7 @@ export function useDeckById(
 
   const loadDeck = () => {
     dispatch({
-      type: 'GetDeck',
+      type: 'LoadDeck',
       id,
     })
     getDeck().then((result) => {
@@ -104,7 +106,7 @@ export function useDeckById(
 
   // TODO Update deck type in
   // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
-  const updateDeck = (deck: any) => {
+  const updateDeck = (deck: NDecks.Deck) => {
     dispatch({
       type: 'UpdateDeck',
       id: deck.id,

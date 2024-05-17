@@ -10,7 +10,7 @@ import { NDecks } from './decks.types'
 const initialState: NDecks.State = {
   decks: {},
   status: Untriggered(),
-  getStatus: {},
+  loadStatus: {},
   createStatus: Untriggered(),
   updateStatus: {},
   uploadDecksStatus: Untriggered(),
@@ -20,23 +20,23 @@ const initialState: NDecks.State = {
 
 export default produce((draft: NDecks.State, action: DecksAction) => {
   switch (action.type) {
-    case 'GetDeck': {
-      draft.getStatus[action.id] = Loading(null)
+    case 'LoadDeck': {
+      draft.loadStatus[action.id] = Loading(null)
       return
     }
     case 'DeckLoaded': {
       either.match(action.result)({
         Left: ({ value }) => {
-          draft.getStatus[action.id] = Failure(value)
+          draft.loadStatus[action.id] = Failure(value)
         },
         Right: ({ value }) => {
-          draft.getStatus[action.id] = Success(value)
+          draft.loadStatus[action.id] = Success(value)
           draft.decks[action.id] = value
         },
       })
       return
     }
-    case 'GetDecks':
+    case 'LoadDecks':
       draft.status = Loading(null)
       return
     case 'DecksLoaded':
@@ -119,7 +119,7 @@ export default produce((draft: NDecks.State, action: DecksAction) => {
     }
     case 'DeckReset': {
       draft.updateStatus[action.id] = Untriggered()
-      draft.getStatus[action.id] = Untriggered()
+      draft.loadStatus[action.id] = Untriggered()
       return
     }
   }

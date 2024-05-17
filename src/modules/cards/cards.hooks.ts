@@ -68,10 +68,10 @@ export function useCardCreate(deckId: string): [
   Async<null, RequestError, NCards.Card>,
   (card: NCards.Card) => void
 ] {
-    const createCardStatus = useSelector(Select.createCardStatus)
+    const createStatus = useSelector(Select.createStatus)
   
     const dispatch = useDispatch()
-    const postCard = api.request({
+    const postCard = api.request<NCards.Card>({
       method: 'POST',
       url: `decks/${deckId}/cards`,
     })
@@ -81,7 +81,7 @@ export function useCardCreate(deckId: string): [
       type: "CreateCard"
     })
 
-    postCard(card).then((result: any) => {
+    postCard(card).then((result) => {
       dispatch({
         type: "CardCreated",
         result
@@ -89,15 +89,15 @@ export function useCardCreate(deckId: string): [
     })
   }
 
-  return [createCardStatus, createCard]
+  return [createStatus, createCard]
 }
 
 export function useCardDetails(
   deckId: string,
   cardId: string
 ): [Async<null, RequestError, NCards.Card>, NCards.Card, () => void] {
-  const loadCardStatus = useSelector(Select.loadCardStatus(cardId))
-  const card = useSelector(Select.loadedCardByID(cardId))
+  const loadStatus = useSelector(Select.loadStatus(cardId))
+  const card = useSelector(Select.loadedCard(cardId))
 
   const dispatch = useDispatch()
   const getCard = api.request({
@@ -119,17 +119,17 @@ export function useCardDetails(
     })
   }
 
-  return [loadCardStatus, card, loadCard]
+  return [loadStatus, card, loadCard]
 }
 
 export function useCardForm(
   deckId: string,
   cardId: string,
 ): [Async<null, RequestError, NCards.Card>, (card: NCards.Card) => void] {
-  const updateCardStatus = useSelector(Select.updateCardStatus(cardId))
+  const updateStatus = useSelector(Select.updateStatus(cardId))
 
   const dispatch = useDispatch()
-  const putCard = api.request({
+  const putCard = api.request<NCards.Card>({
     method: 'PUT',
     url: `decks/${deckId}/cards/${cardId}`,
   })
@@ -140,7 +140,7 @@ export function useCardForm(
       id: card.id
     })
 
-    putCard(card).then((result: any) => {
+    putCard(card).then((result) => {
       dispatch({
         type: 'CardUpdated',
         id: cardId,
@@ -149,7 +149,7 @@ export function useCardForm(
     })
   }
 
-  return [updateCardStatus, updateCard]
+  return [updateStatus, updateCard]
 }
 
 type GetNextCard = {

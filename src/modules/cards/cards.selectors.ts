@@ -1,37 +1,46 @@
+import { createSelector } from "reselect";
 import { RootState } from "src/types";
 import { Untriggered } from "src/utils/async";
 import { NCards } from "./cards.types";
 
-export function check(id: NCards.Card['id']) {
-  return (state: RootState) => {
-    return state.cards.check[id] || { distance: 0, answer: ""}
-  }
-}
+const selectCheck = (state: RootState) => state.cards.check
+export const check = (id: NCards.Card['id']) =>
+  createSelector(
+    [selectCheck],
+    (check: NCards.State['check']) => check[id] || { distance: 0, answer: '' },
+  )
 
-export function checkStatus(id: NCards.Card['id']) {
-  return (state: RootState) => {
-    return state.cards.checkStatus[id] || Untriggered()
-  }
-}
+const selectCheckStatus = (state: RootState) => state.cards.checkStatus
+export const checkStatus = (id: NCards.Card['id']) =>
+  createSelector(
+    [selectCheckStatus],
+    (checkStatus: NCards.State['checkStatus']) =>
+      checkStatus[id] || Untriggered()
+  )
 
-export function createCardStatus(state: RootState) {
-  return state.cards.createCardStatus
-}
+const selectCards = (state: RootState) => state.cards
+export const createStatus = createSelector([selectCards], (cards: NCards.State) => cards.createStatus)
 
-export function loadCardStatus(id: NCards.Card['id']) {
-  return (state: RootState) => {
-    return state.cards.loadCardStatus[id] || Untriggered()
-  }
-}
+const selectLoadStatus = (state: RootState) => state.cards.loadStatus
+export const loadStatus = (id: NCards.Card['id']) =>
+  createSelector(
+    [selectLoadStatus],
+    (loadStatus: NCards.State['loadStatus']) =>
+      loadStatus[id] || Untriggered()
+  )
 
-export function loadedCardByID(id: NCards.Card['id']) {
-  return (state: RootState) => {
-    return state.cards.loadedCards[id]
-  }
-}
+const selectCard = (state: RootState) => state.cards.loadedCards
+export const loadedCard = (id: NCards.Card['id']) =>
+  createSelector(
+    [selectCard],
+    (loadedCards: NCards.State['loadedCards']) =>
+      loadedCards[id] 
+  )
 
-export function updateCardStatus(id: NCards.Card['id']) {
-  return (state: RootState) => {
-    return state.cards.updateCardStatus[id] || Untriggered()
-  }
-}
+
+const selectUpdateStatus = (state: RootState) => state.cards.updateStatus
+export const updateStatus = (id: NCards.Card['id']) =>
+  createSelector(
+    [selectUpdateStatus],
+    (updateStatus: NCards.State['updateStatus']) => updateStatus[id] || Untriggered(),
+  )

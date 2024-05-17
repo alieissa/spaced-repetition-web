@@ -1,5 +1,6 @@
 /** @format */
 
+import { createSelector } from 'reselect'
 import { RootState } from 'src/types'
 import { Untriggered } from 'src/utils/async'
 import { NDecks } from './decks.types'
@@ -16,37 +17,37 @@ export function createStatus(state: RootState) {
   return state.decks.createStatus
 }
 
-export function getStatus(state: RootState) {
-  return state.decks.getStatus
-}
+const selectDeck = (state: RootState) => state.decks.decks
+export const deck = (id: NDecks.Deck['id']) =>
+  createSelector([selectDeck], (decks: NDecks.State['decks']) => decks[id])
 
+const selectLoadStatus = (state: RootState) => state.decks.loadStatus
+export const loadStatus = (id: NDecks.Deck['id']) =>
+  createSelector(
+    [selectLoadStatus],
+    (loadStatus: NDecks.State['loadStatus']) => loadStatus[id] || Untriggered(),
+  )
 
-export function deckById(id: NDecks.Deck['id']) {
-  return (state: RootState) => {
-    return decks(state)[id]
-  }
-}
+const selectUpdateStatus = (state: RootState) => state.decks.updateStatus
+export const updateStatus = (id: NDecks.Deck['id']) =>
+  createSelector(
+    [selectUpdateStatus],
+    (updateStatus: NDecks.State['updateStatus']) =>
+      updateStatus[id] || Untriggered(),
+  )
 
-export function deckByIdStatus(id: NDecks.Deck['id']) {
-  return (state: RootState) => {
-    return state.decks.getStatus[id] || Untriggered()
-  }
-}
+const selectDecks = (state: RootState) => state.decks
+export const uploadDecksStatus = createSelector(
+  [selectDecks],
+  (decks) => decks.uploadDecksStatus,
+)
 
-export function updateStatus(id: NDecks.Deck['id']) {
-  return (state: RootState) => {
-    return state.decks.updateStatus[id] ?? Untriggered()
-  }
-}
+export const downloadDecksStatus = createSelector(
+  [selectDecks],
+  (decks) => decks.downloadDecksStatus,
+)
 
-export function uploadDecksStatus(state: RootState) {
-  return state.decks.uploadDecksStatus
-}
-
-export function downloadDecksUrl(state: RootState) {
-  return state.decks.downloadDecksUrl
-}
-
-export function downloadDecksStatus(state: RootState) {
-  return state.decks.downloadDecksStatus
-}
+export const downloadDecksUrl = createSelector(
+  [selectDecks],
+  (decks) => decks.downloadDecksUrl,
+)

@@ -9,10 +9,10 @@ import { NCards } from './cards.types'
 const initialState: NCards.State = {
   check: {},
   checkStatus: {},
-  createCardStatus: Untriggered(),
-  loadCardStatus: {},
+  createStatus: Untriggered(),
+  loadStatus: {},
   loadedCards: {},
-  updateCardStatus: {}
+  updateStatus: {}
 }
 
 export default produce((draft: NCards.State, action: CardsAction) => {
@@ -34,47 +34,47 @@ export default produce((draft: NCards.State, action: CardsAction) => {
       return
     }
     case 'CreateCard': {
-      draft.createCardStatus = Loading(null)
+      draft.createStatus = Loading(null)
       return
     }
     case 'CardCreated': {
       either.match(action.result)({
         Left: ({ value }) => {
-          draft.createCardStatus = Failure(value)
+          draft.createStatus = Failure(value)
         },
         Right: ({ value }) => {
-          draft.createCardStatus = Success(value)
+          draft.createStatus = Success(value)
         },
       })
       return
     }
     case 'LoadCard': {
-      draft.loadCardStatus[action.id] = Loading(null)
+      draft.loadStatus[action.id] = Loading(null)
       return
     }
     case 'CardLoaded': {
       either.match(action.result)({
         Left: ({ value }) => {
-          draft.loadCardStatus[action.id] = Failure(value)
+          draft.loadStatus[action.id] = Failure(value)
         },
         Right: ({ value }) => {
-          draft.loadCardStatus[action.id] = Success(value)
+          draft.loadStatus[action.id] = Success(value)
           draft.loadedCards[action.id] = value
         },
       })
       return
     }
     case 'UpdateCard': {
-      draft.updateCardStatus[action.id] = Loading(null)
+      draft.updateStatus[action.id] = Loading(null)
       return
     }
     case 'CardUpdated': {
       either.match(action.result)({
         Left: ({ value }) => {
-          draft.updateCardStatus[action.id] = Failure(value)
+          draft.updateStatus[action.id] = Failure(value)
         },
         Right: ({ value }) => {
-          draft.updateCardStatus[action.id] = Success(value)
+          draft.updateStatus[action.id] = Success(value)
           draft.loadedCards[action.id] = value
         },
       })
