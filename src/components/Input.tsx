@@ -14,7 +14,7 @@ export default function SPInput(props: InputProps) {
     <Input
       {...props}
       style={containerStyles}
-      input={<input style={inputStyles} />}
+      input={<input style={{ ...inputStyles, ...props.style }} />}
     />
   )
 }

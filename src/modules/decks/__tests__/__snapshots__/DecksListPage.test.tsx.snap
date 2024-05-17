@@ -3,12 +3,76 @@
 exports[`DecksListPage view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="ui segment"
-    data-testid="decks-list-loading"
+    class="flex-column bordered"
+    data-testid="decks-list-success"
   >
     <div
-      class="ui active loader"
-    />
+      class="justify-space-between bordered p-1r"
+    >
+      <h1
+        class="ui header"
+        style="margin-top: 0px; margin-bottom: 0px;"
+      >
+        Decks
+      </h1>
+      <a
+        href="/decks/new"
+      >
+        <button
+          class="ui blue medium icon button"
+          style="border-radius: 0;"
+        >
+          Create New Deck
+        </button>
+      </a>
+    </div>
+    <div
+      class="ui padded grid"
+      style="flex-grow: 1;"
+    >
+      <div
+        class="stretched row"
+      >
+        <div
+          class="four wide column"
+        >
+          <div
+            class="bordered"
+          >
+            <div
+              class="ui placeholder segment"
+            >
+              <div
+                class="ui icon header"
+              >
+                <i
+                  aria-hidden="true"
+                  class="file icon"
+                />
+                No Decks created
+              </div>
+              <a
+                href="/decks/new"
+              >
+                <button
+                  class="ui blue medium icon button"
+                  style="border-radius: 0;"
+                >
+                  Create New Deck
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="twelve wide column"
+        >
+          <div
+            class="bordered"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </DocumentFragment>
 `;

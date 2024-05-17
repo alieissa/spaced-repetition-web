@@ -2,17 +2,12 @@
 
 import { faker } from '@faker-js/faker'
 import '@testing-library/jest-dom'
-import { act, screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 
 import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
 import DeckDetails from '../DeckDetails'
-const mockNavigate = jest.fn(() => ({}))
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}))
 
 const deckId = faker.string.uuid()
 const decksUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}`
@@ -30,15 +25,15 @@ const handlers = [
     return res(
       ctx.json({
         id: deckId,
-        name: faker.word.noun(),
+        name: 'Test name',
         cards: [
           {
-            id: faker.string.uuid(),
-            question: faker.lorem.sentence(5),
+            id: 'testUuid',
+            question: 'Test question',
             answers: [
               {
-                id: faker.string.uuid(),
-                content: faker.lorem.sentence(5),
+                id: 'testUuid',
+                content: 'Test content',
               },
             ],
           },
@@ -56,17 +51,11 @@ afterAll(() => server.close())
 
 describe('DeckDetails', () => {
   describe('view', () => {
-    it('should render correctly', () => {
+    it('should render correctly', async () => {
       const { asFragment } = mountComponent()
-      expect(asFragment()).toMatchSnapshot()
-    })
+      await act(flushPromises)
 
-    it('should display loading', async () => {
-      mountComponent()
-      const testId = 'deck-details-loading'
-      expect(await screen.findByTestId(testId)).toBeInTheDocument()
-      // See https://davidwcai.medium.com/react-testing-library-and-the-not-wrapped-in-act-errors-491a5629193b
-      await waitForElementToBeRemoved(() => screen.queryByTestId(testId))
+      expect(asFragment()).toMatchSnapshot()
     })
 
     it('should display success', async () => {

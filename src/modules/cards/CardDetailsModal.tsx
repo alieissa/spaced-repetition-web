@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Form, Icon, List, Message } from 'semantic-ui-react'
+import { Form, Icon, Message } from 'semantic-ui-react'
 import 'src/App.css'
 import {
   SPButton,
@@ -14,7 +14,7 @@ import {
   SPListItem,
   SPModal,
   SPModalContent,
-  SPModalHeader,
+  SPSectionHeader,
   SPText,
 } from 'src/components'
 import { styles } from 'src/styles'
@@ -50,6 +50,7 @@ export default function CardDetailsModal() {
 
   useEffect(() => {
     loadCard()
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.cardId])
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export default function CardDetailsModal() {
     }
 
     setIsModalOpen(true)
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadCardStatus.type])
 
   return (
@@ -81,14 +83,15 @@ function CardDetailsView(props: ViewProps) {
 
   return (
     <>
-      <SPModalHeader data-testid="card-details-view">
-        <div className="justify-space-between">
-          <span>Card Details</span>
+      <SPSectionHeader
+        data-testid="card-details-view"
+        title="Card Details"
+        actions={
           <SPButton data-testid="card-details-edit-btn" onClick={props.onEdit}>
             Edit
           </SPButton>
-        </div>
-      </SPModalHeader>
+        }
+      />
       <SPModalContent className="flex-column align-center justify-center">
         <div className="flex-row-reverse">
           <Icon
@@ -102,7 +105,7 @@ function CardDetailsView(props: ViewProps) {
             <SPText className="w-full" value={props.question} />
           </SPListItem>
           <SPListItem className="flex-1">
-            <List style={styles.p0}>
+            <SPList style={styles.p0}>
               {areAnswersVisible &&
                 props.answers.map((answer, index) => {
                   return (
@@ -114,7 +117,7 @@ function CardDetailsView(props: ViewProps) {
                     </SPListItem>
                   )
                 })}
-            </List>
+            </SPList>
           </SPListItem>
         </SPList>
       </SPModalContent>
@@ -188,30 +191,36 @@ function CardDetailsForm(props: FormProps) {
 
   return (
     <>
-      <SPModalHeader data-testid="card-details-form" style={styles.flex}>
-        <Icon
-          data-testid="card-details-form-back-btn"
-          name="arrow left"
-          onClick={props.onBack}
-        />
-        <div>Edit Card</div>
-      </SPModalHeader>
-      <SPModalContent className="flex-column align-center justify-center">
-        {async.match(updateCardStatus)({
-          Untriggered: () => null,
-          Loading: () => null,
-          Success: () => (
+      <SPSectionHeader
+        data-testid="card-details-form"
+        title="Edit Card"
+        navIcon={
+          <SPButtonIcon
+            data-testid="card-details-form-back-btn"
+            icon="chevron left"
+            size="huge"
+            onClick={props.onBack}
+          />
+        }
+      />
+      {async.match(updateCardStatus)({
+        Untriggered: () => null,
+        Loading: () => null,
+        Success: () => (
+          <SPModalContent className="flex-column align-center justify-center">
             <Message data-testid="card-update-success" success>
               <Message.Header>Card has been updated</Message.Header>
             </Message>
-          ),
-          Failure: () => (
+          </SPModalContent>
+        ),
+        Failure: () => (
+          <SPModalContent className="flex-column align-center justify-center">
             <Message data-testid="card-update-error" negative>
               <Message.Header>Error: Unable to update card</Message.Header>
             </Message>
-          ),
-        })}
-      </SPModalContent>
+          </SPModalContent>
+        ),
+      })}
       <SPModalContent className="flex-column align-center justify-center">
         <Form className="w-full">
           <SPList horizontal className="flex" style={styles.flex}>

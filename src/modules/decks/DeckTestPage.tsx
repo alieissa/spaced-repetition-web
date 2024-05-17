@@ -2,11 +2,10 @@
 
 import { useNavigate, useParams } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
-import { Container, Message } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 import 'src/App.css'
-import { SPButtonIcon, SPHeader } from 'src/components'
+import { SPButtonIcon, SPSectionHeader } from 'src/components'
 import { TestCard, useCardTestFormReducer } from 'src/modules/cards'
-import { styles } from 'src/styles'
 import { async } from 'src/utils'
 import { useDeckById } from './decks.hooks'
 import { NDecks } from './decks.types'
@@ -50,8 +49,8 @@ export function DeckTestPage(props: Props) {
   const isFirstCard = state.currentCardIndex === 0
 
   return (
-    <Container className="w-max-xl" data-testid="deck-test-success">
-      <div className="align-center" style={styles.p0}>
+    <div data-testid="deck-test-success">
+      {/* <div className="align-center" style={styles.p0}>
         <SPButtonIcon
           size="huge"
           icon="chevron left"
@@ -60,7 +59,17 @@ export function DeckTestPage(props: Props) {
         <SPHeader as="h2" className="flex">
           {props.deck.name}
         </SPHeader>
-      </div>
+      </div> */}
+      <SPSectionHeader
+        title={props.deck.name}
+        navIcon={
+          <SPButtonIcon
+            size="huge"
+            icon="chevron left"
+            onClick={handleBackClick}
+          />
+        }
+      ></SPSectionHeader>
 
       <TestCard
         {...currentCard}
@@ -84,13 +93,13 @@ export function DeckTestPage(props: Props) {
           </>
         )}
       </TestCard>
-    </Container>
+    </div>
   )
 }
 
 export default function DeckTest() {
   const params = useParams<{ deckId: string }>()
-  const [status, _deck, _updateDeck] = useDeckById(params.deckId!)
+  const { status } = useDeckById(params.deckId!)
 
   return async.match(status)({
     Untriggered: () => null,

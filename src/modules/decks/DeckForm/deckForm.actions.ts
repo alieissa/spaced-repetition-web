@@ -41,6 +41,9 @@ export type DeckFormAction =
   | {
       type: 'SET_DECK'
       deck: NDecks.Deck
+  }
+  | {
+      type: 'RESET_FORM'
     }
 
 export const addAnswer = (dispatch: any, payload: { cardId: string }) => {
@@ -97,5 +100,12 @@ export const deleteAnswer = (
 export const addCard = (dispatch: any) => {
   dispatch({
     type: 'ADD_CARD',
+  })
+}
+
+export const setDeck = (dispatch: any, deck: any) => {
+  dispatch({
+    type: 'SET_DECK',
+    deck: deck
   })
 }

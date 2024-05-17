@@ -64,6 +64,7 @@ describe('DeckTestPage', () => {
     it('should render correctly', async () => {
       const { asFragment } = mountComponent()
       await act(flushPromises)
+
       expect(asFragment()).toMatchSnapshot()
     })
 

@@ -5,6 +5,7 @@ exports[`CardCreateModal view should render correctly 1`] = `
   <button
     class="ui green icon button"
     data-testid="card-create-modal-btn"
+    style="border-radius: 0;"
   >
     <i
       aria-hidden="true"

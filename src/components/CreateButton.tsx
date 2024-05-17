@@ -2,7 +2,8 @@
 
 import * as _ from 'lodash'
 import { Link } from 'react-router-dom'
-import { Button, ButtonProps } from 'semantic-ui-react'
+import { ButtonProps } from 'semantic-ui-react'
+import { SPButton } from '.'
 
 interface Props {
   createLink: string
@@ -10,9 +11,14 @@ interface Props {
 export default function CreateButton(props: Props & ButtonProps) {
   return (
     <Link to={props.createLink}>
-      <Button color="green" {..._.omit(props, 'createLink')}>
-        Create
-      </Button>
+      <SPButton
+        color="blue"
+        size="medium"
+        icon
+        {..._.omit(props, 'createLink')}
+      >
+        Create New Deck
+      </SPButton>
     </Link>
   )
 }

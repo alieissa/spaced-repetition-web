@@ -3,15 +3,12 @@
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
-  Container,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownProps,
-  Loader,
   Message,
   MessageHeader,
-  Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
 import { async } from 'src/utils'
@@ -22,11 +19,12 @@ import {
   SPCardContent,
   SPList,
   SPListItem,
-  SPText,
+  SPSection,
+  SPSectionHeader,
 } from 'src/components'
 
 import _ from 'lodash'
-import { styles } from 'src/styles'
+import { useEffect } from 'react'
 import { useDeckById } from './decks.hooks'
 
 /**
@@ -36,7 +34,12 @@ import { useDeckById } from './decks.hooks'
 export default function DeckDetails() {
   const navigate = useNavigate()
   const params = useParams<{ deckId: string }>()
-  const [loadDeckStatus, deck, __] = useDeckById(params.deckId!)
+  const { status: loadDeckStatus, deck, loadDeck } = useDeckById(params.deckId!)
+
+  useEffect(() => {
+    loadDeck()
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.deckId])
 
   const handleEdit = () => navigate(`/decks/${params.deckId}/edit`)
 
@@ -50,11 +53,7 @@ export default function DeckDetails() {
 
   return async.match(loadDeckStatus)({
     Untriggered: () => null,
-    Loading: () => (
-      <Segment data-testid="deck-details-loading">
-        <Loader active />
-      </Segment>
-    ),
+    Loading: () => null,
     Success: () => {
       return (
         <>
@@ -63,55 +62,57 @@ export default function DeckDetails() {
               and card create modals are opened here
           */}
           <Outlet />
-          <Container data-testid="deck-details-success">
-            <Segment basic style={styles.p0}>
-              <header className="justify-space-between">
-                <h2>{deck.name}</h2>
-                <div>
+          <div data-testid="deck-details-success">
+            <SPSectionHeader
+              className="bordered"
+              title={deck.name}
+              actions={
+                <>
                   <SPButton data-testid="deck-edit-btn" onClick={handleEdit}>
                     Edit
                   </SPButton>
                   <DeckMenu onDelete={handleDelete} onTest={handleTest} />
-                </div>
-              </header>
-            </Segment>
-            <main>
-              <div>
-                {deck.description && (
-                  <SPText
+                </>
+              }
+            />
+            <main className="px-2r mb-2r">
+              {deck.description && (
+                <SPSection title="Description">
+                  <span
                     data-testid="deck-details-description"
                     className="w-full"
-                    value={deck.description}
-                  />
-                )}
-                <section className="flex-column w-inherit test">
-                  <SPList horizontal celled divided={false}>
-                    {deck.cards.map((card, index) => (
-                      <SPListItem key={card.id}>
-                        <SPCard
-                          data-testid={`deck-details-card-${index}`}
-                          className="pointer"
-                          as="div"
-                          onClick={() => handleCardClick(card.id)}
-                        >
-                          <SPCardContent>{card.question}</SPCardContent>
-                        </SPCard>
-                      </SPListItem>
-                    ))}
-                    <SPListItem>
+                  >
+                    {deck.description}
+                  </span>
+                </SPSection>
+              )}
+              <SPSection title="Cards">
+                <SPList horizontal celled divided={false}>
+                  {deck.cards.map((card, index) => (
+                    <SPListItem key={card.id}>
                       <SPCard
-                        as="div"
+                        data-testid={`deck-details-card-${index}`}
                         className="pointer"
-                        onClick={handleAddCard}
+                        as="div"
+                        onClick={() => handleCardClick(card.id)}
                       >
-                        <SPCardContent>Add card</SPCardContent>
+                        <SPCardContent>{card.question}</SPCardContent>
                       </SPCard>
                     </SPListItem>
-                  </SPList>
-                </section>
-              </div>
+                  ))}
+                  <SPListItem>
+                    <SPCard
+                      as="div"
+                      className="pointer"
+                      onClick={handleAddCard}
+                    >
+                      <SPCardContent>Add card</SPCardContent>
+                    </SPCard>
+                  </SPListItem>
+                </SPList>
+              </SPSection>
             </main>
-          </Container>
+          </div>
         </>
       )
     },

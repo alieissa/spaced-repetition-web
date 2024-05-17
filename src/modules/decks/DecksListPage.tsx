@@ -2,11 +2,12 @@
 
 import * as _ from 'lodash'
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
-  Container,
   Grid,
+  GridColumn,
+  GridRow,
   Header,
   Icon,
   Loader,
@@ -14,46 +15,64 @@ import {
 } from 'semantic-ui-react'
 import 'src/App.css'
 import { isUnauthorized } from 'src/api'
-import { CreateButton } from 'src/components'
+import { CreateButton, SPHeader, SPList } from 'src/components'
 import { async } from 'src/utils'
-import Deck from './Deck'
-import DecksDownload from './DecksDownload'
-import DecksUploadModal from './DecksUploadModal'
+import DecksListItem from './DecksListItem'
 import { useDecks } from './decks.hooks'
 import { NDecks } from './decks.types'
 
 type Props = {
   decks: Record<NDecks.Deck['id'], NDecks.Deck>
 }
+
+function DecksHeader() {
+  return (
+    <div className="justify-space-between bordered p-1r">
+      <SPHeader as="h1">Decks</SPHeader>
+      <CreateButton createLink="/decks/new" />
+    </div>
+  )
+}
+
+function DecksEmpty() {
+  return (
+    <Segment placeholder>
+      <Header icon>
+        <Icon name="file" />
+        No Decks created
+      </Header>
+      <CreateButton createLink="/decks/new" />
+    </Segment>
+  )
+}
+
 function DecksComponent(props: Props) {
   return (
-    <Container data-testid="decks-list-success" className="w-max-xl">
-      <section className="justify-space-between">
-        <Header as="h2">Decks</Header>
-        <div>
-          <CreateButton createLink="/decks/new" />
-          <DecksUploadModal />
-          <DecksDownload />
-        </div>
-      </section>
-      {_.isEmpty(props.decks) ? (
-        <Segment placeholder>
-          <Header icon>
-            <Icon name="file" />
-            No Decks created
-          </Header>
-          <CreateButton createLink="/decks/new" />
-        </Segment>
-      ) : (
-        <Grid doubling stackable>
-          {_.map(_.values(props.decks), (d) => (
-            <Grid.Column width={4} key={d.id}>
-              <Deck {...d} className="h-full" />
-            </Grid.Column>
-          ))}
-        </Grid>
-      )}
-    </Container>
+    <div data-testid="decks-list-success" className="flex-column bordered">
+      <DecksHeader />
+      <Grid padded style={{ flexGrow: 1 }}>
+        <GridRow stretched>
+          <GridColumn width={4}>
+            <div className="bordered">
+              {_.isEmpty(props.decks) ? (
+                <DecksEmpty />
+              ) : (
+                <SPList divided relaxed>
+                  {_.map(_.values(props.decks), (d) => (
+                    <DecksListItem {...d} key={d.id} />
+                  ))}
+                </SPList>
+              )}
+            </div>
+          </GridColumn>
+          <GridColumn width={12}>
+            <div className="bordered">
+              <Outlet />
+            </div>
+          </GridColumn>
+        </GridRow>
+      </Grid>
+    </div>
   )
 }
 
@@ -76,6 +95,7 @@ export default function Decks() {
       // 401 is displayed
       navigate('/login')
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.type])
 
   return async.match(status)({
