@@ -50,6 +50,7 @@ export default function CardDetailsModal() {
 
   useEffect(() => {
     loadCard()
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.cardId])
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export default function CardDetailsModal() {
     }
 
     setIsModalOpen(true)
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadCardStatus.type])
 
   return (

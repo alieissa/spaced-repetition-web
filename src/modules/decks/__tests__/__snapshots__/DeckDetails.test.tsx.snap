@@ -9,7 +9,7 @@ exports[`DeckDetails view should render correctly 1`] = `
       actions="[object Object]"
       class="justify-space-between bordered"
       style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem;"
-      title="train"
+      title="Test name"
     >
       <div
         class="align-center"
@@ -18,7 +18,7 @@ exports[`DeckDetails view should render correctly 1`] = `
           class="ui header"
           style="font-size: 1.5rem; margin-top: 0px; margin-bottom: 0px;"
         >
-          train
+          Test name
         </div>
       </div>
       <div>
@@ -100,7 +100,7 @@ exports[`DeckDetails view should render correctly 1`] = `
                 <div
                   class="content"
                 >
-                  Theatrum tepidus vigilo subseco quisquam.
+                  Test question
                 </div>
               </div>
             </div>

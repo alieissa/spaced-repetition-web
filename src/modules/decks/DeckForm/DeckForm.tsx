@@ -37,7 +37,7 @@ const isValidCard = (card: FormCard, answers: NAnswers.Answer[]) => {
   return isValidQuestion && areValidAnswers
 }
 const isValidForm = (state: DeckFormState) => {
-  const isValidName = state.name.trim() != ''
+  const isValidName = state.name.trim() !== ''
   const areValidCards = getCards(state).every((card) =>
     isValidCard(card, getAnswersByCardId(state, card.id)),
   )
@@ -61,6 +61,7 @@ export default function DeckForm(props: Props) {
 
   useEffect(() => {
     setDeck(localDispatch, props.deck)
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.deck])
 
   const isUpdating = props.submitStatus.type === 'Loading'

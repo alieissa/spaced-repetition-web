@@ -95,6 +95,7 @@ export default function Decks() {
       // 401 is displayed
       navigate('/login')
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.type])
 
   return async.match(status)({

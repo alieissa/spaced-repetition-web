@@ -8,11 +8,6 @@ import { setupServer } from 'msw/node'
 
 import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
 import DeckDetails from '../DeckDetails'
-const mockNavigate = jest.fn(() => ({}))
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}))
 
 const deckId = faker.string.uuid()
 const decksUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}`
@@ -30,15 +25,15 @@ const handlers = [
     return res(
       ctx.json({
         id: deckId,
-        name: faker.word.noun(),
+        name: 'Test name',
         cards: [
           {
-            id: faker.string.uuid(),
-            question: faker.lorem.sentence(5),
+            id: 'testUuid',
+            question: 'Test question',
             answers: [
               {
-                id: faker.string.uuid(),
-                content: faker.lorem.sentence(5),
+                id: 'testUuid',
+                content: 'Test content',
               },
             ],
           },

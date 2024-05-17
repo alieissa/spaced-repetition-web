@@ -4,11 +4,8 @@ import clsx from 'clsx'
 import { HTMLAttributes, PropsWithChildren } from 'react'
 import SPHeader from './Header'
 
-const styles = {
-  boxShadow: 'none',
-  border: '1px solid',
-  borderRadius: 'unset',
-}
+const headerStyles = { fontSize: '1.5rem' }
+
 type Props = {
   title: string
   navIcon?: JSX.Element
@@ -28,7 +25,7 @@ export default function SPSectionHeader(props: PropsWithChildren<Props>) {
     >
       <div className="align-center">
         {props.navIcon && <div>{props.navIcon}</div>}
-        <SPHeader style={{ fontSize: '1.5rem' }}>{props.title}</SPHeader>
+        <SPHeader style={headerStyles}>{props.title}</SPHeader>
       </div>
       {props.actions && <div>{props.actions}</div>}
     </div>

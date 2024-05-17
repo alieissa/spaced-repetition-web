@@ -1,7 +1,7 @@
 /** @format */
 
 import { useFormik } from 'formik'
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Form, Segment } from 'semantic-ui-react'
 import 'src/App.css'
@@ -48,7 +48,6 @@ type Props = {
 export default function Card(props: PropsWithChildren<Props>) {
   const [checkAnswerStatus, checkAnswerResult, checkAnswer, updateCardQuality] =
     useCard(props.deckId, props.id)
-  const [open, setOpen] = useState(false)
   const form = useFormik({
     initialValues: {
       answer: props.userAnswer,

@@ -38,6 +38,7 @@ export default function DeckDetails() {
 
   useEffect(() => {
     loadDeck()
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.deckId])
 
   const handleEdit = () => navigate(`/decks/${params.deckId}/edit`)
