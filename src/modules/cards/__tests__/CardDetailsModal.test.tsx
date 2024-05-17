@@ -64,7 +64,7 @@ describe('CardDetailsModal', () => {
         await act(flushPromises)
 
         // Act
-        const cardDetailsModalEditBtn = screen.getByTestId(
+        const cardDetailsModalEditBtn = await screen.findByTestId(
           'card-details-edit-btn',
         )
         await act(() => cardDetailsModalEditBtn.click())
@@ -94,13 +94,13 @@ describe('CardDetailsModal', () => {
         // Assemble
         mountComponent()
         await act(flushPromises)
-        const cardDetailsModalEditBtn = screen.getByTestId(
+        const cardDetailsModalEditBtn = await screen.findByTestId(
           'card-details-edit-btn',
         )
         await act(() => cardDetailsModalEditBtn.click())
 
         // Act
-        const cardDetailsFormBackBTn = screen.getByTestId(
+        const cardDetailsFormBackBTn = await screen.findByTestId(
           'card-details-form-back-btn',
         )
         await act(() => cardDetailsFormBackBTn.click())
