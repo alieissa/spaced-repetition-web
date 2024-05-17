@@ -35,43 +35,36 @@ describe('DeckForm', () => {
   })
 
   describe('interaction', () => {
-    it('should create deck', async () => {
+    it('should create deck', () => {
       // Assemble
       mountComponent(async.Success(null))
 
       // Assert
-      const successMessage = await screen.queryByTestId(
-        'deck-submission-success',
-      )
+      const successMessage = screen.queryByTestId('deck-submission-success')
       expect(successMessage).toBeInTheDocument()
     })
 
-    it('shoudl display failure message when submission fails', async () => {
+    it('shoudl display failure message when submission fails', () => {
       // Assemble
       mountComponent(async.Failure({ message: faker.word.sample() }))
 
       // Assert
-      const warningMessage = await screen.queryByTestId(
-        'deck-submission-failure',
-      )
+      const warningMessage = screen.queryByTestId('deck-submission-failure')
       expect(warningMessage).toBeInTheDocument()
     })
 
     it('should not allow submission with empty deck name', async () => {
       // Assemble
-      const { container } = mountComponent()
+      mountComponent()
       const user = userEvent.setup()
-      const descriptionInput = container.querySelector(
-        '[data-testid="deck-description"] textarea',
-      )
-      expect(descriptionInput).not.toBeNull()
+      const descriptionInput = await screen.findByTestId('deck-description')
 
       // Act
       await act(() =>
         user.type(descriptionInput as Element, faker.lorem.lines(1)),
       )
-      const saveButton = screen.getByTestId('deck-save')
-      await act(() => user.click(saveButton))
+      const saveButton = await screen.findByTestId('deck-save')
+      await act(() => saveButton.click())
 
       // Assert
       const warningMessage = await screen.findByTestId('deck-submission-error')
@@ -81,56 +74,44 @@ describe('DeckForm', () => {
     it('should not allow submission with empty question content', async () => {
       // Assemble
       const user = userEvent.setup()
-      const { container } = mountComponent()
-
-      const nameInput = container.querySelector(
-        '[data-testid="deck-name"] input',
-      )
-      expect(nameInput).not.toBeNull()
+      mountComponent()
+      const nameInput = await screen.findByTestId('deck-name')
       await act(() => user.type(nameInput as Element, faker.lorem.lines(1)))
 
       const viewAnswersBtn = await screen.findByTestId('view-answers-btn')
       await act(() => viewAnswersBtn.click())
 
-      const answerInput = container.querySelector('[name="answer-content"]')
-      expect(answerInput).not.toBeNull()
+      const answerInput = await screen.findByTestId('answer-content-0')
       await act(() => user.type(answerInput as Element, faker.lorem.lines(1)))
 
       // Act
-      const saveButton = screen.getByTestId('deck-save')
-      await act(() => user.click(saveButton))
-
+      const saveButton = await screen.findByTestId('deck-save')
+      await act(() => saveButton.click())
       await act(flushPromises)
 
       // Assert
-      const warningMessage = await screen.queryByTestId('deck-submission-error')
+      const warningMessage = await screen.findByTestId('deck-submission-error')
       expect(warningMessage).toBeInTheDocument()
     })
 
     it('should not allow saving deck with empty answer content', async () => {
       // Assemble
       const user = userEvent.setup()
-      const { container } = mountComponent()
+      mountComponent()
 
-      const nameInput = container.querySelector(
-        '[data-testid="deck-name"] input',
-      )
-      expect(nameInput).not.toBeNull()
+      const nameInput = await screen.findByTestId('deck-name')
       await act(() => user.type(nameInput as Element, faker.lorem.lines(1)))
 
-      const questionInput = container.querySelector('[name="question-content"]')
-
-      expect(questionInput).not.toBeNull()
+      const questionInput = await screen.findByTestId('question-content')
       await act(() => user.type(questionInput as Element, faker.lorem.lines(1)))
 
       // Act
-      const saveButton = screen.getByTestId('deck-save')
-      await act(() => user.click(saveButton))
-
+      const saveButton = await screen.findByTestId('deck-save')
+      await act(() => saveButton.click())
       await act(flushPromises)
 
       // Assert
-      const warningMessage = screen.queryByTestId('deck-submission-error')
+      const warningMessage = await screen.findByTestId('deck-submission-error')
       expect(warningMessage).toBeInTheDocument()
     })
 
@@ -139,7 +120,7 @@ describe('DeckForm', () => {
       mountComponent(async.Loading(null))
 
       // Assert
-      const saveButton = screen.getByTestId('deck-save')
+      const saveButton = await screen.findByTestId('deck-save')
       expect(saveButton).toBeDisabled()
     })
   })

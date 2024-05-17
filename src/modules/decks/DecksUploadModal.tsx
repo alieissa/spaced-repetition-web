@@ -44,6 +44,7 @@ export default function UploadDecksModal() {
     if (uploadDecksStatus.type === 'Success') {
       handleCloseModal()
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadDecksStatus.type])
 
   return (

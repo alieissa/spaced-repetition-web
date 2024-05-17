@@ -27,6 +27,7 @@ export function useVerification() {
         result
       })
     })
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return { status }

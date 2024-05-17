@@ -30,6 +30,8 @@ jobs:
         run: npm run lint
       
   tests:
+    needs:
+      - lint
     runs-on: ubuntu-22.04
     name: Test
     steps:

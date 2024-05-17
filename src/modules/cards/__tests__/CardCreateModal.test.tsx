@@ -3,7 +3,6 @@
 import { faker } from '@faker-js/faker'
 import '@testing-library/jest-dom'
 import { act, screen } from '@testing-library/react'
-import user from '@testing-library/user-event'
 import { rest } from 'msw'
 import { setupServer } from 'msw/lib/node'
 import { renderWithProviders } from 'src/utils/test-utils'
@@ -41,15 +40,15 @@ describe('CardCreateModal', () => {
       )
       renderWithProviders(<CardCreateModal deckId={deckId} />)
       const deckImportBtn = screen.getByTestId('card-create-modal-btn')
-      await act(() => user.click(deckImportBtn))
+      await act(() => deckImportBtn.click())
 
       // Act
       const cardCreateSaveBtn = screen.getByTestId('card-create-save-btn')
-      await act(() => user.click(cardCreateSaveBtn))
+      await act(() => cardCreateSaveBtn.click())
 
       // Assert
-      const cardCreateLoader = screen.queryByTestId('card-create-error')
-      expect(cardCreateLoader).toBeInTheDocument()
+      const cardCreateError = await screen.findByTestId('card-create-error')
+      expect(cardCreateError).toBeInTheDocument()
     })
   })
 })

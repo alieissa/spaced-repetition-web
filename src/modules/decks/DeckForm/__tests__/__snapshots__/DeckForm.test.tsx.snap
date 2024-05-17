@@ -40,10 +40,10 @@ exports[`DeckForm view should render correctly 1`] = `
         <div>
           <div
             class="ui huge input w-full"
-            data-testid="deck-name"
             style="opacity: 1;"
           >
             <input
+              data-testid="deck-name"
               placeholder="Enter name here"
               style="border-radius: unset; font-weight: 400; padding-left: 0px;"
               type="text"
@@ -53,7 +53,6 @@ exports[`DeckForm view should render correctly 1`] = `
         </div>
         <div
           class="flex-column"
-          data-testid="deck-description"
           style="margin-top: 1.5rem;"
           title="Description"
         >
@@ -111,7 +110,7 @@ exports[`DeckForm view should render correctly 1`] = `
                     style="opacity: 1;"
                   >
                     <input
-                      name="question-content"
+                      data-testid="question-content"
                       placeholder="Enter question here"
                       style="border-radius: unset;"
                       type="text"

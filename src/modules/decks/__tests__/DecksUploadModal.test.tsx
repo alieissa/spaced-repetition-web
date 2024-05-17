@@ -22,7 +22,7 @@ const uploadFile = async (inputElementId: string) => {
     type: 'application/json',
   })
 
-  const input = screen.getByTestId(inputElementId)
+  const input = await screen.findByTestId(inputElementId)
   expect(input).toBeInTheDocument()
 
   return user.upload(input, file)
@@ -49,15 +49,15 @@ describe('DecksUploadModal', () => {
     it.skip('should display loading when upload in progress', async () => {
       // Assemble
       renderWithProviders(<DecksUploadModal />)
-      const deckImportBtn = screen.getByTestId('decks-upload-modal-btn')
-      await act(() => user.click(deckImportBtn))
+      const deckImportBtn = await screen.findByTestId('decks-upload-modal-btn')
+      await act(() => deckImportBtn.click())
       await act(() => uploadFile('decks-upload-file-input'))
 
       // Act
-      const decksUploadConfirmBtn = screen.getByTestId(
+      const decksUploadConfirmBtn = await screen.findByTestId(
         'decks-upload-confirm-btn',
       )
-      await act(() => user.click(decksUploadConfirmBtn))
+      await act(() => decksUploadConfirmBtn.click())
 
       // Assert
       const decksUploadLoader = screen.queryByTestId('decks-upload-loader')
@@ -70,15 +70,15 @@ describe('DecksUploadModal', () => {
         rest.post(decksUploadUrl, (__, res, ctx) => res(ctx.status(422))),
       )
       renderWithProviders(<DecksUploadModal />)
-      const deckImportBtn = screen.getByTestId('decks-upload-modal-btn')
-      await act(() => user.click(deckImportBtn))
+      const deckImportBtn = await screen.findByTestId('decks-upload-modal-btn')
+      await act(() => deckImportBtn.click())
       await act(() => uploadFile('decks-upload-file-input'))
 
       // Act
-      const decksUploadConfirmBtn = screen.getByTestId(
+      const decksUploadConfirmBtn = await screen.findByTestId(
         'decks-upload-confirm-btn',
       )
-      await act(() => user.click(decksUploadConfirmBtn))
+      await act(() => decksUploadConfirmBtn.click())
 
       // Assert
       const decksUploadLoader = screen.queryByTestId('decks-upload-error')

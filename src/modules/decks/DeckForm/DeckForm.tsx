@@ -155,7 +155,7 @@ export default function DeckForm(props: Props) {
             />
           </div>
 
-          <SPSection data-testid="deck-description" title="Description">
+          <SPSection title="Description">
             <textarea
               data-testid="deck-description"
               rows={5}

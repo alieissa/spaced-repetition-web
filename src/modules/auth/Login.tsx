@@ -89,6 +89,7 @@ function Login() {
       return
     }
     navigate('/')
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.type])
 
   const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {

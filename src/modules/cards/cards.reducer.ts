@@ -65,7 +65,6 @@ export default produce((draft: NCards.State, action: CardsAction) => {
       return
     }
     case 'UpdateCard': {
-      console.log('updating card', action)
       draft.updateCardStatus[action.id] = Loading(null)
       return
     }

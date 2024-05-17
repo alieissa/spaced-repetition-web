@@ -3,7 +3,6 @@
 import { faker } from '@faker-js/faker'
 import '@testing-library/jest-dom'
 import { act, screen } from '@testing-library/react'
-import user from '@testing-library/user-event'
 import { rest } from 'msw'
 import { setupServer } from 'msw/lib/node'
 import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
@@ -68,7 +67,7 @@ describe('CardDetailsModal', () => {
         const cardDetailsModalEditBtn = screen.getByTestId(
           'card-details-edit-btn',
         )
-        await act(() => user.click(cardDetailsModalEditBtn))
+        await act(() => cardDetailsModalEditBtn.click())
 
         // Assert
         const cardDetailsForm = await screen.findByTestId('card-details-form')
@@ -82,7 +81,7 @@ describe('CardDetailsModal', () => {
 
         // Act
         const viewAnswersBtn = await screen.findByTestId('view-answers-btn')
-        await act(() => user.click(viewAnswersBtn))
+        await act(() => viewAnswersBtn.click())
 
         // Assert
         const answer = screen.queryByTestId('answers-0')
@@ -98,13 +97,13 @@ describe('CardDetailsModal', () => {
         const cardDetailsModalEditBtn = screen.getByTestId(
           'card-details-edit-btn',
         )
-        await act(() => user.click(cardDetailsModalEditBtn))
+        await act(() => cardDetailsModalEditBtn.click())
 
         // Act
         const cardDetailsFormBackBTn = screen.getByTestId(
           'card-details-form-back-btn',
         )
-        await act(() => user.click(cardDetailsFormBackBTn))
+        await act(() => cardDetailsFormBackBTn.click())
 
         // Assert
         const cardDetailsView = await screen.findByTestId('card-details-view')
@@ -119,11 +118,11 @@ describe('CardDetailsModal', () => {
         const cardDetailsModalEditBtn = await screen.findByTestId(
           'card-details-edit-btn',
         )
-        await act(() => user.click(cardDetailsModalEditBtn))
+        await act(() => cardDetailsModalEditBtn.click())
 
         // Act
         const saveBtn = await screen.findByTestId('card-details-form-save-btn')
-        await act(() => user.click(saveBtn))
+        await act(() => saveBtn.click())
         await act(flushPromises)
 
         // Assert
@@ -143,11 +142,11 @@ describe('CardDetailsModal', () => {
         const cardDetailsModalEditBtn = await screen.findByTestId(
           'card-details-edit-btn',
         )
-        await act(() => user.click(cardDetailsModalEditBtn))
+        await act(() => cardDetailsModalEditBtn.click())
 
         // Act
         const saveBtn = await screen.findByTestId('card-details-form-save-btn')
-        await act(() => user.click(saveBtn))
+        await act(() => saveBtn.click())
         await act(flushPromises)
 
         // Assert

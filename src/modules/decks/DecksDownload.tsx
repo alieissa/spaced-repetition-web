@@ -1,4 +1,4 @@
-/** @format */
+/* eslint-disable jsx-a11y/anchor-has-content */
 
 import { useEffect, useRef } from 'react'
 import 'src/App.css'
