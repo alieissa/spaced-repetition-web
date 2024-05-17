@@ -3,33 +3,39 @@
 exports[`DeckTestPage view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="w-max-xl"
     data-testid="deck-test-success"
   >
     <div
-      class="align-center"
-      style="padding: 0px;"
+      class="justify-space-between"
+      style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem;"
+      title="Test Deck"
     >
-      <button
-        class="ui huge icon button"
-        style="padding-left: 0px; padding-right: 0px; background: none;"
+      <div
+        class="align-center"
       >
-        <i
-          aria-hidden="true"
-          class="chevron left icon"
-        />
-      </button>
-      <h2
-        class="ui header flex"
-        style="margin-top: 0px; margin-bottom: 0px;"
-      >
-        Test Deck
-      </h2>
+        <div>
+          <button
+            class="ui huge icon button"
+            style="padding-left: 0px; padding-right: 0px; background: none;"
+          >
+            <i
+              aria-hidden="true"
+              class="chevron left icon"
+            />
+          </button>
+        </div>
+        <div
+          class="ui header"
+          style="font-size: 1.5rem; margin-top: 0px; margin-bottom: 0px;"
+        >
+          Test Deck
+        </div>
+      </div>
     </div>
     <div
       class="ui fluid card"
       data-testid="test-card-0"
-      style="box-shadow: none; border: 1px solid; border-radius: unset;"
+      style="box-shadow: none; border: 1px solid; border-radius: unset; margin-top: 0px;"
     >
       <div
         class="content"

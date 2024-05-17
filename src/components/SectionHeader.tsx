@@ -1,6 +1,7 @@
 /** @format */
 
 import clsx from 'clsx'
+import _ from 'lodash'
 import { HTMLAttributes, PropsWithChildren } from 'react'
 import SPHeader from './Header'
 
@@ -15,7 +16,7 @@ type Props = {
 export default function SPSectionHeader(props: PropsWithChildren<Props>) {
   return (
     <div
-      {...props}
+      {..._.omit(props, ['navIcon', 'actions'])}
       className={clsx('justify-space-between', props.className)}
       style={{
         padding: '1rem 1rem 1rem 2rem',

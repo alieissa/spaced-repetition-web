@@ -6,7 +6,6 @@ exports[`DeckDetails view should render correctly 1`] = `
     data-testid="deck-details-success"
   >
     <div
-      actions="[object Object]"
       class="justify-space-between bordered"
       style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem;"
       title="Test name"
@@ -69,7 +68,7 @@ exports[`DeckDetails view should render correctly 1`] = `
       </div>
     </div>
     <main
-      class="px-2r"
+      class="px-2r mb-2r"
     >
       <div
         class="flex-column"
@@ -95,7 +94,7 @@ exports[`DeckDetails view should render correctly 1`] = `
               <div
                 class="ui card pointer"
                 data-testid="deck-details-card-0"
-                style="box-shadow: none; border: 1px solid; border-radius: unset;"
+                style="box-shadow: none; border: 1px solid; border-radius: unset; margin-top: 0px;"
               >
                 <div
                   class="content"
@@ -111,7 +110,7 @@ exports[`DeckDetails view should render correctly 1`] = `
             >
               <div
                 class="ui card pointer"
-                style="box-shadow: none; border: 1px solid; border-radius: unset;"
+                style="box-shadow: none; border: 1px solid; border-radius: unset; margin-top: 0px;"
               >
                 <div
                   class="content"

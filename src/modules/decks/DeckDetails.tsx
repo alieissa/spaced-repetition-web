@@ -75,7 +75,7 @@ export default function DeckDetails() {
                 </>
               }
             />
-            <main className="px-2r">
+            <main className="px-2r mb-2r">
               {deck.description && (
                 <SPSection title="Description">
                   <span

@@ -8,7 +8,6 @@ exports[`DeckForm view should render correctly 1`] = `
   >
     <div
       class="justify-space-between bordered"
-      navicon="[object Object]"
       style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem;"
       title="Test Deck"
     >
