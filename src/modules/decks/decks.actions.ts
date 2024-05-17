@@ -4,8 +4,8 @@ import { RequestError } from 'src/types'
 import { Either } from 'src/utils/either'
 import { NDecks } from './decks.types'
 
-export type GetDeck = {
-  type: 'GetDeck'
+export type LoadDeck = {
+  type: 'LoadDeck'
   id: NDecks.Deck['id']
 }
 
@@ -15,13 +15,13 @@ export type DeckLoaded = {
   id: NDecks.Deck['id']
 }
 
-export type GetDecks = {
-  type: 'GetDecks'
+export type LoadDecks = {
+  type: 'LoadDecks'
 }
 
 export type DecksLoaded = {
   type: 'DecksLoaded'
-  result: Either<RequestError, ReadonlyArray<NDecks.Deck>>
+  result: Either<RequestError, NDecks.Deck[]>
 }
 
 export type CreateDeck = {
@@ -72,9 +72,9 @@ export type DeckReset = {
 }
 
 export type DecksAction =
-  | GetDeck
+  | LoadDeck
   | DeckLoaded
-  | GetDecks
+  | LoadDecks
   | DecksLoaded
   | CreateDeck
   | DeckCreated

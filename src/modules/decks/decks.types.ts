@@ -9,7 +9,7 @@ export namespace NDecks {
   export type State = {
     decks: _.Dictionary<Deck>
     status: Async<null, RequestError, null>
-    getStatus: _.Dictionary<Async<null, RequestError, Deck>>
+    loadStatus: _.Dictionary<Async<null, RequestError, Deck>>
     createStatus: Async<null, RequestError, null>
     updateStatus: _.Dictionary<Async<null, RequestError, null>>
     uploadDecksStatus: Async<null, RequestError, null>

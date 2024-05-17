@@ -116,9 +116,9 @@ describe('DeckTestPage', () => {
 
       // Act
       const nextCardBtn = await screen.findByTestId('next-card-btn')
-      await act(() => user.click(nextCardBtn))
-      await act(() => user.click(nextCardBtn))
-      await act(() => user.click(nextCardBtn))
+      await act(() => nextCardBtn.click())
+      await act(() => nextCardBtn.click())
+      await act(() => nextCardBtn.click())
 
       // Assert
       expect(await screen.findByTestId('test-card-3')).toBeInTheDocument()
@@ -134,8 +134,8 @@ describe('DeckTestPage', () => {
       // Act
       const previousCardBtn = screen.getByTestId('previous-card-btn')
       const nextCardBtn = screen.getByTestId('next-card-btn')
-      await act(() => user.click(nextCardBtn))
-      await act(() => user.click(previousCardBtn))
+      await act(() => nextCardBtn.click())
+      await act(() => previousCardBtn.click())
 
       // Assert
       expect(await screen.findByTestId('test-card-0')).toBeInTheDocument()

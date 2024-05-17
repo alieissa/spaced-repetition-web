@@ -12,10 +12,10 @@ export namespace NCards {
       Async<null, RequestError, { distance: number; answer: any }>
     >
     check: Record<Card['id'], { distance: number; answer: NAnswers.Answer }>
-    createCardStatus: Async<null, RequestError, NCards.Card>
-    loadCardStatus: Record<Card['id'], Async<null, RequestError, NCards.Card>>
+    createStatus: Async<null, RequestError, NCards.Card>
+    loadStatus: Record<Card['id'], Async<null, RequestError, NCards.Card>>
     loadedCards: Record<Card['id'], NCards.Card>
-    updateCardStatus: Record<Card['id'], Async<null, RequestError, NCards.Card>>
+    updateStatus: Record<Card['id'], Async<null, RequestError, NCards.Card>>
   }
 
   export type Card = {
