@@ -46,6 +46,7 @@ export default function DeckDetails() {
 
   const handleTest = () => navigate(`/decks/${params.deckId}/test`)
   // TODO implement delete deck functionality
+  // https://github.com/alieissa/spaced-repetition-web/issues/64
   const handleDelete = _.noop
 
   const handleCardClick = (cardId: string) =>
@@ -143,7 +144,7 @@ function DeckMenu(props: MenuProps) {
       icon={<Icon name="ellipsis vertical" style={{ height: '100%' }} />}
     >
       <DropdownMenu data-testid="deck-details-dropdown-menu" direction="left">
-        <DropdownItem text="Test" onClick={props.onTest} />
+        <DropdownItem text="Delete" onClick={props.onDelete} />
       </DropdownMenu>
     </Dropdown>
   )
