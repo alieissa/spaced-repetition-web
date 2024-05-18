@@ -175,7 +175,7 @@ export default function DeckForm(props: Props) {
           </Segment>
         </SPSection>
       </div>
-      <footer className="flex-row-reverse px-2r pb-2r">
+      <footer className="flex-row-reverse pb-2r">
         <SPButton
           data-testid="deck-save"
           color="green"

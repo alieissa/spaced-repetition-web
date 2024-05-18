@@ -7,6 +7,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownProps,
+  Icon,
   Message,
   MessageHeader,
 } from 'semantic-ui-react'
@@ -44,6 +45,7 @@ export default function DeckDetails() {
   const handleEdit = () => navigate(`/decks/${params.deckId}/edit`)
 
   const handleTest = () => navigate(`/decks/${params.deckId}/test`)
+  // TODO implement delete deck functionality
   const handleDelete = _.noop
 
   const handleCardClick = (cardId: string) =>
@@ -64,14 +66,17 @@ export default function DeckDetails() {
           <Outlet />
           <div data-testid="deck-details-success">
             <SPSectionHeader
-              className="bordered"
+              style={{ borderBottom: '1px solid' }}
               title={deck.name}
               actions={
                 <>
+                  <SPButton data-testid="deck-test-btn" onClick={handleTest}>
+                    Test
+                  </SPButton>
                   <SPButton data-testid="deck-edit-btn" onClick={handleEdit}>
                     Edit
                   </SPButton>
-                  <DeckMenu onDelete={handleDelete} onTest={handleTest} />
+                  <DeckMenu onDelete={handleDelete} />
                 </>
               }
             />
@@ -128,14 +133,17 @@ export default function DeckDetails() {
 
 type MenuProps = DropdownProps & {
   onDelete: VoidFunction
-  onTest: VoidFunction
 }
 function DeckMenu(props: MenuProps) {
   return (
-    <Dropdown data-testid="deck-details-dropdown" icon="ellipsis vertical">
-      <DropdownMenu data-testid="deck-details-dropdown-menu">
+    <Dropdown
+      data-testid="deck-details-dropdown"
+      className="align-center"
+      style={{ display: 'inline-flex', alignItems: 'center' }}
+      icon={<Icon name="ellipsis vertical" style={{ height: '100%' }} />}
+    >
+      <DropdownMenu data-testid="deck-details-dropdown-menu" direction="left">
         <DropdownItem text="Test" onClick={props.onTest} />
-        <DropdownItem text="Delete" onClick={props.onDelete} />
       </DropdownMenu>
     </Dropdown>
   )

@@ -30,11 +30,11 @@ export default function AppRoutes() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/decks" element={withSidebar(<DecksListPage />)}>
         <Route path="new" element={<NewDeck />} />
+        <Route path=":deckId/edit" element={<DeckEdit />} />
+        <Route path=":deckId/test" element={<DeckTestPage />} />
         <Route path=":deckId" element={<DeckDetails />}>
           <Route path="cards/:cardId" element={<CardDetailsModal />} />
         </Route>
-        <Route path=":deckId/edit" element={<DeckEdit />} />
-        <Route path=":deckId/test" element={<DeckTestPage />} />
       </Route>
       <Route path="/verify" element={<Verification />} />
       <Route path="/" element={withSidebar(<DecksListPage />)} />

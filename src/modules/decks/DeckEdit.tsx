@@ -26,7 +26,7 @@ export default function DeckEdit() {
   const handleCancel = () => navigate(-1)
 
   return (
-    <div data-testid="deck-success" className="bordered">
+    <div data-testid="deck-success">
       <SPSectionHeader
         title="Edit Deck"
         navIcon={
@@ -36,7 +36,7 @@ export default function DeckEdit() {
             onClick={handleCancel}
           />
         }
-        className="bordered"
+        style={{ borderBottom: '1px solid' }}
       />
       <main className="px-2r">
         {async.match(loadDeckStatus)({

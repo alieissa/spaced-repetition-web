@@ -153,13 +153,13 @@ export function useCardForm(
 }
 
 type GetNextCard = {
-  type: 'GET_NEXT_CARD'
+  type: 'GetNextCard'
 }
 type GetPreviousCard = {
-  type: 'GET_PREVIOUS_CARD'
+  type: 'GetPreviousCard'
 }
 type UpdateUserAnswer = {
-  type: 'UPDATE_USER_ANSWER'
+  type: 'UpdateUserAnswer'
   id: NCards.Card['id']
   userAnswer: string
 }
@@ -170,15 +170,15 @@ type State = {
 }
 function cardTestFormReducer(state: State, action: Action) {
   switch (action.type) {
-    case 'GET_NEXT_CARD': {
+    case 'GetNextCard': {
       const nextIndex = state.currentCardIndex + 1
       return { ...state, currentCardIndex: nextIndex }
     }
-    case 'GET_PREVIOUS_CARD': {
+    case 'GetPreviousCard': {
       const nextIndex = state.currentCardIndex - 1
       return { ...state, currentCardIndex: nextIndex }
     }
-    case 'UPDATE_USER_ANSWER': {
+    case 'UpdateUserAnswer': {
       const updatedCard = {
         ...state.cards[state.currentCardIndex],
         userAnswer: action.userAnswer,

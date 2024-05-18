@@ -14,7 +14,6 @@ type Props = {
 } & HTMLAttributes<HTMLDivElement>
 
 export default function SPSectionHeader(props: PropsWithChildren<Props>) {
-  const t = 'foobar'
   return (
     <div
       {..._.omit(props, ['navIcon', 'actions'])}

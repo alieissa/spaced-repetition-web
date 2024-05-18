@@ -26,7 +26,7 @@ export function DeckTestPage(props: Props) {
 
   const handleAnswerChange = (id: string, userAnswer: string) => {
     dispatch({
-      type: 'UPDATE_USER_ANSWER',
+      type: 'UpdateUserAnswer',
       id,
       userAnswer,
     })
@@ -34,13 +34,13 @@ export function DeckTestPage(props: Props) {
 
   const handleNext = () => {
     dispatch({
-      type: 'GET_NEXT_CARD',
+      type: 'GetNextCard',
     })
   }
 
   const handlePrevious = () => {
     dispatch({
-      type: 'GET_PREVIOUS_CARD',
+      type: 'GetPreviousCard',
     })
   }
 
@@ -50,16 +50,6 @@ export function DeckTestPage(props: Props) {
 
   return (
     <div data-testid="deck-test-success">
-      {/* <div className="align-center" style={styles.p0}>
-        <SPButtonIcon
-          size="huge"
-          icon="chevron left"
-          onClick={handleBackClick}
-        />
-        <SPHeader as="h2" className="flex">
-          {props.deck.name}
-        </SPHeader>
-      </div> */}
       <SPSectionHeader
         title={props.deck.name}
         navIcon={
