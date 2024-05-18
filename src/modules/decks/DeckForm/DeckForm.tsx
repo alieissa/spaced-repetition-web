@@ -9,7 +9,6 @@ import {
   SPButtonIcon,
   SPInput,
   SPSection,
-  SPSectionHeader,
 } from 'src/components'
 import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
@@ -46,7 +45,6 @@ const isValidForm = (state: DeckFormState) => {
 }
 
 type Props = {
-  header: string
   deck: NDecks.Deck
   successMessage: string
   failureMessage: string
@@ -58,13 +56,15 @@ type Props = {
 export default function DeckForm(props: Props) {
   const [localState, localDispatch] = useDeckFormReducer(props.deck)
   const [displayValidationError, setDisplayValidationError] = useState(false)
+  const [displaySubmissionStatus, setDisplaySubmissionStatus] = useState(false)
 
   useEffect(() => {
     setDeck(localDispatch, props.deck)
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.deck])
 
-  const isUpdating = props.submitStatus.type === 'Loading'
+  const isUpdating =
+    displaySubmissionStatus && props.submitStatus.type === 'Loading'
 
   const handleChangeDeckName = (e: any) => {
     changeDeck(localDispatch, {
@@ -109,26 +109,15 @@ export default function DeckForm(props: Props) {
   }
 
   return (
-    <div data-testid="deck-success" className="bordered">
-      <SPSectionHeader
-        title={props.header}
-        navIcon={
-          <SPButtonIcon
-            size="huge"
-            icon="chevron left"
-            onClick={props.onCancel}
-          />
-        }
-        className="bordered"
-      />
-      <main className="px-2r">
-        {displayValidationError && (
-          <Message negative data-testid="deck-submission-error">
-            <MessageHeader>Invalid input detected</MessageHeader>
-            <p>Enter valid input and try again</p>
-          </Message>
-        )}
-        {async.match(props.submitStatus)({
+    <>
+      {displayValidationError && (
+        <Message negative data-testid="deck-submission-error">
+          <MessageHeader>Invalid input detected</MessageHeader>
+          <p>Enter valid input and try again</p>
+        </Message>
+      )}
+      {displaySubmissionStatus &&
+        async.match(props.submitStatus)({
           Untriggered: () => null,
           Loading: () => null,
           Success: () => (
@@ -142,51 +131,50 @@ export default function DeckForm(props: Props) {
             </Message>
           ),
         })}
+      <div>
         <div>
-          <div>
-            <SPInput
-              data-testid="deck-name"
-              size="huge"
-              placeholder="Enter name here"
-              className="w-full"
-              value={localState.name}
-              style={{ fontWeight: 400, paddingLeft: 0 }}
-              onChange={handleChangeDeckName}
-            />
-          </div>
-
-          <SPSection title="Description">
-            <textarea
-              data-testid="deck-description"
-              rows={5}
-              className="w-full"
-              name="deck-textarea"
-              value={localState.description}
-              onChange={handleDeckDescriptionChange}
-            />
-          </SPSection>
-          <SPSection title="Cards">
-            {_.map(getCards(localState), (card) => (
-              <CardForm
-                {...card}
-                key={card.id}
-                answers={getAnswersByCardId(localState, card.id)}
-                onAddAnswer={() => handleAddAnswer(card.id)}
-                onChangeAnswer={(id, content) =>
-                  handleChangeAnswer(id, card.id, content)
-                }
-                onChangeQuestion={(question: string) =>
-                  handleChangeQuestion(card.id, question)
-                }
-                onDeleteAnswer={(id: string) => handleDeleteAnswer(id, card.id)}
-              />
-            ))}
-            <Segment basic style={styles.p0} className="flex-row-reverse">
-              <SPButtonIcon color="green" icon="plus" onClick={handleAddCard} />
-            </Segment>
-          </SPSection>
+          <SPInput
+            data-testid="deck-name"
+            size="huge"
+            placeholder="Enter name here"
+            className="w-full"
+            value={localState.name}
+            style={{ fontWeight: 400, paddingLeft: 0 }}
+            onChange={handleChangeDeckName}
+          />
         </div>
-      </main>
+
+        <SPSection title="Description">
+          <textarea
+            data-testid="deck-description"
+            rows={5}
+            className="w-full"
+            name="deck-textarea"
+            value={localState.description}
+            onChange={handleDeckDescriptionChange}
+          />
+        </SPSection>
+        <SPSection title="Cards">
+          {_.map(getCards(localState), (card) => (
+            <CardForm
+              {...card}
+              key={card.id}
+              answers={getAnswersByCardId(localState, card.id)}
+              onAddAnswer={() => handleAddAnswer(card.id)}
+              onChangeAnswer={(id, content) =>
+                handleChangeAnswer(id, card.id, content)
+              }
+              onChangeQuestion={(question: string) =>
+                handleChangeQuestion(card.id, question)
+              }
+              onDeleteAnswer={(id: string) => handleDeleteAnswer(id, card.id)}
+            />
+          ))}
+          <Segment basic style={styles.p0} className="flex-row-reverse">
+            <SPButtonIcon color="green" icon="plus" onClick={handleAddCard} />
+          </Segment>
+        </SPSection>
+      </div>
       <footer className="flex-row-reverse px-2r pb-2r">
         <SPButton
           data-testid="deck-save"
@@ -212,11 +200,12 @@ export default function DeckForm(props: Props) {
             }
 
             props.onSubmit(deckToUpdate)
+            setDisplaySubmissionStatus(true)
           }}
         >
           Save
         </SPButton>
       </footer>
-    </div>
+    </>
   )
 }

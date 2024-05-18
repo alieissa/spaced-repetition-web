@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { useReducer } from 'react'
 import { NAnswers } from 'src/modules/answers'
 import { NCards } from 'src/modules/cards'
+import { Untriggered } from 'src/utils/async'
 import { NDecks } from '../decks.types'
 import { DeckFormAction } from './deckForm.actions'
 
@@ -43,12 +44,13 @@ const getInitState = <D extends NDecks.Deck>(deck: D): DeckFormState => {
     ...deck,
     cards,
     answers,
+    submitStatus: Untriggered()
   }
 }
 
 function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
   switch (action.type) {
-    case 'ADD_ANSWER': {
+    case 'AddAnswer': {
       const newAnswer = NAnswers.Initial({})
       const updatedCardAnswers = [...state.answers[action.cardId], newAnswer]
       const updatedAnswers = {
@@ -58,7 +60,7 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
 
       return { ...state, answers: updatedAnswers }
     }
-    case 'UPDATE_ANSWER': {
+    case 'UpdateAnswer': {
       const cardAnswers = state.answers[action.cardId]
       const updatedCardAnswers = cardAnswers.map((answer) =>
         answer.id === action.id
@@ -72,7 +74,7 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
 
       return { ...state, answers: updatedAnswers }
     }
-    case 'DELETE_ANSWER': {
+    case 'DeleteAnswer': {
       const cardAnswers = state.answers[action.cardId]
       const updatedCardAnswers = cardAnswers.filter(
         (answer) => answer.id !== action.id,
@@ -85,7 +87,7 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
       return { ...state, answers: updatedAnswers }
     }
 
-    case 'ADD_CARD': {
+    case 'AddCard': {
       const newCard = NCards.Initial({})
       const answers = convertToAnswersState([newCard])
       const cards = convertToCardsState([newCard])
@@ -99,7 +101,7 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
         ],
       }
     }
-    case 'DELETE_CARD': {
+    case 'DeleteCard': {
       const updatedCards = state.cards.filter((card) => card.id !== action.id)
       const updatedAnswers = _.omit(state.answers, action.id)
       return {
@@ -108,7 +110,7 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
         cards: updatedCards,
       }
     }
-    case 'UPDATE_QUESTION': {
+    case 'UpdateQuestion': {
       const updatedCards = state.cards.map((card) =>
         card.id === action.cardId
           ? { ...card, question: action.question }
@@ -118,7 +120,7 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
       return { ...state, cards: updatedCards }
     }
 
-    case 'UPDATE_DECK': {
+    case 'UpdateDeck': {
       return {
         ...state,
         name: action.name,
@@ -126,7 +128,7 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
       }
     }
 
-    case 'SET_DECK': {
+    case 'SetDeck': {
       return getInitState(action.deck)
     }
     default:

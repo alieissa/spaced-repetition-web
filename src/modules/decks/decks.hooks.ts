@@ -71,7 +71,7 @@ export function useDeckById(
   // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
 ): DeckByIdReturnType {
   const deck = useSelector(Select.deck(id))
-  const status = useSelector(Select.loadStatus(id))
+  const loadStatus = useSelector(Select.loadStatus(id))
   const dispatch = useDispatch<Dispatch<DecksAction>>()
   const getDeck = api.request<NDecks.Deck>({
     method: 'GET',
@@ -80,6 +80,10 @@ export function useDeckById(
   const putDeck = api.request<NDecks.Deck>({ method: 'PUT', url: `decks/${id}` })
 
   useEffect(() => {
+    if (loadStatus.type === 'Success') {
+      return
+    }
+
     dispatch({
       type: 'LoadDeck',
       id,
@@ -87,10 +91,6 @@ export function useDeckById(
     getDeck().then((result: any) => {
       dispatch({ type: 'DeckLoaded', result, id })
     })
-
-    return () => {
-      dispatch({ type: 'DeckReset', id })
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -121,7 +121,7 @@ export function useDeckById(
     })
   }
 
-  return { status, deck, loadDeck, updateDeck }
+  return { status: loadStatus, deck, loadDeck, updateDeck }
 }
 
 export function useUploadDecks(): [

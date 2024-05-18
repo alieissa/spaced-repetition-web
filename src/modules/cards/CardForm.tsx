@@ -19,7 +19,7 @@ export type CardFormProps = {
 }
 
 export default function CardForm(props: CardFormProps) {
-  const [areAnswersVisible, setAreAnswersVisible] = useState(false)
+  const [areAnswersVisible, setAreAnswersVisible] = useState(true)
 
   return (
     <Form className="w-full bordered">
