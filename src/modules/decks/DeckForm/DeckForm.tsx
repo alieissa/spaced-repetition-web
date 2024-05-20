@@ -160,6 +160,7 @@ export default function DeckForm(props: Props) {
               {...card}
               key={card.id}
               answers={getAnswersByCardId(localState, card.id)}
+              areAnswersVisible={true}
               onAddAnswer={() => handleAddAnswer(card.id)}
               onChangeAnswer={(id, content) =>
                 handleChangeAnswer(id, card.id, content)

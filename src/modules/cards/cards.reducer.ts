@@ -44,6 +44,7 @@ export default produce((draft: NCards.State, action: CardsAction) => {
         },
         Right: ({ value }) => {
           draft.createStatus = Success(value)
+          draft.loadedCards[value.id] = value
         },
       })
       return

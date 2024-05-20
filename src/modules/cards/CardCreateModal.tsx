@@ -1,6 +1,7 @@
 /** @format */
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Loader, Message } from 'semantic-ui-react'
 import {
   SPButton,
@@ -10,72 +11,48 @@ import {
   SPModalHeader,
 } from 'src/components'
 import { async } from 'src/utils'
-import { NAnswers } from '../answers'
 import CardForm from './CardForm'
-import { useCardCreate } from './cards.hooks'
+import { useCardCreate, useCardForm } from './cards.hooks'
 import { NCards } from './cards.types'
 
-type Props = {
-  deckId: string
-}
 /**
  * This component contains the create card modal and the button that is used to toggle
  * the modal.
  */
-export default function CardCreateModal(props: Props) {
-  const [card, setCard] = useState(NCards.Initial({ deckId: props.deckId }))
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [createCardStatus, createCard] = useCardCreate(props.deckId)
+export default function CardCreateModal() {
+  const params = useParams()
+  const navigate = useNavigate()
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-  }
+  const [createCardStatus, createCard] = useCardCreate(params.deckId!)
 
-  const handleChangeQuestion = (question: string) => {
-    setCard({ ...card, question })
-  }
+  const initCard = NCards.Initial({})
 
-  const handleChangeAnswer = (answerId: string, content: string) => {
-    setCard({
-      ...card,
-      answers: card.answers.map((answer) =>
-        answer.id === answerId ? { ...answer, content } : answer,
-      ),
-    })
-  }
+  const {
+    form,
+    getQuestionError,
+    getAnswerError,
+    handleAddAnswer,
+    handleDeleteAnswer,
+    handleChangeAnswer,
+    handleChangeQuestion,
+  } = useCardForm(initCard, () => {
+    createCard(form.values)
+  })
 
-  const handleAddAnswer = () => {
-    setCard({ ...card, answers: [...card.answers, NAnswers.Initial({})] })
-  }
-
-  const handleDeleteAnswer = (answerId: string) => {
-    setCard({
-      ...card,
-      answers: card.answers.filter((answer) => answer.id !== answerId),
-    })
-  }
-
-  const handleCardCreate = () => {
-    createCard(card)
-  }
+  const handleCloseModal = () => navigate(-1)
 
   useEffect(() => {
     if (createCardStatus.type === 'Success') {
       handleCloseModal()
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createCardStatus.type])
 
   return (
     <>
-      <SPButton
-        data-testid="card-create-modal-btn"
-        color="green"
-        icon="plus"
-        onClick={() => setIsModalOpen(true)}
-      />
       <SPModal
         data-testid="card-create-modal"
-        open={isModalOpen}
+        open={true}
         onClose={handleCloseModal}
       >
         <SPModalHeader>Create Card</SPModalHeader>
@@ -96,11 +73,14 @@ export default function CardCreateModal(props: Props) {
           })}
 
           <CardForm
-            {...card}
-            onChangeQuestion={handleChangeQuestion}
-            onChangeAnswer={handleChangeAnswer}
+            {...form.values}
+            areAnswersVisible={true}
+            getQuestionError={getQuestionError}
+            getAnswerError={getAnswerError}
             onAddAnswer={handleAddAnswer}
+            onChangeAnswer={handleChangeAnswer}
             onDeleteAnswer={handleDeleteAnswer}
+            onChangeQuestion={handleChangeQuestion}
           />
         </SPModalContent>
         <SPModalActions>
@@ -108,7 +88,7 @@ export default function CardCreateModal(props: Props) {
           <SPButton
             data-testid="card-create-save-btn"
             color="green"
-            onClick={handleCardCreate}
+            onClick={form.submitForm}
           >
             Save
           </SPButton>

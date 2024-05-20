@@ -12,7 +12,7 @@ import {
 import { Signup } from 'src/modules/signup'
 import { Verification } from 'src/modules/verification'
 import SPSidebar from './modules/Sidebar'
-import { CardDetailsModal } from './modules/cards'
+import { CardCreateModal, CardDetailsModal } from './modules/cards'
 
 const withSidebar = (Component: JSX.Element) => {
   return (
@@ -33,6 +33,7 @@ export default function AppRoutes() {
         <Route path=":deckId/edit" element={<DeckEdit />} />
         <Route path=":deckId/test" element={<DeckTestPage />} />
         <Route path=":deckId" element={<DeckDetails />}>
+          <Route path="cards/new" element={<CardCreateModal />} />
           <Route path="cards/:cardId" element={<CardDetailsModal />} />
         </Route>
       </Route>

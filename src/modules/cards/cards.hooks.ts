@@ -1,10 +1,14 @@
 /** @format */
 
+import { useFormik } from 'formik'
+import _ from 'lodash'
 import { useReducer } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
 import { RequestError } from 'src/types'
 import { Async } from 'src/utils/async'
+import * as Yup from 'yup'
+import { NAnswers } from '../answers'
 import { NDecks } from '../decks/decks.types'
 import * as Select from './cards.selectors'
 import { NCards } from './cards.types'
@@ -13,7 +17,7 @@ type Params = [
   NCards.State['checkStatus'][string],
   NCards.State['check'][string],
   (answer: { answer: string }) => void,
-  (quality: number) => void
+  (quality: number) => void,
 ]
 export function useCard(
   deckId: NDecks.Deck['id'],
@@ -56,7 +60,7 @@ export function useCard(
     putCard({ quality }).then((result: any) => {
       dispatch({
         type: 'CardQualityUpdated',
-        result
+        result,
       })
     })
   }
@@ -64,27 +68,26 @@ export function useCard(
   return [checkAnswerStatus, checkAnswerResult, checkAnswer, updateCardQuality]
 }
 
-export function useCardCreate(deckId: string): [
-  Async<null, RequestError, NCards.Card>,
-  (card: NCards.Card) => void
-] {
-    const createStatus = useSelector(Select.createStatus)
-  
-    const dispatch = useDispatch()
-    const postCard = api.request<NCards.Card>({
-      method: 'POST',
-      url: `decks/${deckId}/cards`,
-    })
-  
+export function useCardCreate(
+  deckId: string,
+): [Async<null, RequestError, NCards.Card>, (card: NCards.Card) => void] {
+  const createStatus = useSelector(Select.createStatus)
+
+  const dispatch = useDispatch()
+  const postCard = api.request<NCards.Card>({
+    method: 'POST',
+    url: `decks/${deckId}/cards`,
+  })
+
   const createCard = (card: NCards.Card) => {
     dispatch({
-      type: "CreateCard"
+      type: 'CreateCard',
     })
 
     postCard(card).then((result) => {
       dispatch({
-        type: "CardCreated",
-        result
+        type: 'CardCreated',
+        result,
       })
     })
   }
@@ -94,7 +97,7 @@ export function useCardCreate(deckId: string): [
 
 export function useCardDetails(
   deckId: string,
-  cardId: string
+  cardId: string,
 ): [Async<null, RequestError, NCards.Card>, NCards.Card, () => void] {
   const loadStatus = useSelector(Select.loadStatus(cardId))
   const card = useSelector(Select.loadedCard(cardId))
@@ -122,7 +125,7 @@ export function useCardDetails(
   return [loadStatus, card, loadCard]
 }
 
-export function useCardForm(
+export function useCardUpdate(
   deckId: string,
   cardId: string,
 ): [Async<null, RequestError, NCards.Card>, (card: NCards.Card) => void] {
@@ -137,7 +140,7 @@ export function useCardForm(
   const updateCard = (card: NCards.Card) => {
     dispatch({
       type: 'UpdateCard',
-      id: card.id
+      id: card.id,
     })
 
     putCard(card).then((result) => {
@@ -150,6 +153,68 @@ export function useCardForm(
   }
 
   return [updateStatus, updateCard]
+}
+
+const CardFormValidationSchema = Yup.object().shape({
+  question: Yup.string().min(3).required('Required'),
+  answers: Yup.array(
+    Yup.object().shape({
+      content: Yup.string().min(3).required('Required'),
+    }),
+  )
+    .min(1)
+    .required('Required'),
+})
+export function useCardForm(card: NCards.Card, onSubmit: (args: any) => void) {
+  const form = useFormik({
+    initialValues: {
+      ...card
+    },
+    validationSchema: CardFormValidationSchema,
+    onSubmit: onSubmit,
+  })
+  const handleAddAnswer = () => {
+    const answers = [...form.values.answers, NAnswers.Initial({})]
+    form.setFieldValue('answers', answers)
+  }
+
+  const handleDeleteAnswer = (id: string) => {
+    const answers = form.values.answers.filter((answer) => answer.id !== id)
+    form.setFieldValue('answers', answers)
+  }
+
+  const handleChangeAnswer = (id: string, newAnswerContent: string) => {
+    const answers = form.values.answers.map((answer) =>
+      answer.id === id ? { ...answer, content: newAnswerContent } : answer,
+    )
+    form.setFieldValue('answers', answers)
+  }
+
+  const handleChangeQuestion = (question: string) => {
+    form.setFieldValue('question', question)
+  }
+
+  const getAnswerError = (index: number) => {
+    const answerErrors = form.errors.answers || []
+    const touched = !_.isEmpty(form.touched)
+    return !!answerErrors[index] && touched
+  }
+
+  const getQuestionError = () => {
+    const questionError = form.errors.question
+    const touched = !_.isEmpty(form.touched)
+    return !!(questionError && touched)
+  }
+
+  return {
+    form,
+    handleAddAnswer,
+    handleDeleteAnswer,
+    handleChangeAnswer,
+    handleChangeQuestion,
+    getAnswerError,
+    getQuestionError,
+  }
 }
 
 type GetNextCard = {

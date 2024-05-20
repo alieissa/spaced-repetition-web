@@ -6,7 +6,7 @@ import { act, screen } from '@testing-library/react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/lib/node'
 import { renderWithProviders } from 'src/utils/test-utils'
-import CardCreateModal from '../CardCreateModal'
+import CardCreateModal from '../CardCreateModal.1'
 
 const deckId = faker.string.uuid()
 const cardCreateUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}/cards`

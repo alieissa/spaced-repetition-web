@@ -52,7 +52,7 @@ export default function DeckDetails() {
   const handleCardClick = (cardId: string) =>
     navigate(`/decks/${params.deckId}/cards/${cardId}`)
 
-  const handleAddCard = _.noop
+  const handleAddCard = () => navigate(`/decks/${params.deckId}/cards/new`)
 
   return async.match(loadDeckStatus)({
     Untriggered: () => null,

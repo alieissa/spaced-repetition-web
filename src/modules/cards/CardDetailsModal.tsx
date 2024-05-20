@@ -1,27 +1,27 @@
-/** @format */
+/* eslint-disable react-hooks/exhaustive-deps */
 
-import { useFormik } from 'formik'
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Form, Icon, Message } from 'semantic-ui-react'
+import { Icon, Message } from 'semantic-ui-react'
 import 'src/App.css'
 import {
+  CardForm,
   SPButton,
   SPButtonIcon,
-  SPFormInput,
   SPList,
   SPListItem,
   SPModal,
+  SPModalActions,
   SPModalContent,
   SPSectionHeader,
   SPText,
 } from 'src/components'
 import { styles } from 'src/styles'
+import { RequestError } from 'src/types'
 import { async } from 'src/utils'
-import * as Yup from 'yup'
-import { NAnswers } from '../answers'
-import { useCardDetails, useCardForm } from './cards.hooks'
+import { Async } from 'src/utils/async'
+import { useCardDetails, useCardForm, useCardUpdate } from './cards.hooks'
 import { NCards } from './cards.types'
 
 /**
@@ -37,7 +37,14 @@ export default function CardDetailsModal() {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const [loadCardStatus, card, loadCard] = useCardDetails(
+    params.deckId!,
+    params.cardId!,
+  )
+
+  const [updateStatus, updateCard] = useCardUpdate(
     params.deckId!,
     params.cardId!,
   )
@@ -45,12 +52,17 @@ export default function CardDetailsModal() {
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setIsEditing(false)
+    setIsSubmitting(false)
     navigate(`/decks/${params.deckId}`)
+  }
+
+  const handleSubmit = (card: NCards.Card) => {
+    updateCard(card)
+    setIsSubmitting(true)
   }
 
   useEffect(() => {
     loadCard()
-    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.cardId])
 
   useEffect(() => {
@@ -59,8 +71,13 @@ export default function CardDetailsModal() {
     }
 
     setIsModalOpen(true)
-    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadCardStatus.type])
+
+  useEffect(() => {
+    if (updateStatus.type === 'Success' && isSubmitting) {
+      handleCloseModal()
+    }
+  }, [updateStatus.type])
 
   return (
     <SPModal
@@ -69,7 +86,13 @@ export default function CardDetailsModal() {
       onClose={handleCloseModal}
     >
       {isEditing ? (
-        <CardDetailsForm {...card} onBack={() => setIsEditing(false)} />
+        <CardDetailsForm
+          {...card}
+          submitStatus={updateStatus}
+          onBack={() => setIsEditing(false)}
+          onCancel={handleCloseModal}
+          onSubmit={handleSubmit}
+        />
       ) : (
         <CardDetailsView {...card} onEdit={() => setIsEditing(true)} />
       )}
@@ -125,69 +148,25 @@ function CardDetailsView(props: ViewProps) {
   )
 }
 
-const CardFormValidationSchema = Yup.object().shape({
-  question: Yup.string().min(3).required('Required'),
-  answers: Yup.array(
-    Yup.object().shape({
-      content: Yup.string().min(3).required('Required'),
-    }),
-  )
-    .min(1)
-    .required('Required'),
-})
-type FormProps = NCards.Card & { onBack: VoidFunction }
+type FormProps = NCards.Card & {
+  submitStatus: Async<null, RequestError, NCards.Card>
+  onBack: VoidFunction
+  onCancel: VoidFunction
+  onSubmit: (card: NCards.Card) => void
+}
 function CardDetailsForm(props: FormProps) {
-  const params = useParams()
-  const [updateCardStatus, updateCard] = useCardForm(
-    params.deckId!,
-    params.cardId!,
+  const {
+    form,
+    getQuestionError,
+    getAnswerError,
+    handleAddAnswer,
+    handleDeleteAnswer,
+    handleChangeAnswer,
+    handleChangeQuestion,
+  } = useCardForm(
+    _.omit(props, ['submitStatus', 'onBack', 'onCancel', 'onSubmit']),
+    props.onSubmit,
   )
-
-  const handleSubmit = (values: any) => {
-    updateCard({ ...values, id: props.id, deckId: props.deckId })
-  }
-
-  const form = useFormik({
-    initialValues: {
-      question: props.question,
-      answers: props.answers,
-    },
-    validationSchema: CardFormValidationSchema,
-    onSubmit: handleSubmit,
-  })
-
-  const handleAddAnswer = () => {
-    const answers = [...form.values.answers, NAnswers.Initial({})]
-    form.setFieldValue('answers', answers)
-  }
-
-  const handleDeleteAnswer = (id: string) => {
-    const answers = form.values.answers.filter((answer) => answer.id !== id)
-    form.setFieldValue('answers', answers)
-  }
-
-  const handleChangeAnswer = (id: string, newAnswerContent: string) => {
-    const answers = form.values.answers.map((answer) =>
-      answer.id === id ? { ...answer, content: newAnswerContent } : answer,
-    )
-    form.setFieldValue('answers', answers)
-  }
-
-  const handleChangeQuestion = (question: string) => {
-    form.setFieldValue('question', question)
-  }
-
-  const getAnswerError = (index: number) => {
-    const answerErrors = form.errors.answers || []
-    const touched = !_.isEmpty(form.touched)
-    return !!answerErrors[index] && touched
-  }
-
-  const getQuestionError = () => {
-    const questionError = form.errors.question
-    const touched = !_.isEmpty(form.touched)
-    return questionError && touched
-  }
 
   return (
     <>
@@ -203,16 +182,10 @@ function CardDetailsForm(props: FormProps) {
           />
         }
       />
-      {async.match(updateCardStatus)({
+      {async.match(props.submitStatus)({
         Untriggered: () => null,
         Loading: () => null,
-        Success: () => (
-          <SPModalContent className="flex-column align-center justify-center">
-            <Message data-testid="card-update-success" success>
-              <Message.Header>Card has been updated</Message.Header>
-            </Message>
-          </SPModalContent>
-        ),
+        Success: () => null,
         Failure: () => (
           <SPModalContent className="flex-column align-center justify-center">
             <Message data-testid="card-update-error" negative>
@@ -222,74 +195,34 @@ function CardDetailsForm(props: FormProps) {
         ),
       })}
       <SPModalContent className="flex-column align-center justify-center">
-        <Form className="w-full">
-          <SPList horizontal className="flex" style={styles.flex}>
-            <SPListItem className="flex-1">
-              <SPFormInput
-                name="question-content"
-                placeholder="Enter question here"
-                className="w-full"
-                error={getQuestionError()}
-                value={form.values.question}
-                onChange={(e: any) => {
-                  handleChangeQuestion(e.target.value)
-                }}
-              />
-            </SPListItem>
-            <SPListItem className="flex-1">
-              <SPList style={styles.p0}>
-                {form.values.answers.map((answer, index) => (
-                  <SPListItem
-                    key={answer.id}
-                    className="flex"
-                    style={styles.flex}
-                  >
-                    <SPFormInput
-                      value={answer.content}
-                      placeholder="Enter answer here"
-                      className="w-full"
-                      error={getAnswerError(index)}
-                      name="answer-content"
-                      onChange={(e: any) =>
-                        handleChangeAnswer(answer.id, e.target.value)
-                      }
-                    />
-
-                    <SPButtonIcon
-                      size="small"
-                      style={styles.bgWhite}
-                      disabled={form.values.answers.length === 1}
-                      icon="x"
-                      onClick={() => handleDeleteAnswer(answer.id)}
-                    />
-                  </SPListItem>
-                ))}
-                <SPListItem style={styles.textAlignRight}>
-                  <SPButtonIcon
-                    size="small"
-                    style={styles.bgWhite}
-                    icon="plus"
-                    color="green"
-                    onClick={handleAddAnswer}
-                  />
-                </SPListItem>
-              </SPList>
-            </SPListItem>
-          </SPList>
-
-          <div className="flex-row-reverse">
-            <SPButton
-              data-testid="card-details-form-save-btn"
-              size="small"
-              color="green"
-              type="submit"
-              onClick={form.submitForm}
-            >
-              Save
-            </SPButton>
-          </div>
-        </Form>
+        <CardForm
+          {...form.values}
+          getQuestionError={getQuestionError}
+          getAnswerError={getAnswerError}
+          areAnswersVisible={true}
+          onChangeQuestion={handleChangeQuestion}
+          onChangeAnswer={handleChangeAnswer}
+          onAddAnswer={handleAddAnswer}
+          onDeleteAnswer={handleDeleteAnswer}
+        />
       </SPModalContent>
+      <SPModalActions className="justify-flex-end">
+        <SPButton
+          data-testid="card-details-form-cancel-btn"
+          size="small"
+          onClick={props.onCancel}
+        >
+          Cancel
+        </SPButton>
+        <SPButton
+          data-testid="card-details-form-save-btn"
+          size="small"
+          color="green"
+          onClick={form.submitForm}
+        >
+          Save
+        </SPButton>
+      </SPModalActions>
     </>
   )
 }
