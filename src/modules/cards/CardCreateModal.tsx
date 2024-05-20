@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Loader, Message } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 import {
   SPButton,
   SPModal,
@@ -22,7 +22,6 @@ import { NCards } from './cards.types'
 export default function CardCreateModal() {
   const params = useParams()
   const navigate = useNavigate()
-
   const [createCardStatus, createCard] = useCardCreate(params.deckId!)
 
   const initCard = NCards.Initial({})
@@ -49,51 +48,49 @@ export default function CardCreateModal() {
   }, [createCardStatus.type])
 
   return (
-    <>
-      <SPModal
-        data-testid="card-create-modal"
-        open={true}
-        onClose={handleCloseModal}
-      >
-        <SPModalHeader>Create Card</SPModalHeader>
-        <SPModalContent className="flex-column align-center justify-center">
-          {async.match(createCardStatus)({
-            Untriggered: () => null,
-            Loading: () => <Loader active data-testid="card-create-loader" />,
-            Success: () => null,
-            Failure: () => (
-              <Message
-                negative
-                className="w-inherit"
-                data-testid="card-create-error"
-              >
-                <Message.Header>Card creation failed</Message.Header>
-              </Message>
-            ),
-          })}
+    <SPModal
+      data-testid="card-create-modal"
+      open={true}
+      onClose={handleCloseModal}
+    >
+      <SPModalHeader>Create Card</SPModalHeader>
+      <SPModalContent className="flex-column align-center justify-center">
+        {async.match(createCardStatus)({
+          Untriggered: () => null,
+          Success: () => null,
+          Loading: () => null,
+          Failure: () => (
+            <Message
+              data-testid="card-create-error"
+              negative
+              className="w-inherit"
+            >
+              <Message.Header>Error: Failed to create card</Message.Header>
+            </Message>
+          ),
+        })}
 
-          <CardForm
-            {...form.values}
-            areAnswersVisible={true}
-            getQuestionError={getQuestionError}
-            getAnswerError={getAnswerError}
-            onAddAnswer={handleAddAnswer}
-            onChangeAnswer={handleChangeAnswer}
-            onDeleteAnswer={handleDeleteAnswer}
-            onChangeQuestion={handleChangeQuestion}
-          />
-        </SPModalContent>
-        <SPModalActions>
-          <SPButton onClick={handleCloseModal}>Cancel</SPButton>
-          <SPButton
-            data-testid="card-create-save-btn"
-            color="green"
-            onClick={form.submitForm}
-          >
-            Save
-          </SPButton>
-        </SPModalActions>
-      </SPModal>
-    </>
+        <CardForm
+          {...form.values}
+          areAnswersVisible={true}
+          getQuestionError={getQuestionError}
+          getAnswerError={getAnswerError}
+          onAddAnswer={handleAddAnswer}
+          onChangeAnswer={handleChangeAnswer}
+          onDeleteAnswer={handleDeleteAnswer}
+          onChangeQuestion={handleChangeQuestion}
+        />
+      </SPModalContent>
+      <SPModalActions>
+        <SPButton onClick={handleCloseModal}>Cancel</SPButton>
+        <SPButton
+          data-testid="card-create-save-btn"
+          color="green"
+          onClick={form.submitForm}
+        >
+          Save
+        </SPButton>
+      </SPModalActions>
+    </SPModal>
   )
 }

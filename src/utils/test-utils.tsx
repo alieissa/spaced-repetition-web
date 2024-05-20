@@ -56,5 +56,21 @@ export function renderWithProviders(
   return render(withRedux(withRouter(ui, routeOptions)))
 }
 
+// We specify the container in which the component is rendered as the body
+// as a workaround for the modal not being mounted by react-testing library.
+// Without this workaround, the snapshots are empty fragments.
+// See https://github.com/testing-library/react-testing-library/issues/62
+export function renderModalWithProviders(
+  ui: React.ReactElement,
+  routeOptions: { path: string; initialEntries: string[] } = {
+    path: '/',
+    initialEntries: ['/'],
+  },
+) {
+  return render(withRedux(withRouter(ui, routeOptions)), {
+    container: document.body,
+  })
+}
+
 export const flushPromises = () =>
   new Promise((resolve) => setTimeout(resolve, 0))

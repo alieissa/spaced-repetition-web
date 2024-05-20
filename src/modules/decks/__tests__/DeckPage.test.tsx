@@ -7,7 +7,7 @@ import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 
 import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
-import { DeckPage } from '..'
+import { DeckEdit } from '..'
 const mockNavigate = jest.fn(() => ({}))
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -20,7 +20,7 @@ const decksUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}`
 // Mounting component this way ensures that the route parameter :deckId
 // has id of the deck, i.e. deckId defined above
 const mountComponent = () =>
-  renderWithProviders(<DeckPage />, {
+  renderWithProviders(<DeckEdit />, {
     initialEntries: [`/decks/${deckId}`],
     path: 'decks/:deckId',
   })
@@ -54,7 +54,7 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
-describe('DeckPage', () => {
+describe('DeckEdit', () => {
   describe('view', () => {
     it('should render correctly', async () => {
       const { asFragment } = mountComponent()

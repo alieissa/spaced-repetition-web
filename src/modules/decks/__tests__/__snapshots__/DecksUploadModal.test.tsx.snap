@@ -11,5 +11,66 @@ exports[`DecksUploadModal view should render correctly 1`] = `
       class="upload icon"
     />
   </button>
+  <div
+    class="ui inverted page modals dimmer transition visible active"
+    style="display: flex;"
+  >
+    <div
+      class="ui tiny modal transition visible active"
+      data-testid="decks-upload-modal"
+    >
+      <div
+        class="header"
+      >
+        Upload decks
+      </div>
+      <div
+        class="flex-column align-center justify-center content"
+      >
+        <div
+          class="description pb-10"
+        >
+          <p>
+            Select file the file containing the decks
+          </p>
+        </div>
+        <div
+          class="pb-10"
+        />
+        <button
+          class="ui icon left labeled button"
+          data-testid="file-selector"
+        >
+          <i
+            aria-hidden="true"
+            class="file icon"
+          />
+          Select File
+        </button>
+        <input
+          data-testid="decks-upload-file-input"
+          hidden=""
+          type="file"
+        />
+      </div>
+      <div
+        class="actions"
+      >
+        <button
+          class="ui button"
+        >
+          Cancel
+        </button>
+        <button
+          class="ui green disabled button"
+          data-testid="decks-upload-confirm-btn"
+          disabled=""
+          tabindex="-1"
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
 </DocumentFragment>
 `;

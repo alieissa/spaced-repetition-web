@@ -72,16 +72,21 @@ exports[`DeckForm view should render correctly 1`] = `
               style="padding: 0px;"
             >
               <div
-                class="ui input w-full"
-                style="opacity: 1;"
+                class="error field w-full"
               >
-                <input
-                  data-testid="question-content"
-                  placeholder="Enter question here"
-                  style="border-radius: unset;"
-                  type="text"
-                  value=""
-                />
+                <div
+                  class="ui input"
+                  style="opacity: 1;"
+                >
+                  <input
+                    aria-invalid="true"
+                    data-testid="question-content"
+                    placeholder="Enter question here"
+                    style="border-radius: unset;"
+                    type="text"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -100,16 +105,21 @@ exports[`DeckForm view should render correctly 1`] = `
                   style="display: flex; padding: 0px;"
                 >
                   <div
-                    class="ui input w-full"
-                    style="opacity: 1;"
+                    class="error field w-full"
                   >
-                    <input
-                      data-testid="answer-content-0"
-                      placeholder="Enter answer here"
-                      style="border-radius: unset;"
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      class="ui input"
+                      style="opacity: 1;"
+                    >
+                      <input
+                        aria-invalid="true"
+                        data-testid="answer-content-0"
+                        placeholder="Enter answer here"
+                        style="border-radius: unset;"
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                   <button
                     class="ui small icon disabled button"
@@ -160,12 +170,13 @@ exports[`DeckForm view should render correctly 1`] = `
     </div>
   </div>
   <footer
-    class="flex-row-reverse px-2r pb-2r"
+    class="flex-row-reverse pb-2r"
   >
     <button
       class="ui green small button"
       data-testid="deck-save"
       style="border-radius: 0;"
+      type="submit"
     >
       Save
     </button>

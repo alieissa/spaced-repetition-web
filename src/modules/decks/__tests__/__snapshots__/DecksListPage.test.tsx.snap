@@ -3,8 +3,9 @@
 exports[`DecksListPage view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="flex-column bordered"
+    class="flex-column h-full"
     data-testid="decks-list-success"
+    style="overflow-y: auto;"
   >
     <div
       class="justify-space-between bordered p-1r"
@@ -35,6 +36,7 @@ exports[`DecksListPage view should render correctly 1`] = `
       >
         <div
           class="four wide column"
+          style="padding-left: 0px;"
         >
           <div
             class="bordered"
@@ -66,6 +68,7 @@ exports[`DecksListPage view should render correctly 1`] = `
         </div>
         <div
           class="twelve wide column"
+          style="padding-right: 0px;"
         >
           <div
             class="bordered"

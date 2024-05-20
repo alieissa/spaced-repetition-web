@@ -19,7 +19,7 @@ const initialState: NDecks.State = {
   downloadDecksStatus: Untriggered(),
 }
 
-export default produce((draft: NDecks.State, action: DecksAction) => {
+export default produce((draft: NDecks.State, action: DecksAction | CardsAction) => {
   switch (action.type) {
     case 'LoadDeck': {
       draft.loadStatus[action.id] = Loading(null)
