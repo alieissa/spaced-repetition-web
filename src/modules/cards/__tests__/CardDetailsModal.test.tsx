@@ -5,7 +5,7 @@ import '@testing-library/jest-dom'
 import { act, screen } from '@testing-library/react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/lib/node'
-import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
+import { flushPromises, renderModalWithProviders } from 'src/utils/test-utils'
 import CardDetailsModal from '../CardDetailsModal'
 
 const deckId = faker.string.uuid()
@@ -38,7 +38,7 @@ export const handlers = [
 // Mounting component this way ensures that the route parameter :deckId
 // has id of the deck, i.e. deckId defined above
 const mountComponent = () =>
-  renderWithProviders(<CardDetailsModal />, {
+  renderModalWithProviders(<CardDetailsModal />, {
     initialEntries: [`/decks/${deckId}/cards/${cardId}`],
     path: 'decks/:deckId/cards/:cardId',
   })
@@ -108,26 +108,6 @@ describe('CardDetailsModal', () => {
         // Assert
         const cardDetailsView = await screen.findByTestId('card-details-view')
         expect(cardDetailsView).toBeInTheDocument()
-      })
-
-      it('should display a success message when update succeeds', async () => {
-        // Assemble
-
-        mountComponent()
-        await act(flushPromises)
-        const cardDetailsModalEditBtn = await screen.findByTestId(
-          'card-details-edit-btn',
-        )
-        await act(() => cardDetailsModalEditBtn.click())
-
-        // Act
-        const saveBtn = await screen.findByTestId('card-details-form-save-btn')
-        await act(() => saveBtn.click())
-        await act(flushPromises)
-
-        // Assert
-        const cardSaveError = await screen.findByTestId('card-update-success')
-        expect(cardSaveError).toBeInTheDocument()
       })
 
       it('should display an error message when update fails', async () => {

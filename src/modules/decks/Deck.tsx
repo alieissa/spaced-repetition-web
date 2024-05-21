@@ -10,6 +10,9 @@ import { NDecks } from './decks.types'
 
 const styles = {
   width: '100%',
+  borderTop: 'none',
+  borderRight: 'none',
+  borderLeft: 'none',
 }
 export default function Deck(props: NDecks.Deck & CardProps) {
   const navigate = useNavigate()

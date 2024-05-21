@@ -4,6 +4,7 @@ import produce from 'immer'
 import * as _ from 'lodash'
 import { either } from 'src/utils'
 import { Failure, Loading, Success, Untriggered } from 'src/utils/async'
+import { CardsAction } from '../cards/cards.actions'
 import { DecksAction } from './decks.actions'
 import { NDecks } from './decks.types'
 
@@ -18,7 +19,7 @@ const initialState: NDecks.State = {
   downloadDecksStatus: Untriggered(),
 }
 
-export default produce((draft: NDecks.State, action: DecksAction) => {
+export default produce((draft: NDecks.State, action: DecksAction | CardsAction) => {
   switch (action.type) {
     case 'LoadDeck': {
       draft.loadStatus[action.id] = Loading(null)

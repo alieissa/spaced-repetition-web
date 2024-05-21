@@ -42,7 +42,7 @@ jobs:
       - name: Install packages
         run: npm install
       - name: Run tests
-        run: npm test
+        run: npm test -- --silent
 
   release:
     needs: 

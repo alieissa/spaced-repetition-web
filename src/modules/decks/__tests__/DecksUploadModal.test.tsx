@@ -5,7 +5,7 @@ import { act, screen } from '@testing-library/react'
 import user from '@testing-library/user-event'
 import { rest } from 'msw'
 import { setupServer } from 'msw/lib/node'
-import { renderWithProviders } from 'src/utils/test-utils'
+import { flushPromises, renderModalWithProviders } from 'src/utils/test-utils'
 import DecksUploadModal from '../DecksUploadModal'
 
 const decksUploadUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/upload`
@@ -35,8 +35,12 @@ afterAll(() => server.close())
 
 describe('DecksUploadModal', () => {
   describe('view', () => {
-    it('should render correctly', () => {
-      const { asFragment } = renderWithProviders(<DecksUploadModal />)
+    it('should render correctly', async () => {
+      const { asFragment } = renderModalWithProviders(<DecksUploadModal />)
+      const modalBtn = await screen.findByTestId('decks-upload-modal-btn')
+      await act(() => modalBtn.click())
+      await act(flushPromises)
+
       expect(asFragment()).toMatchSnapshot()
     })
   })
@@ -48,7 +52,7 @@ describe('DecksUploadModal', () => {
     // case we do e-2-e tesing.
     it.skip('should display loading when upload in progress', async () => {
       // Assemble
-      renderWithProviders(<DecksUploadModal />)
+      renderModalWithProviders(<DecksUploadModal />)
       const deckImportBtn = await screen.findByTestId('decks-upload-modal-btn')
       await act(() => deckImportBtn.click())
       await act(() => uploadFile('decks-upload-file-input'))
@@ -69,7 +73,7 @@ describe('DecksUploadModal', () => {
       server.use(
         rest.post(decksUploadUrl, (__, res, ctx) => res(ctx.status(422))),
       )
-      renderWithProviders(<DecksUploadModal />)
+      renderModalWithProviders(<DecksUploadModal />)
       const deckImportBtn = await screen.findByTestId('decks-upload-modal-btn')
       await act(() => deckImportBtn.click())
       await act(() => uploadFile('decks-upload-file-input'))

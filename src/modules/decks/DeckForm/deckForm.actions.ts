@@ -1,70 +1,71 @@
 /** @format */
 
+import { Dispatch } from 'react'
 import { NDecks } from '../decks.types'
 
 export type DeckFormAction =
   | {
-      type: 'ADD_ANSWER'
+      type: 'AddAnswer'
       cardId: string
-      deckId: string
     }
   | {
-      type: 'DELETE_ANSWER'
+      type: 'DeleteAnswer'
       id: string
       cardId: string
-      deckId: string
     }
   | {
-      type: 'UPDATE_ANSWER'
+      type: 'UpdateAnswer'
       id: string
       cardId: string
-      deckId: string
       content: string
     }
   | {
-      type: 'ADD_CARD'
+      type: 'AddCard'
     }
   | {
-      type: 'DELETE_CARD'
+      type: 'DeleteCard'
       id: string
     }
   | {
-      type: 'UPDATE_QUESTION'
+      type: 'UpdateQuestion'
       cardId: string
       question: string
     }
   | {
-      type: 'UPDATE_DECK'
+      type: 'UpdateDeck'
       name: string
       description?: string
     }
   | {
-      type: 'SET_DECK'
+      type: 'SetDeck'
       deck: NDecks.Deck
-  }
+    }
   | {
-      type: 'RESET_FORM'
+      type: 'ResetForm'
     }
 
-export const addAnswer = (dispatch: any, payload: { cardId: string }) => {
+export const addAnswer = (
+  dispatch: Dispatch<DeckFormAction>,
+  payload: {cardId: string },
+) => {
   dispatch({
-    type: 'ADD_ANSWER',
+    type: 'AddAnswer',
     ...payload,
   })
 }
 
 export const changeDeck = (
-  dispatch: any,
+  dispatch: Dispatch<DeckFormAction>,
   payload: { name: string; description?: string },
 ) => {
   dispatch({
-    type: 'UPDATE_DECK',
+    type: 'UpdateDeck',
     ...payload,
   })
 }
 
 export const changeAnswer = (
-  dispatch: any,
+  dispatch: Dispatch<DeckFormAction>,
   payload: {
     id: string
     cardId: string
@@ -72,40 +73,40 @@ export const changeAnswer = (
   },
 ) => {
   dispatch({
-    type: 'UPDATE_ANSWER',
+    type: 'UpdateAnswer',
     ...payload,
   })
 }
 
 export const changeQuestion = (
-  dispatch: any,
+  dispatch: Dispatch<DeckFormAction>,
   payload: { cardId: string; question: string },
 ) => {
   dispatch({
-    type: 'UPDATE_QUESTION',
+    type: 'UpdateQuestion',
     ...payload,
   })
 }
 
 export const deleteAnswer = (
-  dispatch: any,
+  dispatch: Dispatch<DeckFormAction>,
   payload: { id: string; cardId: string },
 ) => {
   dispatch({
-    type: 'DELETE_ANSWER',
+    type: 'DeleteAnswer',
     ...payload,
   })
 }
 
-export const addCard = (dispatch: any) => {
+export const addCard = (dispatch: Dispatch<DeckFormAction>) => {
   dispatch({
-    type: 'ADD_CARD',
+    type: 'AddCard',
   })
 }
 
-export const setDeck = (dispatch: any, deck: any) => {
+export const setDeck = (dispatch: Dispatch<DeckFormAction>, deck: NDecks.Deck) => {
   dispatch({
-    type: 'SET_DECK',
-    deck: deck
+    type: 'SetDeck',
+    deck,
   })
 }

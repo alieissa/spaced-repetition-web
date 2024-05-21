@@ -9,7 +9,7 @@ exports[`NewDeck view should render correctly 1`] = `
     <div
       class="justify-space-between bordered"
       style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem;"
-      title="Create deck"
+      title="Create Deck"
     >
       <div
         class="align-center"
@@ -29,7 +29,7 @@ exports[`NewDeck view should render correctly 1`] = `
           class="ui header"
           style="font-size: 1.5rem; margin-top: 0px; margin-bottom: 0px;"
         >
-          Create deck
+          Create Deck
         </div>
       </div>
     </div>
@@ -91,7 +91,7 @@ exports[`NewDeck view should render correctly 1`] = `
               >
                 <i
                   aria-hidden="true"
-                  class="arrow down icon"
+                  class="arrow up icon"
                   data-testid="view-answers-btn"
                 />
               </div>
@@ -106,23 +106,84 @@ exports[`NewDeck view should render correctly 1`] = `
                   style="padding: 0px;"
                 >
                   <div
-                    class="ui input w-full"
-                    style="opacity: 1;"
+                    class="error field w-full"
                   >
-                    <input
-                      data-testid="question-content"
-                      placeholder="Enter question here"
-                      style="border-radius: unset;"
-                      type="text"
-                      value=""
-                    />
+                    <div
+                      class="ui input"
+                      style="opacity: 1;"
+                    >
+                      <input
+                        aria-invalid="true"
+                        data-testid="question-content"
+                        placeholder="Enter question here"
+                        style="border-radius: unset;"
+                        type="text"
+                        value=""
+                      />
+                    </div>
                   </div>
                 </div>
                 <div
                   class="item flex-1"
                   role="listitem"
                   style="padding: 0px;"
-                />
+                >
+                  <div
+                    class="ui list"
+                    role="list"
+                    style="padding: 0px;"
+                  >
+                    <div
+                      class="item flex"
+                      role="listitem"
+                      style="display: flex; padding: 0px;"
+                    >
+                      <div
+                        class="error field w-full"
+                      >
+                        <div
+                          class="ui input"
+                          style="opacity: 1;"
+                        >
+                          <input
+                            aria-invalid="true"
+                            data-testid="answer-content-0"
+                            placeholder="Enter answer here"
+                            style="border-radius: unset;"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                      <button
+                        class="ui small icon disabled button"
+                        disabled=""
+                        style="padding-left: 0px; padding-right: 0px; background: none;"
+                        tabindex="-1"
+                      >
+                        <i
+                          aria-hidden="true"
+                          class="x icon"
+                        />
+                      </button>
+                    </div>
+                    <div
+                      class="item"
+                      role="listitem"
+                      style="text-align: right; padding: 0px;"
+                    >
+                      <button
+                        class="ui small icon button"
+                        style="padding-left: 0px; padding-right: 0px; background: none;"
+                      >
+                        <i
+                          aria-hidden="true"
+                          class="plus icon"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </form>
             <div
@@ -142,18 +203,18 @@ exports[`NewDeck view should render correctly 1`] = `
           </div>
         </div>
       </div>
-    </main>
-    <footer
-      class="flex-row-reverse px-2r pb-2r"
-    >
-      <button
-        class="ui green small button"
-        data-testid="deck-save"
-        style="border-radius: 0;"
+      <footer
+        class="flex-row-reverse pb-2r"
       >
-        Save
-      </button>
-    </footer>
+        <button
+          class="ui green small button"
+          data-testid="deck-save"
+          style="border-radius: 0;"
+        >
+          Save
+        </button>
+      </footer>
+    </main>
   </div>
 </DocumentFragment>
 `;

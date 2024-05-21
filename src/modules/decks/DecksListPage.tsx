@@ -48,11 +48,15 @@ function DecksEmpty() {
 
 function DecksComponent(props: Props) {
   return (
-    <div data-testid="decks-list-success" className="flex-column bordered">
+    <div
+      data-testid="decks-list-success"
+      className="flex-column h-full"
+      style={{ overflowY: 'auto' }}
+    >
       <DecksHeader />
       <Grid padded style={{ flexGrow: 1 }}>
         <GridRow stretched>
-          <GridColumn width={4}>
+          <GridColumn width={4} style={{ paddingLeft: 0 }}>
             <div className="bordered">
               {_.isEmpty(props.decks) ? (
                 <DecksEmpty />
@@ -65,7 +69,7 @@ function DecksComponent(props: Props) {
               )}
             </div>
           </GridColumn>
-          <GridColumn width={12}>
+          <GridColumn width={12} style={{ paddingRight: 0 }}>
             <div className="bordered">
               <Outlet />
             </div>
