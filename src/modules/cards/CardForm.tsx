@@ -25,7 +25,7 @@ export default function CardForm(props: CardFormProps) {
   )
 
   return (
-    <Form className="w-full bordered" id={props.deckId}>
+    <Form className="w-full bordered">
       <div className="flex-row-reverse">
         <Icon
           data-testid="view-answers-btn"

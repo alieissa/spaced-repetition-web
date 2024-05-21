@@ -85,7 +85,6 @@ exports[`NewDeck view should render correctly 1`] = `
           <div>
             <form
               class="ui form w-full bordered"
-              id="3"
             >
               <div
                 class="flex-row-reverse"
@@ -211,7 +210,6 @@ exports[`NewDeck view should render correctly 1`] = `
           class="ui green small button"
           data-testid="deck-save"
           style="border-radius: 0;"
-          type="submit"
         >
           Save
         </button>

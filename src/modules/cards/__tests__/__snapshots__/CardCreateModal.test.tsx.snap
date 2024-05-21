@@ -21,7 +21,6 @@ exports[`CardCreateModal view should render correctly 1`] = `
       >
         <form
           class="ui form w-full bordered"
-          id="2"
         >
           <div
             class="flex-row-reverse"

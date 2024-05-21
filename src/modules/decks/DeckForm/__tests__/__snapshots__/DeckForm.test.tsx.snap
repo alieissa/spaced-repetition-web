@@ -176,7 +176,6 @@ exports[`DeckForm view should render correctly 1`] = `
       class="ui green small button"
       data-testid="deck-save"
       style="border-radius: 0;"
-      type="submit"
     >
       Save
     </button>
