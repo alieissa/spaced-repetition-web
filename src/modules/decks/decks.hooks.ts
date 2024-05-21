@@ -1,9 +1,11 @@
 /** @format */
 
 import { Dispatch } from '@reduxjs/toolkit'
+import _ from 'lodash'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
+import { Async, Untriggered } from 'src/utils/async'
 import { DecksAction } from './decks.actions'
 import * as Select from './decks.selectors'
 import { NDecks } from './decks.types'
@@ -59,6 +61,10 @@ export function useCreateDeck(): [
   return [status, createDeck]
 }
 
+// TODO Finish implemention
+export function useDeleteDeck():[Async<null, null, null>, VoidFunction] {
+  return [Untriggered(), _.noop]
+}
 type DeckByIdReturnType = {
   status: NDecks.State['loadStatus'][string]
   deck: NDecks.Deck
