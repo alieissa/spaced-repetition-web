@@ -1,11 +1,11 @@
 /** @format */
 
 import { Dispatch } from '@reduxjs/toolkit'
-import _ from 'lodash'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
-import { Async, Untriggered } from 'src/utils/async'
+import { RequestError } from 'src/types'
+import { Async } from 'src/utils/async'
 import { DecksAction } from './decks.actions'
 import * as Select from './decks.selectors'
 import { NDecks } from './decks.types'
@@ -62,8 +62,29 @@ export function useCreateDeck(): [
 }
 
 // TODO Finish implemention
-export function useDeleteDeck():[Async<null, null, null>, VoidFunction] {
-  return [Untriggered(), _.noop]
+export function useDeleteDeck(deckId: string): [Async<null, RequestError, null>, VoidFunction] {
+  const dispatch = useDispatch<Dispatch<DecksAction>>()
+  const deleteStatus = useSelector(Select.deleteStatus(deckId))
+  const removeDeck = api.request<null>({
+    method: 'DELETE',
+    url: `decks/${deckId}`
+  })
+
+  const deleteDeck = () => {
+    dispatch({
+      type: "DeleteDeck",
+      id: deckId
+    })
+
+    removeDeck().then(result => {
+      dispatch({
+        type: 'DeckDeleted',
+        id: deckId,
+        result
+      })
+    })
+  }
+  return [deleteStatus, deleteDeck]
 }
 type DeckByIdReturnType = {
   status: NDecks.State['loadStatus'][string]

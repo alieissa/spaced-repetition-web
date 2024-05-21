@@ -44,6 +44,17 @@ export type DeckUpdated = {
   result: Either<RequestError, NDecks.Deck>
 }
 
+export type DeleteDeck = {
+  type: 'DeleteDeck'
+  id: NDecks.Deck['id']
+}
+
+export type DeckDeleted = {
+  type: 'DeckDeleted'
+  id: NDecks.Deck['id']
+  result: Either<RequestError, null>
+}
+
 export type UploadDecks = {
   type: 'UploadDecks'
 }
@@ -78,11 +89,13 @@ export type DecksAction =
   | DecksLoaded
   | CreateDeck
   | DeckCreated
+  | UpdateDeck
+  | DeckUpdated
+  | DeleteDeck
+  | DeckDeleted
   | UploadDecks
   | DecksUploaded
   | DownloadDecks
   | DecksDownloaded
   | ResetUploadDecks
-  | UpdateDeck
-  | DeckUpdated
   | DeckReset

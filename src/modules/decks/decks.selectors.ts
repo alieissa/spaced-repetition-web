@@ -36,6 +36,14 @@ export const updateStatus = (id: NDecks.Deck['id']) =>
       updateStatus[id] || Untriggered(),
   )
 
+const selectDeleteStatus = (state: RootState) => state.decks.deleteStatus
+export const deleteStatus = (id: NDecks.Deck['id']) =>
+  createSelector(
+    [selectDeleteStatus],
+    (deleteStatus: NDecks.State['deleteStatus']) =>
+      deleteStatus[id] || Untriggered(),
+  )
+
 const selectDecks = (state: RootState) => state.decks
 export const uploadDecksStatus = createSelector(
   [selectDecks],

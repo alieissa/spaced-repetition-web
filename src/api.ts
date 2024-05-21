@@ -102,6 +102,11 @@ export function request<D = {}>(params: UseRequestParams) {
         if (params.url === 'decks/download') {
           return r.text()
         }
+
+        if (params.method === 'DELETE') {
+          return r.text()
+        }
+        
         return r.json()
       })
       .then((data) => {

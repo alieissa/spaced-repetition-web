@@ -9,7 +9,7 @@ import { flushPromises, renderModalWithProviders } from 'src/utils/test-utils'
 import DeckDeleteConfirmationDialog from '../DeckDeleteConfirmationDialog'
 
 const deckId = faker.string.uuid()
-const deckDeleteUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}/cards`
+const deckDeleteUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}`
 
 const server = setupServer()
 beforeAll(() => server.listen())
@@ -18,8 +18,8 @@ afterAll(() => server.close())
 
 const mountComponent = () =>
   renderModalWithProviders(<DeckDeleteConfirmationDialog open={true} />, {
-    initialEntries: [`/decks/${deckId}/cards/new`],
-    path: 'decks/:deckId/cards/new',
+    initialEntries: [`/decks/${deckId}`],
+    path: 'decks/:deckId',
   })
 
 describe('DeckDeleteConfirmationDialog', () => {
@@ -35,7 +35,7 @@ describe('DeckDeleteConfirmationDialog', () => {
     it('should display error when deck deletion fails', async () => {
       // Assemble
       server.use(
-        rest.post(deckDeleteUrl, (__, res, ctx) => res(ctx.status(422))),
+        rest.delete(deckDeleteUrl, (__, res, ctx) => res(ctx.status(422))),
       )
       mountComponent()
 
