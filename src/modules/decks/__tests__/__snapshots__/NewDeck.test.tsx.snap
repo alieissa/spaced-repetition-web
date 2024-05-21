@@ -8,7 +8,7 @@ exports[`NewDeck view should render correctly 1`] = `
   >
     <div
       class="justify-space-between bordered"
-      style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem;"
+      style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem; border-bottom: 1px solid;"
       title="Create Deck"
     >
       <div

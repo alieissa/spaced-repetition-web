@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { Message } from 'semantic-ui-react'
 import {
   SPButton,
@@ -12,35 +12,30 @@ import { useDeleteDeck } from './decks.hooks'
 
 type Props = {
   open: boolean
+  onCancel: VoidFunction
+  onClose: VoidFunction
 }
 export default function DeckDeleteConfirmationDialog(props: Props) {
   const params = useParams()
-  const navigate = useNavigate()
   const [deleteStatus, deleteDeck] = useDeleteDeck(params.deckId!)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-  useEffect(() => {
-    if (!props.open) {
-      return
-    }
-    setIsDialogOpen(props.open)
-  }, [props.open])
 
   useEffect(() => {
     if (deleteStatus.type !== 'Success') {
       return
     }
 
-    setIsDialogOpen(false)
+    // Same behaviour as close
+    props.onClose()
   }, [deleteStatus.type])
 
-  const handleCancel = () => {
-    setIsDialogOpen(false)
-  }
   const handleConfirm = deleteDeck
 
   return (
-    <SPModal data-testid="deck-delete-confirmation-dialog" open={isDialogOpen}>
+    <SPModal
+      data-testid="deck-delete-confirmation-dialog"
+      open={props.open}
+      onClose={props.onClose}
+    >
       <SPModalContent>
         {async.match(deleteStatus)({
           Untriggered: () => null,
@@ -53,7 +48,7 @@ export default function DeckDeleteConfirmationDialog(props: Props) {
         <SPButton data-testid="deck-delete-confirm-btn" onClick={handleConfirm}>
           Confirm
         </SPButton>
-        <SPButton onClick={handleCancel}>Cancel</SPButton>
+        <SPButton onClick={props.onCancel}>Cancel</SPButton>
       </SPModalActions>
     </SPModal>
   )

@@ -24,6 +24,7 @@ import {
 import { async } from 'src/utils'
 import * as Select from './decks.selectors'
 
+import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import DeckDeleteConfirmationDialog from './DeckDeleteConfirmationDialog'
@@ -48,7 +49,6 @@ function DeckDetailsComponent(props: DeckDetailsProps) {
         className={clsx({ disabled: isDisabled })}
       >
         <SPSectionHeader
-          style={{ borderBottom: '1px solid' }}
           title={props.name}
           actions={
             <>
@@ -116,9 +116,8 @@ export default function DeckDetails() {
 
   const handleTest = () => navigate(`/decks/${params.deckId}/test`)
 
-  const handleDelete = () => {
-    setIsDeleteConfirmationDialogOpen(true)
-  }
+  const handleDelete = () => setIsDeleteConfirmationDialogOpen(true)
+  const handleCancelDelete = () => setIsDeleteConfirmationDialogOpen(false)
 
   const handleClickCard = (cardId: string) =>
     navigate(`/decks/${params.deckId}/cards/${cardId}`)
@@ -136,66 +135,11 @@ export default function DeckDetails() {
               and card create modals are opened here
           */}
           <Outlet />
-          <DeckDeleteConfirmationDialog open={isDeleteConfirmationDialogOpen} />
-          {/* <div style={{ cursor: 'not-allowed', opacity: '0.5' }}>
-            <div
-              data-testid="deck-details-success"
-              style={{ pointerEvents: 'none' }}
-            >
-              <SPSectionHeader
-                style={{ borderBottom: '1px solid' }}
-                title={deck.name}
-                actions={
-                  <>
-                    <SPButton data-testid="deck-test-btn" onClick={handleTest}>
-                      Test
-                    </SPButton>
-                    <SPButton data-testid="deck-edit-btn" onClick={handleEdit}>
-                      Edit
-                    </SPButton>
-                    <DeckMenu onDelete={handleDelete} />
-                  </>
-                }
-              />
-              <main className="px-2r mb-2r">
-                {deck.description && (
-                  <SPSection title="Description">
-                    <span
-                      data-testid="deck-details-description"
-                      className="w-full"
-                    >
-                      {deck.description}
-                    </span>
-                  </SPSection>
-                )}
-                <SPSection title="Cards">
-                  <SPList horizontal celled divided={false}>
-                    {deck.cards.map((card, index) => (
-                      <SPListItem key={card.id}>
-                        <SPCard
-                          data-testid={`deck-details-card-${index}`}
-                          className="pointer"
-                          as="div"
-                          onClick={() => handleCardClick(card.id)}
-                        >
-                          <SPCardContent>{card.question}</SPCardContent>
-                        </SPCard>
-                      </SPListItem>
-                    ))}
-                    <SPListItem>
-                      <SPCard
-                        as="div"
-                        className="pointer"
-                        onClick={handleAddCard}
-                      >
-                        <SPCardContent>Add card</SPCardContent>
-                      </SPCard>
-                    </SPListItem>
-                  </SPList>
-                </SPSection>
-              </main>
-            </div>
-          </div> */}
+          <DeckDeleteConfirmationDialog
+            open={isDeleteConfirmationDialogOpen}
+            onCancel={handleCancelDelete}
+            onClose={handleCancelDelete}
+          />
           <DeckDetailsComponent
             {...deck}
             onAddCard={handleAddCard}

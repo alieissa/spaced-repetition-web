@@ -13,16 +13,13 @@ exports[`DeckDeleteConfirmationDialog view should render correctly 1`] = `
     >
       <div
         class="content"
-      >
-        <div>
-          Delete
-        </div>
-      </div>
+      />
       <div
         class="actions"
       >
         <button
           class="ui button"
+          data-testid="deck-delete-confirm-btn"
           style="border-radius: 0;"
         >
           Confirm

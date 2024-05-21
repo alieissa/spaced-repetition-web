@@ -3,125 +3,131 @@
 exports[`DeckDetails view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    data-testid="deck-details-success"
+    class="h-full"
   >
     <div
-      class="justify-space-between"
-      style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem; border-bottom: 1px solid;"
-      title="Test name"
+      class=""
+      data-testid="deck-details-success"
     >
       <div
-        class="align-center"
+        class="justify-space-between"
+        style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem; border-bottom: 1px solid;"
+        title="Test name"
       >
         <div
-          class="ui header"
-          style="font-size: 1.5rem; margin-top: 0px; margin-bottom: 0px;"
+          class="align-center"
         >
-          Test name
-        </div>
-      </div>
-      <div>
-        <button
-          class="ui button"
-          data-testid="deck-test-btn"
-          style="border-radius: 0;"
-        >
-          Test
-        </button>
-        <button
-          class="ui button"
-          data-testid="deck-edit-btn"
-          style="border-radius: 0;"
-        >
-          Edit
-        </button>
-        <div
-          aria-expanded="false"
-          class="ui dropdown align-center"
-          data-testid="deck-details-dropdown"
-          role="listbox"
-          style="display: inline-flex; align-items: center;"
-          tabindex="0"
-        >
-          <i
-            aria-hidden="true"
-            class="ellipsis vertical icon"
-            style="height: 100%;"
-          />
           <div
-            class="left menu transition"
-            data-testid="deck-details-dropdown-menu"
+            class="ui header"
+            style="font-size: 1.5rem; margin-top: 0px; margin-bottom: 0px;"
           >
-            <div
-              class="item"
-              role="option"
-            >
-              <span
-                class="text"
-              >
-                Delete
-              </span>
-            </div>
+            Test name
           </div>
-        </div>
-      </div>
-    </div>
-    <main
-      class="px-2r mb-2r"
-    >
-      <div
-        class="flex-column"
-        style="margin-top: 1.5rem;"
-        title="Cards"
-      >
-        <div
-          class="ui small header"
-          style="margin-bottom: 0px; margin-top: 0px;"
-        >
-          Cards
         </div>
         <div>
-          <div
-            class="ui celled horizontal list"
-            role="list"
+          <button
+            class="ui button"
+            data-testid="deck-test-btn"
+            style="border-radius: 0;"
           >
+            Test
+          </button>
+          <button
+            class="ui button"
+            data-testid="deck-edit-btn"
+            style="border-radius: 0;"
+          >
+            Edit
+          </button>
+          <div
+            aria-expanded="false"
+            class="ui dropdown align-center"
+            data-testid="deck-details-dropdown"
+            role="listbox"
+            style="display: inline-flex; align-items: center;"
+            tabindex="0"
+          >
+            <i
+              aria-hidden="true"
+              class="ellipsis vertical icon"
+              style="height: 100%;"
+            />
             <div
-              class="item"
-              role="listitem"
-              style="padding: 0px;"
+              class="left menu transition"
+              data-testid="deck-details-dropdown-menu"
             >
               <div
-                class="ui card pointer"
-                data-testid="deck-details-card-0"
-                style="box-shadow: none; border: 1px solid; border-radius: unset; margin-top: 0px;"
+                class="item"
+                data-testid="deck-menu-delete-option"
+                role="option"
               >
-                <div
-                  class="content"
+                <span
+                  class="text"
                 >
-                  Test question
-                </div>
-              </div>
-            </div>
-            <div
-              class="item"
-              role="listitem"
-              style="padding: 0px;"
-            >
-              <div
-                class="ui card pointer"
-                style="box-shadow: none; border: 1px solid; border-radius: unset; margin-top: 0px;"
-              >
-                <div
-                  class="content"
-                >
-                  Add card
-                </div>
+                  Delete
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </main>
+      <main
+        class="px-2r mb-2r"
+      >
+        <div
+          class="flex-column"
+          style="margin-top: 1.5rem;"
+          title="Cards"
+        >
+          <div
+            class="ui small header"
+            style="margin-bottom: 0px; margin-top: 0px;"
+          >
+            Cards
+          </div>
+          <div>
+            <div
+              class="ui celled horizontal list"
+              role="list"
+            >
+              <div
+                class="item"
+                role="listitem"
+                style="padding: 0px;"
+              >
+                <div
+                  class="ui card pointer"
+                  data-testid="deck-details-card-0"
+                  style="box-shadow: none; border: 1px solid; border-radius: unset; margin-top: 0px;"
+                >
+                  <div
+                    class="content"
+                  >
+                    Test question
+                  </div>
+                </div>
+              </div>
+              <div
+                class="item"
+                role="listitem"
+                style="padding: 0px;"
+              >
+                <div
+                  class="ui card pointer"
+                  style="box-shadow: none; border: 1px solid; border-radius: unset; margin-top: 0px;"
+                >
+                  <div
+                    class="content"
+                  >
+                    Add card
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
 </DocumentFragment>
 `;

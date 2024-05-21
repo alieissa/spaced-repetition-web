@@ -21,6 +21,7 @@ export default function SPSectionHeader(props: PropsWithChildren<Props>) {
       style={{
         padding: '1rem 1rem 1rem 2rem',
         lineHeight: '2rem',
+        borderBottom: '1px solid',
         ...props.style,
       }}
     >
