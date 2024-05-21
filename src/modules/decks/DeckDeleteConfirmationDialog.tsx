@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Message } from 'semantic-ui-react'
 import {
   SPButton,
@@ -15,6 +15,7 @@ type Props = {
 }
 export default function DeckDeleteConfirmationDialog(props: Props) {
   const params = useParams()
+  const navigate = useNavigate()
   const [deleteStatus, deleteDeck] = useDeleteDeck(params.deckId!)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 

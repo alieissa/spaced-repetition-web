@@ -1,12 +1,13 @@
 /** @format */
 
+import _ from 'lodash'
 import { createSelector } from 'reselect'
 import { RootState } from 'src/types'
 import { Untriggered } from 'src/utils/async'
 import { NDecks } from './decks.types'
 
 export function decks(state: RootState) {
-  return state.decks.decks
+  return _.values(state.decks.decks)
 }
 
 export function status(state: RootState) {

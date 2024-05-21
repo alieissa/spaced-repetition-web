@@ -9,7 +9,7 @@ import { Async } from 'src/utils/async'
 import { DecksAction } from './decks.actions'
 import * as Select from './decks.selectors'
 import { NDecks } from './decks.types'
-export function useDecks() {
+export function useDecks():[Async<null, RequestError, null>, NDecks.Deck[]] {
   const status = useSelector(Select.status)
   const decks = useSelector(Select.decks)
   const dispatch = useDispatch<Dispatch<DecksAction>>()
@@ -29,7 +29,7 @@ export function useDecks() {
   }, [])
 
   // TODO return [status, decks]
-  return { status, decks }
+  return [status, decks]
 }
 
 export function useCreateDeck(): [
