@@ -24,8 +24,8 @@ import {
   SPSectionHeader,
 } from 'src/components'
 
-import _ from 'lodash'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import DeckDeleteConfirmationDialog from './DeckDeleteConfirmationDialog'
 import { useDeckById } from './decks.hooks'
 
 /**
@@ -36,6 +36,8 @@ export default function DeckDetails() {
   const navigate = useNavigate()
   const params = useParams<{ deckId: string }>()
   const { status: loadDeckStatus, deck, loadDeck } = useDeckById(params.deckId!)
+  const [isDeleteConfirmationDialogOpen, setIsDeleteConfirmationDialogOpen] =
+    useState(false)
 
   useEffect(() => {
     loadDeck()
@@ -45,9 +47,10 @@ export default function DeckDetails() {
   const handleEdit = () => navigate(`/decks/${params.deckId}/edit`)
 
   const handleTest = () => navigate(`/decks/${params.deckId}/test`)
-  // TODO implement delete deck functionality
-  // https://github.com/alieissa/spaced-repetition-web/issues/64
-  const handleDelete = _.noop
+
+  const handleDelete = () => {
+    setIsDeleteConfirmationDialogOpen(true)
+  }
 
   const handleCardClick = (cardId: string) =>
     navigate(`/decks/${params.deckId}/cards/${cardId}`)
@@ -65,6 +68,7 @@ export default function DeckDetails() {
               and card create modals are opened here
           */}
           <Outlet />
+          <DeckDeleteConfirmationDialog open={isDeleteConfirmationDialogOpen} />
           <div data-testid="deck-details-success">
             <SPSectionHeader
               style={{ borderBottom: '1px solid' }}
@@ -144,7 +148,11 @@ function DeckMenu(props: MenuProps) {
       icon={<Icon name="ellipsis vertical" style={{ height: '100%' }} />}
     >
       <DropdownMenu data-testid="deck-details-dropdown-menu" direction="left">
-        <DropdownItem text="Delete" onClick={props.onDelete} />
+        <DropdownItem
+          data-testid="deck-menu-delete-option"
+          text="Delete"
+          onClick={props.onDelete}
+        />
       </DropdownMenu>
     </Dropdown>
   )
