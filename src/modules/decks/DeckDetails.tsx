@@ -136,6 +136,7 @@ export default function DeckDetails() {
           */}
           <Outlet />
           <DeckDeleteConfirmationDialog
+            name={deck.name}
             open={isDeleteConfirmationDialogOpen}
             onCancel={handleCancelDelete}
             onClose={handleCancelDelete}

@@ -6,11 +6,13 @@ import {
   SPModal,
   SPModalActions,
   SPModalContent,
+  SPModalHeader,
 } from 'src/components'
 import { async } from 'src/utils'
 import { useDeleteDeck } from './decks.hooks'
 
 type Props = {
+  name: string
   open: boolean
   onCancel: VoidFunction
   onClose: VoidFunction
@@ -33,22 +35,30 @@ export default function DeckDeleteConfirmationDialog(props: Props) {
   return (
     <SPModal
       data-testid="deck-delete-confirmation-dialog"
+      size="tiny"
       open={props.open}
       onClose={props.onClose}
     >
-      <SPModalContent>
-        {async.match(deleteStatus)({
-          Untriggered: () => null,
-          Loading: () => null,
-          Success: () => null,
-          Failure: () => <Message data-testid="deck-delete-error"></Message>,
-        })}
+      <SPModalHeader>Delete Deck</SPModalHeader>
+      {async.match(deleteStatus)({
+        Untriggered: () => null,
+        Loading: () => null,
+        Success: () => null,
+        Failure: () => (
+          <SPModalContent>
+            <Message data-testid="deck-delete-error" />
+          </SPModalContent>
+        ),
+      })}
+
+      <SPModalContent style={{ alignText: 'center' }}>
+        Are you sure you want to delete {props.name}?
       </SPModalContent>
       <SPModalActions>
+        <SPButton onClick={props.onCancel}>Cancel</SPButton>
         <SPButton data-testid="deck-delete-confirm-btn" onClick={handleConfirm}>
           Confirm
         </SPButton>
-        <SPButton onClick={props.onCancel}>Cancel</SPButton>
       </SPModalActions>
     </SPModal>
   )
