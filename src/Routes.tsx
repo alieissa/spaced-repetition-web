@@ -1,6 +1,6 @@
 /** @format */
 
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { Login, Logout } from 'src/modules/auth'
 import {
   DeckDetails,
@@ -38,7 +38,7 @@ export default function AppRoutes() {
         </Route>
       </Route>
       <Route path="/verify" element={<Verification />} />
-      <Route path="/" element={withSidebar(<DecksListPage />)} />
+      <Route path="/" element={<Navigate replace to="/decks" />} />
     </Routes>
   )
 }

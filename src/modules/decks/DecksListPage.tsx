@@ -1,7 +1,8 @@
 /** @format */
 
-import * as _ from 'lodash'
-import { useEffect } from 'react'
+import _ from 'lodash'
+import { PropsWithChildren, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { Outlet, useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
@@ -19,6 +20,7 @@ import { CreateButton, SPHeader, SPList } from 'src/components'
 import { async } from 'src/utils'
 import DecksListItem from './DecksListItem'
 import { useDecks } from './decks.hooks'
+import * as Select from './decks.selectors'
 import { NDecks } from './decks.types'
 
 type Props = {
@@ -46,7 +48,7 @@ function DecksEmpty() {
   )
 }
 
-function DecksComponent(props: Props) {
+function DecksComponent(props: PropsWithChildren<any>) {
   return (
     <div
       data-testid="decks-list-success"
@@ -57,17 +59,7 @@ function DecksComponent(props: Props) {
       <Grid padded style={{ flexGrow: 1 }}>
         <GridRow stretched>
           <GridColumn width={4} style={{ paddingLeft: 0 }}>
-            <div className="bordered">
-              {_.isEmpty(props.decks) ? (
-                <DecksEmpty />
-              ) : (
-                <SPList divided relaxed>
-                  {_.map(_.values(props.decks), (d) => (
-                    <DecksListItem {...d} key={d.id} />
-                  ))}
-                </SPList>
-              )}
-            </div>
+            {props.children}
           </GridColumn>
           <GridColumn width={12} style={{ paddingRight: 0 }}>
             <div className="bordered">
@@ -87,18 +79,23 @@ function DecksComponent(props: Props) {
  */
 export default function Decks() {
   const navigate = useNavigate()
-  const { status, decks } = useDecks()
+  const [status, decks] = useDecks()
 
   useEffect(() => {
-    if (status.type !== 'Failure') {
-      return
-    }
-
-    if (isUnauthorized(status.value)) {
-      // TODO Add query params so that message for navigation resulting from
-      // 401 is displayed
-      navigate('/login')
-    }
+    async.match(status)({
+      Untriggered: () => null,
+      Loading: () => null,
+      Success: () => {
+        navigate(`${decks[0].id}`)
+      },
+      Failure: ({ value }) => {
+        if (isUnauthorized(value)) {
+          // TODO Add query params so that message for navigation resulting from
+          // 401 is displayed
+          navigate('/login')
+        }
+      },
+    })
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.type])
 
@@ -117,6 +114,25 @@ export default function Decks() {
         <Loader active></Loader>
       </Segment>
     ),
-    Success: () => <DecksComponent decks={decks} />,
+    Success: () => (
+      <DecksComponent decks={decks}>
+        <div className="bordered">
+          {_.isEmpty(decks) ? (
+            <DecksEmpty />
+          ) : (
+            <SPList divided relaxed>
+              {_.map(_.values(decks), (d) => (
+                <DecksListItemContainer {...d} key={d.id} />
+              ))}
+            </SPList>
+          )}
+        </div>
+      </DecksComponent>
+    ),
   })
+}
+
+function DecksListItemContainer(props: NDecks.Deck) {
+  const deleteStatus = useSelector(Select.deleteStatus(props.id))
+  return <DecksListItem {...props} disabled={deleteStatus.type === 'Success'} />
 }

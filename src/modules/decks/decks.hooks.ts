@@ -4,10 +4,12 @@ import { Dispatch } from '@reduxjs/toolkit'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
+import { RequestError } from 'src/types'
+import { Async } from 'src/utils/async'
 import { DecksAction } from './decks.actions'
 import * as Select from './decks.selectors'
 import { NDecks } from './decks.types'
-export function useDecks() {
+export function useDecks(): [Async<null, RequestError, null>, NDecks.Deck[]] {
   const status = useSelector(Select.status)
   const decks = useSelector(Select.decks)
   const dispatch = useDispatch<Dispatch<DecksAction>>()
@@ -27,7 +29,7 @@ export function useDecks() {
   }, [])
 
   // TODO return [status, decks]
-  return { status, decks }
+  return [status, decks]
 }
 
 export function useCreateDeck(): [
@@ -59,16 +61,41 @@ export function useCreateDeck(): [
   return [status, createDeck]
 }
 
+export function useDeleteDeck(
+  deckId: string,
+): [Async<null, RequestError, null>, VoidFunction] {
+  const dispatch = useDispatch<Dispatch<DecksAction>>()
+  const deleteStatus = useSelector(Select.deleteStatus(deckId))
+  const removeDeck = api.request<null>({
+    method: 'DELETE',
+    url: `decks/${deckId}`,
+  })
+
+  const deleteDeck = () => {
+    dispatch({
+      type: 'DeleteDeck',
+      id: deckId,
+    })
+
+    removeDeck().then((result) => {
+      dispatch({
+        type: 'DeckDeleted',
+        id: deckId,
+        result,
+      })
+    })
+  }
+  return [deleteStatus, deleteDeck]
+}
 type DeckByIdReturnType = {
   status: NDecks.State['loadStatus'][string]
   deck: NDecks.Deck
-  loadDeck: VoidFunction
   updateDeck: (deck: NDecks.Deck) => void
 }
+// TODO Create a useUpdateDeck hook and remove
+// the update logic from this hook
 export function useDeckById(
   id: NDecks.Deck['id'],
-  // TODO Update deck type in
-  // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
 ): DeckByIdReturnType {
   const deck = useSelector(Select.deck(id))
   const loadStatus = useSelector(Select.loadStatus(id))
@@ -77,8 +104,11 @@ export function useDeckById(
     method: 'GET',
     url: `decks/${id}`,
   })
-  const putDeck = api.request<NDecks.Deck>({ method: 'PUT', url: `decks/${id}` })
-
+  const putDeck = api.request<NDecks.Deck>({
+    method: 'PUT',
+    url: `decks/${id}`,
+  })
+  
   useEffect(() => {
     if (loadStatus.type === 'Success') {
       return
@@ -88,21 +118,11 @@ export function useDeckById(
       type: 'LoadDeck',
       id,
     })
-    getDeck().then((result: any) => {
-      dispatch({ type: 'DeckLoaded', result, id })
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const loadDeck = () => {
-    dispatch({
-      type: 'LoadDeck',
-      id,
-    })
     getDeck().then((result) => {
       dispatch({ type: 'DeckLoaded', result, id })
     })
-  }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   // TODO Update deck type in
   // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
@@ -121,7 +141,7 @@ export function useDeckById(
     })
   }
 
-  return { status: loadStatus, deck, loadDeck, updateDeck }
+  return { status: loadStatus, deck,  updateDeck }
 }
 
 export function useUploadDecks(): [
@@ -185,6 +205,3 @@ export function useDownloadDecks(): [
 
   return [downloadDecksUrl, downloadDecksStatus, downloadDecks]
 }
-
-// TODO Update deck type in
-// https://github.com/alieissa/Spaced_Repetition_Web/issues/21

@@ -1,12 +1,13 @@
 /** @format */
 
+import _ from 'lodash'
 import { createSelector } from 'reselect'
 import { RootState } from 'src/types'
 import { Untriggered } from 'src/utils/async'
 import { NDecks } from './decks.types'
 
 export function decks(state: RootState) {
-  return state.decks.decks
+  return _.values(state.decks.decks)
 }
 
 export function status(state: RootState) {
@@ -34,6 +35,14 @@ export const updateStatus = (id: NDecks.Deck['id']) =>
     [selectUpdateStatus],
     (updateStatus: NDecks.State['updateStatus']) =>
       updateStatus[id] || Untriggered(),
+  )
+
+const selectDeleteStatus = (state: RootState) => state.decks.deleteStatus
+export const deleteStatus = (id: NDecks.Deck['id']) =>
+  createSelector(
+    [selectDeleteStatus],
+    (deleteStatus: NDecks.State['deleteStatus']) =>
+      deleteStatus[id] || Untriggered(),
   )
 
 const selectDecks = (state: RootState) => state.decks

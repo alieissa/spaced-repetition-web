@@ -100,5 +100,27 @@ describe('DeckDetails', () => {
       )
       expect(deckDetailsMenu).toBeVisible()
     })
+
+    it('should open delete confirmation dialog when clicking on delete option', async () => {
+      // Assemble
+      mountComponent()
+      await act(flushPromises)
+      const deckDetailsMenuBtn = await screen.findByTestId(
+        'deck-details-dropdown',
+      )
+      await act(() => deckDetailsMenuBtn.click())
+
+      // Act
+      const deckMenuDeleteOption = await screen.findByTestId(
+        'deck-menu-delete-option',
+      )
+      await act(() => deckMenuDeleteOption.click())
+
+      // Assert
+      const deckDeleteConfirmation = await screen.findByTestId(
+        'deck-delete-confirmation-dialog',
+      )
+      expect(deckDeleteConfirmation).toBeVisible()
+    })
   })
 })

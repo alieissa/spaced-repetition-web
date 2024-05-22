@@ -12,6 +12,7 @@ export namespace NDecks {
     loadStatus: _.Dictionary<Async<null, RequestError, Deck>>
     createStatus: Async<null, RequestError, null>
     updateStatus: _.Dictionary<Async<null, RequestError, null>>
+    deleteStatus: _.Dictionary<Async<null, RequestError, null>>
     uploadDecksStatus: Async<null, RequestError, null>
     downloadDecksUrl: string | null
     downloadDecksStatus: Async<null, RequestError, null>

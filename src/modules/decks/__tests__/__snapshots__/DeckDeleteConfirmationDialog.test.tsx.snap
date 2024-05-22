@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeckDeleteConfirmationDialog view should render correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="ui inverted top aligned page modals dimmer transition visible active"
+    style="display: flex;"
+  >
+    <div
+      class="ui tiny modal transition visible active"
+      data-testid="deck-delete-confirmation-dialog"
+      style="box-shadow: none; border: 1px solid; border-radius: 0;"
+    >
+      <div
+        class="header"
+      >
+        Delete Deck
+      </div>
+      <div
+        class="content"
+      >
+        Are you sure you want to delete ?
+      </div>
+      <div
+        class="actions"
+      >
+        <button
+          class="ui button"
+          style="border-radius: 0;"
+        >
+          Cancel
+        </button>
+        <button
+          class="ui red button"
+          data-testid="deck-delete-confirm-btn"
+          style="border-radius: 0;"
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -14,6 +14,7 @@ const initialState: NDecks.State = {
   loadStatus: {},
   createStatus: Untriggered(),
   updateStatus: {},
+  deleteStatus: {},
   uploadDecksStatus: Untriggered(),
   downloadDecksUrl: null,
   downloadDecksStatus: Untriggered(),
@@ -48,6 +49,9 @@ export default produce((draft: NDecks.State, action: DecksAction | CardsAction) 
         Right: ({ value }) => {
           draft.status = Success(null)
           draft.decks = _.isEmpty(value) ? {} : _.keyBy(value, 'id')
+          value.forEach((deck) => {
+            draft.loadStatus[deck.id] = Success(deck)
+          })
         },
       })
       return
@@ -79,6 +83,21 @@ export default produce((draft: NDecks.State, action: DecksAction | CardsAction) 
         Right: ({ value }) => {
           draft.updateStatus[action.id] = Success(null)
           draft.decks[action.id] = value
+        },
+      })
+      return
+    }
+    case 'DeleteDeck': {
+      draft.deleteStatus[action.id] = Loading(null)
+      return
+    }
+    case 'DeckDeleted': {
+      either.match(action.result)({
+        Left: ({ value }) => {
+          draft.deleteStatus[action.id] = Failure(value)
+        },
+        Right: () => {
+          draft.deleteStatus[action.id] = Success(null)
         },
       })
       return
