@@ -28,6 +28,7 @@ export default function DeckDeleteConfirmationDialog(props: Props) {
 
     // Same behaviour as close
     props.onClose()
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteStatus.type])
 
   const handleConfirm = deleteDeck

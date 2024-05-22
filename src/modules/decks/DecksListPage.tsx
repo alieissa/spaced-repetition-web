@@ -82,15 +82,20 @@ export default function Decks() {
   const [status, decks] = useDecks()
 
   useEffect(() => {
-    if (status.type !== 'Failure') {
-      return
-    }
-
-    if (isUnauthorized(status.value)) {
-      // TODO Add query params so that message for navigation resulting from
-      // 401 is displayed
-      navigate('/login')
-    }
+    async.match(status)({
+      Untriggered: () => null,
+      Loading: () => null,
+      Success: () => {
+        navigate(`${decks[0].id}`)
+      },
+      Failure: ({ value }) => {
+        if (isUnauthorized(value)) {
+          // TODO Add query params so that message for navigation resulting from
+          // 401 is displayed
+          navigate('/login')
+        }
+      },
+    })
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.type])
 

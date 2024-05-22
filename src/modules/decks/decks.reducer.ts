@@ -49,6 +49,9 @@ export default produce((draft: NDecks.State, action: DecksAction | CardsAction) 
         Right: ({ value }) => {
           draft.status = Success(null)
           draft.decks = _.isEmpty(value) ? {} : _.keyBy(value, 'id')
+          value.forEach((deck) => {
+            draft.loadStatus[deck.id] = Success(deck)
+          })
         },
       })
       return

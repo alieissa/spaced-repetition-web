@@ -25,7 +25,7 @@ import { async } from 'src/utils'
 import * as Select from './decks.selectors'
 
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import DeckDeleteConfirmationDialog from './DeckDeleteConfirmationDialog'
 import { useDeckById } from './decks.hooks'
@@ -103,14 +103,9 @@ function DeckDetailsComponent(props: DeckDetailsProps) {
 export default function DeckDetails() {
   const navigate = useNavigate()
   const params = useParams<{ deckId: string }>()
-  const { status: loadDeckStatus, deck, loadDeck } = useDeckById(params.deckId!)
+  const { status: loadDeckStatus, deck } = useDeckById(params.deckId!)
   const [isDeleteConfirmationDialogOpen, setIsDeleteConfirmationDialogOpen] =
     useState(false)
-
-  useEffect(() => {
-    loadDeck()
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.deckId])
 
   const handleEdit = () => navigate(`/decks/${params.deckId}/edit`)
 
