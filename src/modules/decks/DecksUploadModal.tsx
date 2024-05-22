@@ -14,13 +14,13 @@ import {
 import 'src/App.css'
 import FileSelector from 'src/components/FileSelector'
 import { async } from 'src/utils'
-import { ImportButton } from '../../components'
+import { UploadButton } from '../../components'
 import { useUploadDecks } from './decks.hooks'
 /**
  * This component contains the modal and the button that is used to toggle
  * the modal.
  */
-export default function UploadDecksModal() {
+export default function DecksUploadModal() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [file, setFile] = useState<File | null>()
   const [uploadDecksStatus, uploadDecks, resetUploadDecks] = useUploadDecks()
@@ -49,7 +49,7 @@ export default function UploadDecksModal() {
 
   return (
     <>
-      <ImportButton
+      <UploadButton
         data-testid="decks-upload-modal-btn"
         onClick={() => setIsModalOpen(true)}
       />

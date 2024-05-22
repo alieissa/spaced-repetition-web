@@ -1,5 +1,10 @@
 /* Overriding the default margins applied by semantic UI */
-.ui.button.export-btn {
+.ui.button.download-btn {
+  margin-left: 0;
+  margin-right: 0.125rem;
+}
+
+.ui.button.upload-btn {
   margin: 0
 }
 
