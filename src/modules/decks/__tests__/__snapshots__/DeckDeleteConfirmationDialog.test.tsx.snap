@@ -31,7 +31,7 @@ exports[`DeckDeleteConfirmationDialog view should render correctly 1`] = `
           Cancel
         </button>
         <button
-          class="ui button"
+          class="ui red button"
           data-testid="deck-delete-confirm-btn"
           style="border-radius: 0;"
         >

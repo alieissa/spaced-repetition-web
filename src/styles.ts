@@ -1,11 +1,17 @@
 /** @format */
 
 export const styles = {
+  inlineFlex: {
+    display: 'inline-flex'
+  },
   flex: {
     display: 'flex',
   },
   justifyEnd: {
     justifyContent: 'flex-end',
+  },
+  alignCenter: {
+    alignItems: "center"
   },
   p0: {
     padding: 0,
@@ -37,6 +43,9 @@ export const styles = {
   textAlignRight: {
     textAlign: 'right',
   },
+  colorRed: {
+    color: '#db2828'
+  },
   colorInherit: {
     color: 'inherit',
   },
@@ -50,4 +59,7 @@ export const styles = {
   flexGrow1: {
     flexGrow: 1,
   },
+  hFull: {
+    height: '100%'
+  }
 }

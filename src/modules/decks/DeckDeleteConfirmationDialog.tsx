@@ -52,12 +52,16 @@ export default function DeckDeleteConfirmationDialog(props: Props) {
         ),
       })}
 
-      <SPModalContent style={{ alignText: 'center' }}>
+      <SPModalContent>
         Are you sure you want to delete {props.name}?
       </SPModalContent>
       <SPModalActions>
         <SPButton onClick={props.onCancel}>Cancel</SPButton>
-        <SPButton data-testid="deck-delete-confirm-btn" onClick={handleConfirm}>
+        <SPButton
+          data-testid="deck-delete-confirm-btn"
+          color="red"
+          onClick={handleConfirm}
+        >
           Confirm
         </SPButton>
       </SPModalActions>

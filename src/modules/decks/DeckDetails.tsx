@@ -27,6 +27,7 @@ import * as Select from './decks.selectors'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { styles } from 'src/styles'
 import DeckDeleteConfirmationDialog from './DeckDeleteConfirmationDialog'
 import { useDeckById } from './decks.hooks'
 import { NDecks } from './decks.types'
@@ -165,13 +166,15 @@ function DeckMenu(props: MenuProps) {
     <Dropdown
       data-testid="deck-details-dropdown"
       className="align-center"
-      style={{ display: 'inline-flex', alignItems: 'center' }}
-      icon={<Icon name="ellipsis vertical" style={{ height: '100%' }} />}
+      style={{ ...styles.inlineFlex, ...styles.alignCenter }}
+      icon={<Icon name="ellipsis vertical" style={styles.hFull} />}
     >
       <DropdownMenu data-testid="deck-details-dropdown-menu" direction="left">
         <DropdownItem
           data-testid="deck-menu-delete-option"
+          style={styles.colorRed}
           text="Delete"
+          color="red"
           onClick={props.onDelete}
         />
       </DropdownMenu>
