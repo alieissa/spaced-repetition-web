@@ -42,27 +42,37 @@ exports[`DecksListPage view should render correctly 1`] = `
             class="bordered"
           >
             <div
-              class="ui placeholder segment"
+              class="ui divided relaxed list"
+              role="list"
             >
               <div
-                class="ui icon header"
+                class=""
               >
-                <i
-                  aria-hidden="true"
-                  class="file icon"
-                />
-                No Decks created
-              </div>
-              <a
-                href="/decks/new"
-              >
-                <button
-                  class="ui blue medium icon button"
-                  style="border-radius: 0;"
+                <div
+                  class="item"
+                  role="listitem"
+                  style="padding: 0px;"
                 >
-                  Create New Deck
-                </button>
-              </a>
+                  <div
+                    class="ui card pointer"
+                    style="width: 100%; box-shadow: none; border: 1px solid; border-radius: unset; margin-top: 0px;"
+                  >
+                    <div
+                      class="content"
+                    >
+                      <div
+                        class="ui big header"
+                        style="margin-top: 0px; margin-bottom: 0px;"
+                      >
+                        Test Deck
+                      </div>
+                      <div
+                        class="description"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -16,7 +16,25 @@ const decksUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks`
 
 export const handlers = [
   rest.get(decksUrl, (__, res, ctx) => {
-    return res(ctx.json([]))
+    return res(
+      ctx.json([
+        {
+          name: 'Test Deck',
+          card: [
+            {
+              id: 'testCard0id',
+              question: 'Test Question',
+              answers: [
+                {
+                  id: 'testAnswer0id',
+                  content: 'Test Answer',
+                },
+              ],
+            },
+          ],
+        },
+      ]),
+    )
   }),
 ]
 
