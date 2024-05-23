@@ -1,16 +1,14 @@
 /** @format */
 
-import { ButtonProps, Popup } from 'semantic-ui-react'
+import { ButtonProps } from 'semantic-ui-react'
+import { SPTooltip } from '.'
 import SPButton from './Button'
 import './components.css'
 
 export default function UploadButton(props: ButtonProps) {
   return (
-    <Popup
-      content="Upload decks"
-      open={true}
-      size="mini"
-      trigger={<SPButton className="upload-btn" icon="upload" {...props} />}
-    />
+    <SPTooltip content="Upload decks" size="mini">
+      <SPButton className="upload-btn" icon="upload" {...props} />
+    </SPTooltip>
   )
 }

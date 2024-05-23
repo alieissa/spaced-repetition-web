@@ -1,15 +1,13 @@
 /** @format */
 
-import { ButtonProps, Popup } from 'semantic-ui-react'
-import { SPButton } from '.'
+import { ButtonProps } from 'semantic-ui-react'
+import { SPButton, SPTooltip } from '.'
 import './components.css'
 
 export default function DownloadButton(props: ButtonProps) {
   return (
-    <Popup
-      content="Download decks"
-      size="mini"
-      trigger={<SPButton className="download-btn" icon="download" {...props} />}
-    />
+    <SPTooltip content="Download decks" size="mini">
+      <SPButton className="download-btn" icon="download" {...props} />
+    </SPTooltip>
   )
 }

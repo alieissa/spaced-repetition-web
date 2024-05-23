@@ -23,6 +23,6 @@ export { default as SPSection } from './Section'
 export { default as SPSectionHeader } from './SectionHeader'
 export { default as Settings } from './Settings'
 export { default as SPText } from './Text'
-export { default as Tooltip } from './Tooltip'
+export { default as SPTooltip } from './Tooltip'
 export { default as UploadButton } from './UploadButton'
 
