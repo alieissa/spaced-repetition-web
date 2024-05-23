@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import 'src/App.css'
-import { ExportButton } from '../../components'
+import { DownloadButton } from '../../components'
 import { useDownloadDecks } from './decks.hooks'
 /**
  * This contains the download button. Once the button is clicked all the users
@@ -27,7 +27,7 @@ export default function DecksDownload() {
   // download button is displayed
   return (
     <>
-      <ExportButton
+      <DownloadButton
         data-testid="decks-download-btn"
         disabled={isDownloadDecksDisbaled}
         onClick={downloadDecks}

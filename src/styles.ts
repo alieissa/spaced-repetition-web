@@ -1,8 +1,8 @@
 /** @format */
 
-export const styles = {
+export const styles: { [key: string]: React.CSSProperties } = {
   inlineFlex: {
-    display: 'inline-flex'
+    display: 'inline-flex',
   },
   flex: {
     display: 'flex',
@@ -11,13 +11,16 @@ export const styles = {
     justifyContent: 'flex-end',
   },
   alignCenter: {
-    alignItems: "center"
+    alignItems: 'center',
   },
   p0: {
     padding: 0,
   },
   'pl-0': {
     paddingLeft: 0,
+  },
+  'pr-0': {
+    paddingRight: 0,
   },
   'px-0': {
     paddingLeft: 0,
@@ -44,7 +47,7 @@ export const styles = {
     textAlign: 'right',
   },
   colorRed: {
-    color: '#db2828'
+    color: '#db2828',
   },
   colorInherit: {
     color: 'inherit',
@@ -60,6 +63,9 @@ export const styles = {
     flexGrow: 1,
   },
   hFull: {
-    height: '100%'
-  }
+    height: '100%',
+  },
+  'ofy-auto': {
+    overflowY: 'auto',
+  },
 }

@@ -17,8 +17,11 @@ import {
 import 'src/App.css'
 import { isUnauthorized } from 'src/api'
 import { CreateButton, SPHeader, SPList } from 'src/components'
+import { styles } from 'src/styles'
 import { async } from 'src/utils'
+import DecksDownload from './DecksDownload'
 import DecksListItem from './DecksListItem'
+import DecksUploadModal from './DecksUploadModal'
 import { useDecks } from './decks.hooks'
 import * as Select from './decks.selectors'
 import { NDecks } from './decks.types'
@@ -31,7 +34,11 @@ function DecksHeader() {
   return (
     <div className="justify-space-between bordered p-1r">
       <SPHeader as="h1">Decks</SPHeader>
-      <CreateButton createLink="/decks/new" />
+      <div>
+        <CreateButton createLink="/decks/new" />
+        <DecksDownload />
+        <DecksUploadModal />
+      </div>
     </div>
   )
 }
@@ -53,15 +60,15 @@ function DecksComponent(props: PropsWithChildren<any>) {
     <div
       data-testid="decks-list-success"
       className="flex-column h-full"
-      style={{ overflowY: 'auto' }}
+      style={styles['ofy-auto']}
     >
       <DecksHeader />
-      <Grid padded style={{ flexGrow: 1 }}>
+      <Grid padded style={styles.flexGrow1}>
         <GridRow stretched>
-          <GridColumn width={4} style={{ paddingLeft: 0 }}>
+          <GridColumn width={4} style={styles['pl-0']}>
             {props.children}
           </GridColumn>
-          <GridColumn width={12} style={{ paddingRight: 0 }}>
+          <GridColumn width={12} style={styles['pr-0']}>
             <div className="bordered">
               <Outlet />
             </div>

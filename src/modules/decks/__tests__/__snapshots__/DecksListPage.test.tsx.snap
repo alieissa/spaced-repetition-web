@@ -16,16 +16,38 @@ exports[`DecksListPage view should render correctly 1`] = `
       >
         Decks
       </h1>
-      <a
-        href="/decks/new"
-      >
+      <div>
+        <a
+          href="/decks/new"
+        >
+          <button
+            class="ui blue medium icon button"
+            style="border-radius: 0;"
+          >
+            Create New Deck
+          </button>
+        </a>
         <button
-          class="ui blue medium icon button"
+          class="ui icon button download-btn"
+          data-testid="decks-download-btn"
           style="border-radius: 0;"
         >
-          Create New Deck
+          <i
+            aria-hidden="true"
+            class="download icon"
+          />
         </button>
-      </a>
+        <button
+          class="ui icon button upload-btn"
+          data-testid="decks-upload-modal-btn"
+          style="border-radius: 0;"
+        >
+          <i
+            aria-hidden="true"
+            class="upload icon"
+          />
+        </button>
+      </div>
     </div>
     <div
       class="ui padded grid"
