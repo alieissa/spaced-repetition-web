@@ -3,7 +3,7 @@
 exports[`DecksDownload view should render correctly 1`] = `
 <DocumentFragment>
   <button
-    class="ui small icon button export-btn"
+    class="ui icon button download-btn"
     data-testid="decks-download-btn"
     style="border-radius: 0;"
   >

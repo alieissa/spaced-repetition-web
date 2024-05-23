@@ -3,8 +3,9 @@
 exports[`DecksUploadModal view should render correctly 1`] = `
 <DocumentFragment>
   <button
-    class="ui small icon button"
+    class="ui icon button upload-btn"
     data-testid="decks-upload-modal-btn"
+    style="border-radius: 0;"
   >
     <i
       aria-hidden="true"
@@ -12,23 +13,38 @@ exports[`DecksUploadModal view should render correctly 1`] = `
     />
   </button>
   <div
-    class="ui inverted page modals dimmer transition visible active"
+    style="display: flex; position: absolute; left: 0px; top: 0px; bottom: 0px; transform: translate(0px, 0px);"
+  >
+    <div
+      class="ui top left mini basic popup transition visible"
+      style="position: initial; box-shadow: unset; border-radius: 0;"
+    >
+      <div
+        class="content"
+      >
+        Upload decks
+      </div>
+    </div>
+  </div>
+  <div
+    class="ui inverted top aligned page modals dimmer transition visible active"
     style="display: flex;"
   >
     <div
       class="ui tiny modal transition visible active"
       data-testid="decks-upload-modal"
+      style="box-shadow: none; border: 1px solid; border-radius: 0;"
     >
       <div
         class="header"
       >
-        Upload decks
+        Upload Decks
       </div>
       <div
         class="flex-column align-center justify-center content"
       >
         <div
-          class="description pb-10"
+          class="pb-10 content"
         >
           <p>
             Select file the file containing the decks
@@ -40,6 +56,7 @@ exports[`DecksUploadModal view should render correctly 1`] = `
         <button
           class="ui icon left labeled button"
           data-testid="file-selector"
+          style="border-radius: 0;"
         >
           <i
             aria-hidden="true"
@@ -58,6 +75,7 @@ exports[`DecksUploadModal view should render correctly 1`] = `
       >
         <button
           class="ui button"
+          style="border-radius: 0;"
         >
           Cancel
         </button>
@@ -65,6 +83,7 @@ exports[`DecksUploadModal view should render correctly 1`] = `
           class="ui green disabled button"
           data-testid="decks-upload-confirm-btn"
           disabled=""
+          style="border-radius: 0;"
           tabindex="-1"
         >
           Confirm
