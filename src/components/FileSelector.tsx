@@ -2,7 +2,7 @@
 
 import _ from 'lodash'
 import { ChangeEvent, useRef } from 'react'
-import { Button } from 'semantic-ui-react'
+import { SPButton } from '.'
 
 type Props = {
   onFileSelected: (file: ChangeEvent<HTMLInputElement>) => void
@@ -11,7 +11,7 @@ export default function FileSelector(props: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   return (
     <>
-      <Button
+      <SPButton
         content="Select File"
         labelPosition="left"
         icon="file"
