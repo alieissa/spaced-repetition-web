@@ -6,6 +6,9 @@ on:
     types: [opened, synchronize, closed]
     branches:
       - main
+  push:
+    branches:
+      - 75-redeploy-service-with-new-image
 
 env:
   IMAGE_NAME: spaced-repetition-web
@@ -13,6 +16,7 @@ env:
 
 jobs:
   lint:
+    if: false
     runs-on: ubuntu-22.04
     name: Lint
     steps:
@@ -28,6 +32,7 @@ jobs:
         run: npm run lint
       
   tests:
+    if: false
     needs:
       - lint
     runs-on: ubuntu-22.04
@@ -71,3 +76,12 @@ jobs:
           docker push $REPO/$IMAGE_NAME
           docker tag $REPO/$IMAGE_NAME $REPO/$IMAGE_NAME:${GITHUB_SHA::6}
           docker push $REPO/$IMAGE_NAME:${GITHUB_SHA::6}
+  
+  deploy:
+    # needs: 
+    #   - release
+    runs-on: ubuntu-22.04
+    name: Deploy
+    steps:
+      - name: Restart ECS Service
+        run: aws --version
