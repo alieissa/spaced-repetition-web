@@ -19,6 +19,7 @@ export const handlers = [
     return res(
       ctx.json([
         {
+          id: 'testDeck0id',
           name: 'Test Deck',
           card: [
             {
@@ -82,8 +83,8 @@ describe('DecksListPage', () => {
   })
 
   // TODO: Unstable test. Will address it in another ticket
-  describe.skip('interaction', () => {
-    it('should navigate to login on 401', async () => {
+  describe('interaction', () => {
+    it.skip('should navigate to login on 401', async () => {
       server.use(rest.get(decksUrl, (__, res, ctx) => res(ctx.status(401))))
 
       renderWithProviders(<DecksListPage />)
@@ -91,6 +92,25 @@ describe('DecksListPage', () => {
       await act(flushPromises)
 
       expect(mockNavigate).toHaveBeenCalledWith('/login')
+    })
+
+    it('should navigate to first deck when decks', async () => {
+      // Assemble
+      renderWithProviders(<DecksListPage />)
+      await act(flushPromises)
+
+      // Assert
+      expect(mockNavigate).toHaveBeenCalledWith('testDeck0id')
+    })
+
+    it('should NOT attempt to navigate to first deck when decks list is empty', async () => {
+      // Assemble
+      server.use(rest.get(decksUrl, (__, res, ctx) => res(ctx.json([]))))
+      renderWithProviders(<DecksListPage />)
+      await act(flushPromises)
+
+      // Assert
+      expect(mockNavigate).not.toHaveBeenCalledWith()
     })
   })
 })
