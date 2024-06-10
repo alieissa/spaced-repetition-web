@@ -93,6 +93,9 @@ export default function Decks() {
       Untriggered: () => null,
       Loading: () => null,
       Success: () => {
+        if (_.isEmpty(decks)) {
+          return
+        }
         navigate(`${decks[0].id}`)
       },
       Failure: ({ value }) => {
