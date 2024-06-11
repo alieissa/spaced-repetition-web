@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sidebar view should render correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="ui vertical labeled icon ui left visible sidebar bordered bs-none menu"
+  >
+    <a
+      class="item"
+    >
+      <i
+        aria-hidden="true"
+        class="home icon"
+      />
+      Decks
+    </a>
+    <a
+      class="item"
+      data-testid="sidebar-logout-menu-item"
+      style="position: absolute; bottom: 0px;"
+    >
+      <i
+        aria-hidden="true"
+        class="log out icon"
+      />
+      Logout
+    </a>
+  </div>
+</DocumentFragment>
+`;

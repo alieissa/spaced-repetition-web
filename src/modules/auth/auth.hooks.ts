@@ -1,6 +1,5 @@
 /** @format */
 
-import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import * as api from 'src/api'
@@ -21,13 +20,13 @@ export function useLogout():[NAuth.State['logoutStatus'], VoidFunction] {
 
   const logoutCall = api.request({ method: 'GET', url: 'users/logout' })
 
-  useEffect(() => {
-    if (status.type !== 'Success') {
-      return
-    }
-    navigate('/login')
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status.type])
+  // useEffect(() => {
+  //   if (status.type !== 'Success') {
+  //     return
+  //   }
+  //   navigate('/logout')
+  //   //eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [status.type])
 
   const logout = () => {
     dispatch({
