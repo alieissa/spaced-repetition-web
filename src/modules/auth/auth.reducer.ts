@@ -15,6 +15,7 @@ export default produce((draft: NAuth.State, action: LoginAction) => {
   switch (action.type) {
     case 'Login': {
       draft.status = Loading(null)
+      draft.logoutStatus = Untriggered()
       return
     }
     case 'LoggedIn': {
@@ -29,7 +30,9 @@ export default produce((draft: NAuth.State, action: LoginAction) => {
       return
     }
     case 'Logout': {
-      draft.logoutStatus = Untriggered()
+      localStorage.removeItem('token')
+      draft.logoutStatus = Loading(null)
+      draft.status = Untriggered()
       return
     }
     case 'LoggedOut': {
@@ -38,7 +41,6 @@ export default produce((draft: NAuth.State, action: LoginAction) => {
           draft.logoutStatus = Failure(value)
         },
         Right: ({ value }) => {
-          localStorage.removeItem('token')
           draft.logoutStatus = Success(value)
         },
       })

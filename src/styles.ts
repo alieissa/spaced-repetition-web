@@ -13,6 +13,9 @@ export const styles: { [key: string]: React.CSSProperties } = {
   alignCenter: {
     alignItems: 'center',
   },
+  b0: {
+    bottom: 0
+  },
   p0: {
     padding: 0,
   },
@@ -68,4 +71,7 @@ export const styles: { [key: string]: React.CSSProperties } = {
   'ofy-auto': {
     overflowY: 'auto',
   },
+  absolute: {
+    position: 'absolute'
+  }
 }
