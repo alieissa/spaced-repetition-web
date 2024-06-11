@@ -1,7 +1,7 @@
 /** @format */
 
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { Login, Logout } from 'src/modules/auth'
+import { Login } from 'src/modules/auth'
 import {
   DeckDetails,
   DeckEdit,
@@ -26,7 +26,6 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="/logout" element={<Logout />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/decks" element={withSidebar(<DecksListPage />)}>
         <Route path="new" element={<NewDeck />} />
