@@ -5,7 +5,10 @@ export namespace NSignup {
   }
 
   export type User = {
+    firstName: string,
+    lastName: string,
     email: string,
-    password: string
+    password: string,
+    confirmedPassword: string
   }
 }

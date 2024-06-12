@@ -3,44 +3,64 @@
 exports[`Login view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="ui segment"
-    data-testid="login-form"
+    class="ui container"
   >
-    <form
-      class="ui form"
+    <div
+      class="bordered p-1r"
+      data-testid="login-form"
     >
-      <div
-        class="field"
+      <form
+        class="ui form flex-column"
       >
-        <label>
-          Email
-        </label>
-        <input
-          placeholder="Email"
-          title="email"
-          value=""
-        />
-      </div>
-      <div
-        class="field"
-      >
-        <label>
-          Password
-        </label>
-        <input
-          placeholder="Password"
-          title="password"
-          type="password"
-          value=""
-        />
-      </div>
-      <button
-        class="ui button"
-        type="submit"
-      >
-        Login
-      </button>
-    </form>
+        <div
+          class="field"
+        >
+          <label>
+            Email
+          </label>
+          <div
+            class="ui input"
+            style="opacity: 1;"
+          >
+            <input
+              data-testid="login-form-email-input"
+              placeholder="Email"
+              style="border-radius: unset;"
+              title="email"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="field"
+        >
+          <label>
+            Password
+          </label>
+          <div
+            class="ui input"
+            style="opacity: 1;"
+          >
+            <input
+              data-testid="login-form-password-input"
+              placeholder="Password"
+              style="border-radius: unset;"
+              title="password"
+              type="password"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="ui button align-self-end"
+          style="border-radius: 0;"
+          type="submit"
+        >
+          Login
+        </button>
+      </form>
+    </div>
   </div>
 </DocumentFragment>
 `;

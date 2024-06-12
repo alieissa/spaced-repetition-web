@@ -5,7 +5,9 @@ import { noop } from 'lodash'
 import { ChangeEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Button, Form, Loader, Message, Segment } from 'semantic-ui-react'
+import { Container, Form, Loader, Message } from 'semantic-ui-react'
+import { SPButton, SPInput, SPText } from 'src/components'
+import { styles } from 'src/styles'
 import { async } from 'src/utils'
 import * as Yup from 'yup'
 import useLogin from './auth.hooks'
@@ -28,20 +30,30 @@ const LoginComponent = (props: Props) => {
 
   return (
     <>
-      <Form onSubmit={props.onLogin ?? noop}>
+      <Form onSubmit={props.onLogin ?? noop} className="flex-column">
         <Form.Field error={emailError}>
           <label>Email</label>
-          <input
+          <SPInput
+            data-testid="login-form-email-input"
             title="email"
             disabled={props.form.isSubmitting}
             placeholder="Email"
             value={props.form.values.email}
             onChange={props.onChangeEmail}
           />
+          {emailError && (
+            <SPText
+              data-testid="login-form-email-error"
+              style={styles['mt-0.5r']}
+            >
+              {props.form.errors.email}
+            </SPText>
+          )}
         </Form.Field>
         <Form.Field error={passwordError}>
           <label>Password</label>
-          <input
+          <SPInput
+            data-testid="login-form-password-input"
             title="password"
             disabled={props.form.isSubmitting}
             placeholder="Password"
@@ -49,10 +61,22 @@ const LoginComponent = (props: Props) => {
             value={props.form.values.password}
             onChange={props.onChangePassword}
           />
+          {passwordError && (
+            <SPText
+              data-testid="login-form-password-error"
+              style={styles['mt-0.5r']}
+            >
+              {props.form.errors.password}
+            </SPText>
+          )}
         </Form.Field>
-        <Button type="submit" disabled={props.form.isSubmitting}>
+        <SPButton
+          type="submit"
+          disabled={props.form.isSubmitting}
+          className="align-self-end"
+        >
           Login
-        </Button>
+        </SPButton>
       </Form>
     </>
   )
@@ -104,33 +128,38 @@ function Login() {
     form,
     onChangeEmail: handleChangeEmail,
     onChangePassword: handleChangePassword,
+    // onSignup: () => navigate('/signup'),
   }
 
-  return async.match(status)({
-    Untriggered: () => (
-      <Segment data-testid="login-form">
-        <LoginComponent onLogin={form.submitForm} {...commonProps} />
-      </Segment>
-    ),
-    Loading: () => (
-      <Segment data-testid="login-form-loading">
-        <Loader active></Loader>
-        <LoginComponent {...commonProps} />
-      </Segment>
-    ),
-    Failure: () => (
-      <Segment data-testid="login-form-error">
-        <Message negative>
-          <Message.Header>Login failed</Message.Header>
-          <p>Please make sure email and/or password are correct</p>
-        </Message>
-        <LoginComponent {...commonProps} />
-      </Segment>
-    ),
-    Success: () => {
-      return null
-    },
-  })
+  return (
+    <Container>
+      {async.match(status)({
+        Untriggered: () => (
+          <div data-testid="login-form" className="bordered p-1r">
+            <LoginComponent onLogin={form.submitForm} {...commonProps} />
+          </div>
+        ),
+        Loading: () => (
+          <div data-testid="login-form-loading" className="bordered p-1r">
+            <Loader active></Loader>
+            <LoginComponent {...commonProps} />
+          </div>
+        ),
+        Failure: () => (
+          <div data-testid="login-form-error" className="bordered p-1r">
+            <Message negative>
+              <Message.Header>Login failed</Message.Header>
+              <p>Please make sure email and/or password are correct</p>
+            </Message>
+            <LoginComponent {...commonProps} />
+          </div>
+        ),
+        Success: () => {
+          return null
+        },
+      })}
+    </Container>
+  )
 }
 
 export default Login

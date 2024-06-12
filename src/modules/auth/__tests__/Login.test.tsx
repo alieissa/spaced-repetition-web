@@ -3,14 +3,14 @@
 import '@testing-library/jest-dom'
 import {
   act,
-  fireEvent,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
+import { renderWithProviders } from 'src/utils/test-utils'
 import Login from '../Login'
 const mockNavigate = jest.fn(() => ({}))
 jest.mock('react-router-dom', () => ({
@@ -25,6 +25,21 @@ export const handlers = [
     return res(ctx.json({ token: 'dummytoken1234' }))
   }),
 ]
+// const formFields = ['email', 'password'] as const
+
+const setupForm = async (fields: ('email' | 'password')[]) => {
+  const user = userEvent.setup()
+
+  if (fields.includes('email')) {
+    const emailInput = screen.getByTestId('login-form-email-input')
+    await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
+  }
+
+  if (fields.includes('password')) {
+    const passwordInput = screen.getByTestId('login-form-password-input')
+    await act(() => user.type(passwordInput, 'heythere!'))
+  }
+}
 
 const server = setupServer(...handlers)
 beforeAll(() => server.listen())
@@ -37,25 +52,21 @@ describe('Login', () => {
       const { asFragment } = renderWithProviders(<Login />)
       expect(asFragment()).toMatchSnapshot()
     })
-  })
-
-  describe('interaction', () => {
     test('display initial', async () => {
       renderWithProviders(<Login />)
       expect(screen.getByTestId('login-form')).toBeInTheDocument()
     })
 
     test('display loading', async () => {
-      const user = userEvent.setup()
-
+      // Assemble
       renderWithProviders(<Login />)
+      await setupForm(['email', 'password'])
 
-      const emailInput = screen.getByRole('textbox', { name: 'email' })
-      const passwordInput = screen.getByTitle('password')
-      await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
-      await act(() => user.type(passwordInput, 'heythere!'))
-      fireEvent.click(screen.getByRole('button', { name: 'Login' }))
+      // Act
+      const loginBtn = screen.getByRole('button', { name: 'Login' })
+      await act(() => loginBtn.click())
 
+      // Assert
       const testId = 'login-form-loading'
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
       // See https://davidwcai.medium.com/react-testing-library-and-the-not-wrapped-in-act-errors-491a5629193b
@@ -63,22 +74,20 @@ describe('Login', () => {
     })
 
     test('display failure', async () => {
+      // Assemble
       server.use(
         rest.post(loginUrl, (__, res, ctx) =>
           res(ctx.json({ email: 'invalidemail' }), ctx.status(422)),
         ),
       )
-
       renderWithProviders(<Login />)
+      await setupForm(['email', 'password'])
 
-      const user = userEvent.setup()
-      const emailInput = screen.getByRole('textbox', { name: 'email' })
-      const passwordInput = screen.getByTitle('password')
-      await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
-      await act(() => user.type(passwordInput, 'heythere!'))
+      // Act
+      const loginBtn = screen.getByRole('button', { name: 'Login' })
+      await act(() => loginBtn.click())
 
-      fireEvent.click(screen.getByRole('button', { name: 'Login' }))
-
+      // Assert
       const testId = 'login-form-error'
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
@@ -86,19 +95,46 @@ describe('Login', () => {
     test('display success', async () => {
       // Assemble
       renderWithProviders(<Login />)
-      const user = userEvent.setup()
-      const emailInput = screen.getByRole('textbox', { name: 'email' })
-      const passwordInput = screen.getByTitle('password')
-      await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
-      await act(() => user.type(passwordInput, 'heythere!'))
+      await setupForm(['email', 'password'])
 
       // Act
       const loginBtn = await screen.findByRole('button', { name: 'Login' })
       await act(() => loginBtn.click())
-      await act(flushPromises)
 
       // Assert
-      expect(mockNavigate).toBeCalledWith('/')
+      await waitFor(() => expect(mockNavigate).toBeCalledWith('/'))
+    })
+  })
+
+  describe('interaction', () => {
+    it('Should display error when email is invalid', async () => {
+      // Assemble
+      renderWithProviders(<Login />)
+      await setupForm(['password'])
+
+      // Act
+      const loginBtn = await screen.findByRole('button', { name: 'Login' })
+      await act(() => loginBtn.click())
+
+      // Assert
+      const emailError = await screen.findByTestId('login-form-email-error')
+      expect(emailError).toBeInTheDocument()
+    })
+
+    it('Should display error when password is invalid', async () => {
+      // Assemble
+      renderWithProviders(<Login />)
+      await setupForm(['email'])
+
+      // Act
+      const loginBtn = await screen.findByRole('button', { name: 'Login' })
+      await act(() => loginBtn.click())
+
+      // Assert
+      const passwordError = await screen.findByTestId(
+        'login-form-password-error',
+      )
+      expect(passwordError).toBeInTheDocument()
     })
   })
 })

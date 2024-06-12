@@ -8,6 +8,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import _ from 'lodash'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import { renderWithProviders } from 'src/utils/test-utils'
@@ -23,6 +24,44 @@ export const handlers = [
   }),
 ]
 
+const formFields = [
+  'firstName',
+  'lastName',
+  'email',
+  'password',
+  'confirmedPassword',
+] as const
+
+const setupForm = async (fields: (typeof formFields)[number][]) => {
+  const user = userEvent.setup()
+  if (fields.includes('firstName')) {
+    const firstNameInput = screen.getByTestId('signup-form-first-name-input')
+    await act(() => user.type(firstNameInput, 'Johnny'))
+  }
+
+  if (fields.includes('lastName')) {
+    const lastNameInput = screen.getByTestId('signup-form-last-name-input')
+    await act(() => user.type(lastNameInput, 'Bravo'))
+  }
+
+  if (fields.includes('email')) {
+    const emailInput = screen.getByTestId('signup-form-email-input')
+    await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
+  }
+
+  if (fields.includes('password')) {
+    const passwordInput = screen.getByTestId('signup-form-password-input')
+    await act(() => user.type(passwordInput, 'heythere!'))
+  }
+
+  if (fields.includes('confirmedPassword')) {
+    const confirmedPasswordInput = screen.getByTestId(
+      'signup-form-confirmed-password-input',
+    )
+    await act(() => user.type(confirmedPasswordInput, 'heythere!'))
+  }
+}
+
 const server = setupServer(...handlers)
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
@@ -34,25 +73,16 @@ describe('Signup', () => {
       const { asFragment } = renderWithProviders(<Signup />)
       expect(asFragment()).toMatchSnapshot()
     })
-  })
-
-  describe('interaction', () => {
-    test('display initial', async () => {
-      renderWithProviders(<Signup />)
-      expect(screen.getByTestId('signup-form')).toBeInTheDocument()
-    })
 
     test('display loading', async () => {
-      const user = userEvent.setup()
-
+      // Assemble
       renderWithProviders(<Signup />)
+      await setupForm([...formFields])
 
-      const emailInput = screen.getByRole('textbox', { name: 'email' })
-      const passwordInput = screen.getByTitle('password')
-      await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
-      await act(() => user.type(passwordInput, 'heythere!'))
-      fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+      const signupBtn = screen.getByRole('button', { name: 'Submit' })
+      await act(() => signupBtn.click())
 
+      // Assert
       const testId = 'signup-form-loading'
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
       // See https://davidwcai.medium.com/react-testing-library-and-the-not-wrapped-in-act-errors-491a5629193b
@@ -60,38 +90,69 @@ describe('Signup', () => {
     })
 
     test('display failure', async () => {
+      // Assemble
       server.use(
         rest.post(signupUrl, (__, res, ctx) =>
           res(ctx.json({ email: 'dfsfsdf' }), ctx.status(422)),
         ),
       )
-
       renderWithProviders(<Signup />)
+      await setupForm([...formFields])
 
-      const user = userEvent.setup()
-      const emailInput = screen.getByRole('textbox', { name: 'email' })
-      const passwordInput = screen.getByTitle('password')
-      await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
-      await act(() => user.type(passwordInput, 'heythere!'))
+      // Act
+      const signupBtn = screen.getByRole('button', { name: 'Submit' })
+      await act(() => signupBtn.click())
 
-      fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-
+      // Assert
       const testId = 'signup-form-error'
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
 
     test('display success', async () => {
+      // Assemble
       renderWithProviders(<Signup />)
+      await setupForm([...formFields])
 
-      const user = userEvent.setup()
-      const emailInput = screen.getByRole('textbox', { name: 'email' })
-      const passwordInput = screen.getByTitle('password')
-      await act(() => user.type(emailInput, 'johnnyb1@gmail.com'))
-      await act(() => user.type(passwordInput, 'heythere!'))
+      // Act
+      const signupBtn = screen.getByRole('button', { name: 'Submit' })
+      await act(() => signupBtn.click())
 
-      fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
-
+      // Assert
       const testId = 'signup-form-successful'
+      expect(await screen.findByTestId(testId)).toBeInTheDocument()
+    })
+  })
+
+  describe('interaction', () => {
+    it.each([
+      [
+        'Should display error when email is invalid',
+        'email',
+        'signup-form-email-error',
+      ],
+      [
+        'Should display error when password is invalid',
+        'password',
+        'signup-form-password-error',
+      ],
+      [
+        'Should display error when confirmed password is invalid',
+        'confirmedPassword',
+        'signup-form-confirmed-password-error',
+      ],
+    ])('%s', async (__, omittedFormField, testId) => {
+      // Assembled
+      renderWithProviders(<Signup />)
+      await setupForm(
+        _.filter(formFields, (field) => field !== omittedFormField),
+      )
+
+      // Act
+      await act(() =>
+        fireEvent.click(screen.getByRole('button', { name: 'Submit' })),
+      )
+
+      // Assert
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
   })

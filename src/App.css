@@ -46,6 +46,10 @@
   justify-content: space-between;
 }
 
+.align-self-end {
+  align-self: end;
+}
+
 .bt-none {
   border-top: none;
 }
