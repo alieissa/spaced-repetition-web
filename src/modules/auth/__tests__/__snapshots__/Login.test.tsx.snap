@@ -6,6 +6,25 @@ exports[`Login view should render correctly 1`] = `
     class="ui container"
   >
     <div
+      class="justify-space-between bordered p-1r mb-1r"
+    >
+      <h1
+        class="ui header"
+        style="margin-top: 0px; margin-bottom: 0px;"
+      >
+        Spaced Reps
+      </h1>
+      <div>
+        <button
+          class="ui blue medium button"
+          data-testid="login-form-signup-button"
+          style="border-radius: 0;"
+        >
+          Signup
+        </button>
+      </div>
+    </div>
+    <div
       class="bordered p-1r"
       data-testid="login-form"
     >

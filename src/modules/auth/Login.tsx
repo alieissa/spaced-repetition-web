@@ -6,7 +6,7 @@ import { ChangeEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Container, Form, Loader, Message } from 'semantic-ui-react'
-import { SPButton, SPInput, SPText } from 'src/components'
+import { SPButton, SPHeader, SPInput, SPText } from 'src/components'
 import { styles } from 'src/styles'
 import { async } from 'src/utils'
 import * as Yup from 'yup'
@@ -124,15 +124,29 @@ function Login() {
     form.setFieldValue('password', e.target.value)
   }
 
+  const handleSignupClick = () => navigate('/signup')
+
   const commonProps = {
     form,
     onChangeEmail: handleChangeEmail,
     onChangePassword: handleChangePassword,
-    // onSignup: () => navigate('/signup'),
   }
 
   return (
     <Container>
+      <div className="justify-space-between bordered p-1r mb-1r">
+        <SPHeader as="h1">Spaced Reps</SPHeader>
+        <div>
+          <SPButton
+            data-testid="login-form-signup-button"
+            size="medium"
+            color="blue"
+            onClick={handleSignupClick}
+          >
+            Signup
+          </SPButton>
+        </div>
+      </div>
       {async.match(status)({
         Untriggered: () => (
           <div data-testid="login-form" className="bordered p-1r">
@@ -154,9 +168,7 @@ function Login() {
             <LoginComponent {...commonProps} />
           </div>
         ),
-        Success: () => {
-          return null
-        },
+        Success: () => null,
       })}
     </Container>
   )

@@ -5,7 +5,7 @@ import { noop } from 'lodash'
 import { ChangeEvent } from 'react'
 import { useDispatch } from 'react-redux'
 import { Container, Form, Loader, Message } from 'semantic-ui-react'
-import { SPButton, SPInput, SPText } from 'src/components'
+import { SPButton, SPHeader, SPInput, SPText } from 'src/components'
 import { styles } from 'src/styles'
 import { async } from 'src/utils'
 import * as Yup from 'yup'
@@ -190,6 +190,9 @@ function Signup() {
 
   return (
     <Container>
+      <div className="justify-space-between bordered p-1r mb-1r">
+        <SPHeader as="h1">Spaced Reps</SPHeader>
+      </div>
       {async.match(status)({
         Untriggered: () => (
           <div data-testid="signup-form">

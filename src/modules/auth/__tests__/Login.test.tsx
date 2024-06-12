@@ -136,5 +136,18 @@ describe('Login', () => {
       )
       expect(passwordError).toBeInTheDocument()
     })
+
+    it('Should navigate to signup page when signup button clicked', async () => {
+      // Assemble
+      renderWithProviders(<Login />)
+      await setupForm([])
+
+      // Act
+      const signupBtn = await screen.findByTestId('login-form-signup-button')
+      await act(() => signupBtn.click())
+
+      // Assert
+      await waitFor(() => expect(mockNavigate).toBeCalledWith('/signup'))
+    })
   })
 })
