@@ -1,7 +1,12 @@
 /** @format */
 
 import '@testing-library/jest-dom'
-import { act, screen, waitForElementToBeRemoved } from '@testing-library/react'
+import {
+  act,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
@@ -97,10 +102,11 @@ describe('DecksListPage', () => {
     it('should navigate to first deck when decks', async () => {
       // Assemble
       renderWithProviders(<DecksListPage />)
-      await act(flushPromises)
 
       // Assert
-      expect(mockNavigate).toHaveBeenCalledWith('testDeck0id')
+      await waitFor(() =>
+        expect(mockNavigate).toHaveBeenCalledWith('testDeck0id'),
+      )
     })
 
     it('should NOT attempt to navigate to first deck when decks list is empty', async () => {
