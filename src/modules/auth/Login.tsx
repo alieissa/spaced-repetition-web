@@ -6,7 +6,7 @@ import { ChangeEvent, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Container, Form, Loader, Message } from 'semantic-ui-react'
-import { SPButton, SPHeader, SPInput, SPText } from 'src/components'
+import { SPButton, SPCheckbox, SPHeader, SPInput, SPText } from 'src/components'
 import { styles } from 'src/styles'
 import { async } from 'src/utils'
 import * as Yup from 'yup'
@@ -18,10 +18,11 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().required('Required'),
 })
 type Props = {
-  form: FormikState<NAuth.User>
-  onLogin?: (data: NAuth.User) => void
+  form: FormikState<NAuth.UserForm>
+  onLogin?: (data: NAuth.UserForm) => void
   onChangeEmail: (e: ChangeEvent<HTMLInputElement>) => void
   onChangePassword: (e: ChangeEvent<HTMLInputElement>) => void
+  onChangeRememberMe: VoidFunction
 }
 const LoginComponent = (props: Props) => {
   const emailError = props.form.touched.email && !!props.form.errors.email
@@ -70,13 +71,22 @@ const LoginComponent = (props: Props) => {
             </SPText>
           )}
         </Form.Field>
-        <SPButton
-          type="submit"
-          disabled={props.form.isSubmitting}
-          className="align-self-end"
-        >
-          Login
-        </SPButton>
+        <footer className="align-center justify-space-between">
+          <div className="align-center">
+            <SPCheckbox
+              checked={props.form.values.rememberMe}
+              onChange={props.onChangeRememberMe}
+            />
+            <span className="ml-fourth-r">Remember Me?</span>
+          </div>
+          <SPButton
+            type="submit"
+            disabled={props.form.isSubmitting}
+            className="align-self-end"
+          >
+            Login
+          </SPButton>
+        </footer>
       </Form>
     </>
   )
@@ -87,13 +97,14 @@ function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const handleLogin = (
-    data: NAuth.User,
-    { setSubmitting }: FormikHelpers<NAuth.User>,
+    data: NAuth.UserForm,
+    { setSubmitting }: FormikHelpers<NAuth.UserForm>,
   ) => {
     dispatch({
       type: 'Login',
     })
-    login(data).then((result) => {
+
+    login({ email: data.email, password: data.email }).then((result) => {
       setSubmitting(false)
       dispatch({ type: 'LoggedIn', result })
     })
@@ -103,6 +114,7 @@ function Login() {
     initialValues: {
       password: '',
       email: '',
+      rememberMe: true,
     },
     validationSchema: LoginSchema,
     onSubmit: handleLogin ?? noop,
@@ -124,12 +136,17 @@ function Login() {
     form.setFieldValue('password', e.target.value)
   }
 
+  const handleChangeRememberMe = () => {
+    form.setFieldValue('rememberMe', !form.values.rememberMe)
+  }
+
   const handleSignupClick = () => navigate('/signup')
 
   const commonProps = {
     form,
     onChangeEmail: handleChangeEmail,
     onChangePassword: handleChangePassword,
+    onChangeRememberMe: handleChangeRememberMe,
   }
 
   return (
@@ -155,7 +172,7 @@ function Login() {
         ),
         Loading: () => (
           <div data-testid="login-form-loading" className="bordered p-1r">
-            <Loader active></Loader>
+            <Loader active />
             <LoginComponent {...commonProps} />
           </div>
         ),
