@@ -1,7 +1,6 @@
 /** @format */
 
 import { FormikHelpers, FormikState, useFormik } from 'formik'
-import { noop } from 'lodash'
 import { ChangeEvent } from 'react'
 import { useDispatch } from 'react-redux'
 import { Container, Form, Loader, Message } from 'semantic-ui-react'
@@ -26,7 +25,7 @@ type Props = {
   onChangeEmail: (e: ChangeEvent<HTMLInputElement>) => void
   onChangePassword: (e: ChangeEvent<HTMLInputElement>) => void
   onChangeConfirmedPassword: (e: ChangeEvent<HTMLInputElement>) => void
-  onSignup?: (data: NSignup.User) => void
+  onSignup: VoidFunction
 }
 const SignupComponent = (props: Props) => {
   const emailError = props.form.touched.email && !!props.form.errors.email
@@ -38,8 +37,9 @@ const SignupComponent = (props: Props) => {
 
   return (
     <Form
-      onSubmit={props.onSignup ?? noop}
+      onSubmit={props.onSignup}
       className="flex-column bordered p-1r"
+      name="signup-form"
     >
       <Form.Field>
         <label htmlFor="first name">First name</label>
@@ -160,7 +160,7 @@ function Signup() {
       confirmedPassword: '',
     },
     validationSchema: SignUpSchema,
-    onSubmit: handleSignUp ?? noop,
+    onSubmit: handleSignUp,
   })
 
   const handleChangeFirstName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -186,6 +186,7 @@ function Signup() {
     onChangeEmail: handleChangeEmail,
     onChangePassword: handleChangePassword,
     onChangeConfirmedPassword: handleChangeConfirmedPassword,
+    onSignup: form.submitForm,
   }
 
   return (
@@ -196,7 +197,7 @@ function Signup() {
       {async.match(status)({
         Untriggered: () => (
           <div data-testid="signup-form">
-            <SignupComponent onSignup={form.submitForm} {...commonProps} />
+            <SignupComponent {...commonProps} />
           </div>
         ),
         Loading: () => (

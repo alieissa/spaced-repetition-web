@@ -20,6 +20,7 @@ exports[`Signup view should render correctly 1`] = `
     >
       <form
         class="ui form flex-column bordered p-1r"
+        name="signup-form"
       >
         <div
           class="field"
