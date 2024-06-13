@@ -3,44 +3,137 @@
 exports[`Signup view should render correctly 1`] = `
 <DocumentFragment>
   <div
-    class="ui segment"
-    data-testid="signup-form"
+    class="ui container"
   >
-    <form
-      class="ui form"
+    <div
+      class="justify-space-between bordered p-1r mb-1r"
     >
-      <div
-        class="field"
+      <h1
+        class="ui header"
+        style="margin-top: 0px; margin-bottom: 0px;"
       >
-        <label>
-          Email
-        </label>
-        <input
-          placeholder="Email"
-          title="email"
-          value=""
-        />
-      </div>
-      <div
-        class="field"
+        Spaced Reps
+      </h1>
+    </div>
+    <div
+      data-testid="signup-form"
+    >
+      <form
+        class="ui form flex-column bordered p-1r"
+        name="signup-form"
       >
-        <label>
-          Password
-        </label>
-        <input
-          placeholder="Password"
-          title="password"
-          type="password"
-          value=""
-        />
-      </div>
-      <button
-        class="ui button"
-        type="submit"
-      >
-        Submit
-      </button>
-    </form>
+        <div
+          class="field"
+        >
+          <label
+            for="first name"
+          >
+            First name
+          </label>
+          <div
+            class="ui input"
+            style="opacity: 1;"
+          >
+            <input
+              data-testid="signup-form-first-name-input"
+              placeholder="First name"
+              style="border-radius: unset;"
+              title="first name"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="field"
+        >
+          <label>
+            Last name
+          </label>
+          <div
+            class="ui input"
+            style="opacity: 1;"
+          >
+            <input
+              data-testid="signup-form-last-name-input"
+              placeholder="Last name"
+              style="border-radius: unset;"
+              title="last name"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="field"
+        >
+          <label>
+            Email
+          </label>
+          <div
+            class="ui input"
+            style="opacity: 1;"
+          >
+            <input
+              data-testid="signup-form-email-input"
+              name="email"
+              placeholder="Email"
+              style="border-radius: unset;"
+              title="email"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="field"
+        >
+          <label>
+            Password
+          </label>
+          <div
+            class="ui input"
+            style="opacity: 1;"
+          >
+            <input
+              data-testid="signup-form-password-input"
+              placeholder="Password"
+              style="border-radius: unset;"
+              title="password"
+              type="password"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="field"
+        >
+          <label>
+            Confirm password
+          </label>
+          <div
+            class="ui input"
+            style="opacity: 1;"
+          >
+            <input
+              data-testid="signup-form-confirmed-password-input"
+              placeholder="Confirm password"
+              style="border-radius: unset;"
+              title="confirm password"
+              type="password"
+              value=""
+            />
+          </div>
+        </div>
+        <button
+          class="ui button align-self-end"
+          style="border-radius: 0;"
+          type="submit"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
   </div>
 </DocumentFragment>
 `;

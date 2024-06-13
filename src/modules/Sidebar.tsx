@@ -18,6 +18,7 @@ export default function SPSidebar() {
       return
     }
     navigate('/login')
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logoutStatus.type])
 
   return (

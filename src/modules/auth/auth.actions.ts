@@ -1,6 +1,7 @@
 /** @format */
 
 import { Either } from 'src/utils/either'
+import { NAuth } from './auth.types'
 
 export type Login = {
   type: 'Login'
@@ -8,7 +9,12 @@ export type Login = {
 
 export type LoggedIn = {
   type: 'LoggedIn'
-  result: Either<Error['message'], string>
+  rememberMe: boolean,
+  result: Either<Error['message'], NAuth.UserToken>
+}
+
+export type ResetLogin = {
+  type: 'ResetLogin'
 }
 
 export type Logout = {
@@ -20,4 +26,4 @@ export type LoggedOut = {
   result: Either<Error['message'], string>
 }
 
-export type LoginAction = Login | LoggedIn | Logout | LoggedOut
+export type LoginAction = Login | LoggedIn | ResetLogin | Logout | LoggedOut

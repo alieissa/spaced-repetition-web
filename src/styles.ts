@@ -43,6 +43,9 @@ export const styles: { [key: string]: React.CSSProperties } = {
     marginLeft: 0,
     marginRight: 0,
   },
+  'mt-0.5r': {
+    marginTop: '0.5rem'
+  },
   bgWhite: {
     backgroundColor: 'white',
   },

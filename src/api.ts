@@ -47,7 +47,7 @@ const getAuthHeader = (url: string, token: string | null) => {
 }
 
 const getToken = (token?: string) => {
-  return token || localStorage.getItem('token')
+  return token || localStorage.getItem('token') || sessionStorage.getItem('token')
 }
 
 const getUrl = (url: string) => {
@@ -64,7 +64,7 @@ const getHeaders = (headers: Record<string, string>) => {
   )
 }
 
-export function request<D = {}>(params: UseRequestParams) {
+export function request<D = {}, R=D>(params: UseRequestParams) {
   const token = getToken(params.token)
   const apiUrl = getUrl(params.url)
   const authHeader = getAuthHeader(params.url, token)
@@ -109,17 +109,8 @@ export function request<D = {}>(params: UseRequestParams) {
         
         return r.json()
       })
-      .then((data) => {
-        // TODO Move this to login reducer
-        if (params.url === 'users/login') {
-          localStorage.setItem('token', data.token)
-        }
-        return data
-      })
-      .then((data) => Right<D>(data))
-      .catch((error) => {
-        return Left({ message: error.message, cause: error.cause })
-      })
+      .then((data) => Right<R>(data))
+      .catch((error) => Left({ message: error.message, cause: error.cause }))
   }
 }
 

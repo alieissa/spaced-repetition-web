@@ -11,3 +11,16 @@
 .ui.button.sp-button>i.icon {
   height: 100%;
 }
+
+/* Overriding very spefici Semantic UI css rule */
+.sp-checkbox.ui.checkbox label:before {
+  border-radius: unset;
+  border-color: black;
+  border-top-width: 1px;
+}
+.sp-checkbox.ui.checkbox input:focus~label:before {
+  border-color: initial
+}
+.sp-checkbox.ui.checkbox input:checked~label:before {
+  border-color: initial
+}

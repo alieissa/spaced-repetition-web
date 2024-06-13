@@ -46,6 +46,10 @@
   justify-content: space-between;
 }
 
+.align-self-end {
+  align-self: end;
+}
+
 .bt-none {
   border-top: none;
 }
@@ -53,11 +57,15 @@
 .mx-auto {
   margin-left: auto;
 }
-
+.ml-fourth-r {
+  margin-left: 0.25rem
+}
 .mt-20 {
   margin-top: 20px
 }
-
+.mb-1r {
+  margin-bottom: 1rem;
+}
 .mb-2r {
   margin-bottom: 2rem;
 }
