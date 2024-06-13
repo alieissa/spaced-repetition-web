@@ -113,6 +113,7 @@ function Login() {
   // an infinite loop
   useEffect(() => {
     return () => resetLogin()
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -121,7 +122,6 @@ function Login() {
       return
     }
     navigate('/')
-
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.type])
 

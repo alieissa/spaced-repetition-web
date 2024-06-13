@@ -1,12 +1,7 @@
 /** @format */
 
 import '@testing-library/jest-dom'
-import {
-  act,
-  fireEvent,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react'
+import { act, screen, waitForElementToBeRemoved } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import _ from 'lodash'
 import { rest } from 'msw'
@@ -148,9 +143,8 @@ describe('Signup', () => {
       )
 
       // Act
-      await act(() =>
-        fireEvent.click(screen.getByRole('button', { name: 'Submit' })),
-      )
+      const submitBtn = screen.getByRole('button', { name: 'Submit' })
+      await act(() => submitBtn.click())
 
       // Assert
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
