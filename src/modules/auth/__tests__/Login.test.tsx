@@ -68,7 +68,8 @@ describe('Login', () => {
 
       // Assert
       const testId = 'login-form-loading'
-      expect(await screen.findByTestId(testId)).toBeInTheDocument()
+      const formLoading = await screen.findByTestId(testId)
+      await waitFor(() => expect(formLoading).toBeInTheDocument())
       // See https://davidwcai.medium.com/react-testing-library-and-the-not-wrapped-in-act-errors-491a5629193b
       await waitForElementToBeRemoved(() => screen.queryByTestId(testId))
     })
@@ -89,7 +90,8 @@ describe('Login', () => {
 
       // Assert
       const testId = 'login-form-error'
-      expect(await screen.findByTestId(testId)).toBeInTheDocument()
+      const errorElement = await screen.findByTestId(testId)
+      await waitFor(() => expect(errorElement).toBeInTheDocument())
     })
 
     test('display success', async () => {

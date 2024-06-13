@@ -24,13 +24,20 @@ export default produce((draft: NAuth.State, action: LoginAction) => {
           draft.status = Failure(value)
         },
         Right: ({ value }) => {
+          const storage = action.rememberMe ? localStorage : sessionStorage
+          storage.setItem('token', value.token)
           draft.status = Success(value)
         },
       })
       return
     }
+    case 'ResetLogin': {
+      draft.status = Untriggered()
+      return
+    }
     case 'Logout': {
       localStorage.removeItem('token')
+      sessionStorage.removeItem('token')
       draft.logoutStatus = Loading(null)
       draft.status = Untriggered()
       return

@@ -1,9 +1,7 @@
 /** @format */
 
-import { FormikHelpers, FormikState, useFormik } from 'formik'
-import { noop } from 'lodash'
+import { FormikState, useFormik } from 'formik'
 import { ChangeEvent, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Container, Form, Loader, Message } from 'semantic-ui-react'
 import { SPButton, SPCheckbox, SPHeader, SPInput, SPText } from 'src/components'
@@ -19,7 +17,7 @@ const LoginSchema = Yup.object().shape({
 })
 type Props = {
   form: FormikState<NAuth.UserForm>
-  onLogin?: (data: NAuth.UserForm) => void
+  onLogin: (data: NAuth.UserForm) => void
   onChangeEmail: (e: ChangeEvent<HTMLInputElement>) => void
   onChangePassword: (e: ChangeEvent<HTMLInputElement>) => void
   onChangeRememberMe: VoidFunction
@@ -31,7 +29,10 @@ const LoginComponent = (props: Props) => {
 
   return (
     <>
-      <Form onSubmit={props.onLogin ?? noop} className="flex-column">
+      <Form
+        onSubmit={() => props.onLogin(props.form.values)}
+        className="flex-column bordered p-1r"
+      >
         <Form.Field error={emailError}>
           <label>Email</label>
           <SPInput
@@ -93,22 +94,8 @@ const LoginComponent = (props: Props) => {
 }
 
 function Login() {
-  const { status, login } = useLogin()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const handleLogin = (
-    data: NAuth.UserForm,
-    { setSubmitting }: FormikHelpers<NAuth.UserForm>,
-  ) => {
-    dispatch({
-      type: 'Login',
-    })
-
-    login({ email: data.email, password: data.email }).then((result) => {
-      setSubmitting(false)
-      dispatch({ type: 'LoggedIn', result })
-    })
-  }
+  const [status, login, resetLogin] = useLogin()
 
   const form = useFormik({
     initialValues: {
@@ -117,14 +104,24 @@ function Login() {
       rememberMe: true,
     },
     validationSchema: LoginSchema,
-    onSubmit: handleLogin ?? noop,
+    onSubmit: (data: NAuth.UserForm) => login(data),
   })
 
+  // Very important: Makes sure that when login is mounted
+  // as a result of a redirect from the app the login status
+  // is not success. Without this cleanup code we would have
+  // an infinite loop
   useEffect(() => {
+    return () => resetLogin()
+  }, [])
+
+  useEffect(() => {
+    form.setSubmitting(status.type === 'Loading')
     if (status.type !== 'Success') {
       return
     }
     navigate('/')
+
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status.type])
 
@@ -147,6 +144,7 @@ function Login() {
     onChangeEmail: handleChangeEmail,
     onChangePassword: handleChangePassword,
     onChangeRememberMe: handleChangeRememberMe,
+    onLogin: form.submitForm,
   }
 
   return (
@@ -166,18 +164,18 @@ function Login() {
       </div>
       {async.match(status)({
         Untriggered: () => (
-          <div data-testid="login-form" className="bordered p-1r">
-            <LoginComponent onLogin={form.submitForm} {...commonProps} />
+          <div data-testid="login-form">
+            <LoginComponent {...commonProps} />
           </div>
         ),
         Loading: () => (
-          <div data-testid="login-form-loading" className="bordered p-1r">
+          <div data-testid="login-form-loading">
             <Loader active />
             <LoginComponent {...commonProps} />
           </div>
         ),
         Failure: () => (
-          <div data-testid="login-form-error" className="bordered p-1r">
+          <div data-testid="login-form-error">
             <Message negative>
               <Message.Header>Login failed</Message.Header>
               <p>Please make sure email and/or password are correct</p>
