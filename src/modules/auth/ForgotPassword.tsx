@@ -64,16 +64,20 @@ export default function ForgotPassword() {
     form.submitForm()
   }
 
+  const commonProps = {
+    form: form,
+    onChangeEmail: handleChangeEmail,
+    onNotifyForgotPassword: handleNotifyForgotPassword,
+  }
   return async.match(notifyForgotPasswordStatus)({
-    Untriggered: () => (
-      <ForgotPasswordForm
-        form={form}
-        onChangeEmail={handleChangeEmail}
-        onNotifyForgotPassword={handleNotifyForgotPassword}
-      />
+    Untriggered: () => <ForgotPasswordForm {...commonProps} />,
+    Loading: () => <ForgotPasswordForm {...commonProps} />,
+    Failure: () => (
+      <>
+        <div data-testid="forgot-password-form-error">failure</div>
+        <ForgotPasswordForm {...commonProps} />
+      </>
     ),
-    Loading: () => null,
-    Failure: () => null,
     Success: () => (
       <div data-testid="forgot-password-form-success">success</div>
     ),

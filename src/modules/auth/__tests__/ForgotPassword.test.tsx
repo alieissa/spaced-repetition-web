@@ -57,6 +57,11 @@ describe('ForgotPassword', () => {
 
     it('should display error view', async () => {
       // Assemble
+      server.use(
+        rest.post(forgotPasswordUrl, (__, res, ctx) => {
+          return res(ctx.status(422))
+        }),
+      )
       renderWithProviders(<ForgotPassword />)
       await setupForm(['email'])
 
