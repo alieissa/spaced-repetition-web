@@ -85,7 +85,7 @@ describe('ForgotPassword', () => {
   })
 
   describe('interaction', () => {
-    it.only('should display error when email is invalid', async () => {
+    it('should display error when email is invalid', async () => {
       // Assemble
       renderWithProviders(<ForgotPassword />)
       await setupForm([])

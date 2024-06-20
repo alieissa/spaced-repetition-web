@@ -11,7 +11,7 @@ import { NAuth } from './auth.types'
 export default function useLogin(): [
   Async<null, string, NAuth.UserToken>,
   (form: NAuth.UserForm) => void,
-  VoidFunction
+  VoidFunction,
 ] {
   const dispatch = useDispatch()
   const status = useSelector(Select.status)
@@ -62,22 +62,22 @@ export function useLogout(): [NAuth.State['logoutStatus'], VoidFunction] {
 
 export function useForgotPassword(): [
   NAuth.State['notifyForgotPasswordStatus'],
-  VoidFunction,
+  (data: {email:string}) => void,
 ] {
   const dispatch = useDispatch<Dispatch<LoginAction>>()
   const status = useSelector(Select.notifyForgotPasswordStatus)
 
-  const forgotPasswordCall = api.request<null>({
+  const forgotPasswordCall = api.request<{ email: string }, null>({
     method: 'POST',
-    url: 'users/reset-password',
+    url: 'users/forgot-password',
   })
 
-  const forgotPassword = () => {
+  const forgotPassword = (data: { email: string }) => {
     dispatch({
       type: 'NotifyForgotPassword',
     })
 
-    forgotPasswordCall().then((result) => {
+    forgotPasswordCall(data).then((result) => {
       dispatch({
         type: 'ForgotPasswordNotified',
         result,
