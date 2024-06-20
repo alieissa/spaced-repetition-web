@@ -1,8 +1,10 @@
 /** @format */
 
+import { Dispatch } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
 import { Async } from 'src/utils/async'
+import { LoginAction } from './auth.actions'
 import * as Select from './auth.selectors'
 import { NAuth } from './auth.types'
 
@@ -56,4 +58,32 @@ export function useLogout(): [NAuth.State['logoutStatus'], VoidFunction] {
   }
 
   return [status, logout]
+}
+
+export function useForgotPassword(): [
+  NAuth.State['notifyForgotPasswordStatus'],
+  VoidFunction,
+] {
+  const dispatch = useDispatch<Dispatch<LoginAction>>()
+  const status = useSelector(Select.notifyForgotPasswordStatus)
+
+  const forgotPasswordCall = api.request<null>({
+    method: 'POST',
+    url: 'users/reset-password',
+  })
+
+  const forgotPassword = () => {
+    dispatch({
+      type: 'NotifyForgotPassword',
+    })
+
+    forgotPasswordCall().then((result) => {
+      dispatch({
+        type: 'ForgotPasswordNotified',
+        result,
+      })
+    })
+  }
+
+  return [status, forgotPassword]
 }
