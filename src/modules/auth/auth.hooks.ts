@@ -60,19 +60,20 @@ export function useLogout(): [NAuth.State['logoutStatus'], VoidFunction] {
   return [status, logout]
 }
 
+
 export function useForgotPassword(): [
   NAuth.State['notifyForgotPasswordStatus'],
-  (data: {email:string}) => void,
+  (data: NAuth.ForgotPasswordForm) => void,
 ] {
   const dispatch = useDispatch<Dispatch<LoginAction>>()
   const status = useSelector(Select.notifyForgotPasswordStatus)
 
-  const forgotPasswordCall = api.request<{ email: string }, null>({
+  const forgotPasswordCall = api.request<NAuth.ForgotPasswordForm, null>({
     method: 'POST',
     url: 'users/forgot-password',
   })
 
-  const forgotPassword = (data: { email: string }) => {
+  const forgotPassword = (data: NAuth.ForgotPasswordForm) => {
     dispatch({
       type: 'NotifyForgotPassword',
     })

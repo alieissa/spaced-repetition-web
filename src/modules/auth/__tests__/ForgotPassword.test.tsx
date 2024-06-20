@@ -18,13 +18,13 @@ export const handlers = [
   }),
 ]
 
-const setupForm = async (fields: 'email'[]) => {
+const setupForm = async (emailInput = email) => {
   const user = userEvent.setup()
 
-  if (fields.includes('email')) {
-    const emailInput = screen.getByTestId('forgot-password-form-email-input')
-    await act(() => user.type(emailInput, email))
-  }
+  const emailInputElement = screen.getByTestId(
+    'forgot-password-form-email-input',
+  )
+  await act(() => user.type(emailInputElement, emailInput))
 }
 
 const submitForm = async () => {
@@ -63,7 +63,7 @@ describe('ForgotPassword', () => {
         }),
       )
       renderWithProviders(<ForgotPassword />)
-      await setupForm(['email'])
+      await setupForm()
 
       // Act
       await submitForm()
@@ -74,10 +74,10 @@ describe('ForgotPassword', () => {
       )
     })
 
-    it('should display successful submission message', async () => {
+    it('should display success view', async () => {
       // Assemble
       renderWithProviders(<ForgotPassword />)
-      await setupForm(['email'])
+      await setupForm()
 
       // Act
       await submitForm()
@@ -93,7 +93,7 @@ describe('ForgotPassword', () => {
     it('should display error when email is invalid', async () => {
       // Assemble
       renderWithProviders(<ForgotPassword />)
-      await setupForm([])
+      await setupForm('invalidemail')
 
       // Act
       await submitForm()

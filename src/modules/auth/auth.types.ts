@@ -17,4 +17,7 @@ export namespace NAuth {
   export type UserForm = User & {
     rememberMe: boolean
   }
+  export type ForgotPasswordForm = {
+    email: string
+  }
 }
