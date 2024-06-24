@@ -98,6 +98,9 @@ export function request<D = {}, R=D>(params: UseRequestParams) {
         if (params.url === 'users/logout') {
           return r.text()
         }
+        if (params.url === 'users/forgot-password') {
+          return r.text()
+        }
 
         if (params.url === 'decks/download') {
           return r.text()

@@ -80,7 +80,7 @@ export default function ForgotPassword() {
     onNotifyForgotPassword: handleNotifyForgotPassword,
   }
   return (
-    <Container>
+    <Container data-testid="forgot-password-page">
       <div className="justify-space-between bordered p-1r mb-1r">
         <SPHeader as="h1">Spaced Reps</SPHeader>
       </div>

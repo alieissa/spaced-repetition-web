@@ -28,7 +28,7 @@ const reducers = combineReducers({
   cards: cardsReducer,
 })
 
-const withRedux = (ui: React.ReactElement) => {
+export const withRedux = (ui: React.ReactElement) => {
   const store = configureStore({ reducer: reducers })
   return <Provider store={store}>{ui}</Provider>
 }

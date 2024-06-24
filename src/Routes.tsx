@@ -12,6 +12,7 @@ import {
 import { Signup } from 'src/modules/signup'
 import { Verification } from 'src/modules/verification'
 import SPSidebar from './modules/Sidebar'
+import ForgotPassword from './modules/auth/ForgotPassword'
 import { CardCreateModal, CardDetailsModal } from './modules/cards'
 
 const withSidebar = (Component: JSX.Element) => {
@@ -37,6 +38,7 @@ export default function AppRoutes() {
         </Route>
       </Route>
       <Route path="/verify" element={<Verification />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/" element={<Navigate replace to="/decks" />} />
     </Routes>
   )
