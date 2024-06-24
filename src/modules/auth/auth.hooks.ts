@@ -1,15 +1,18 @@
 /** @format */
 
+import { Dispatch } from '@reduxjs/toolkit'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
 import { Async } from 'src/utils/async'
+import { LoginAction } from './auth.actions'
 import * as Select from './auth.selectors'
 import { NAuth } from './auth.types'
 
 export default function useLogin(): [
   Async<null, string, NAuth.UserToken>,
   (form: NAuth.UserForm) => void,
-  VoidFunction
+  VoidFunction,
 ] {
   const dispatch = useDispatch()
   const status = useSelector(Select.status)
@@ -56,4 +59,40 @@ export function useLogout(): [NAuth.State['logoutStatus'], VoidFunction] {
   }
 
   return [status, logout]
+}
+
+
+export function useForgotPassword(): [
+  NAuth.State['notifyForgotPasswordStatus'],
+  (data: NAuth.ForgotPasswordForm) => void,
+] {
+  const dispatch = useDispatch<Dispatch<LoginAction>>()
+  const status = useSelector(Select.notifyForgotPasswordStatus)
+
+  useEffect(() => {
+    return () => {
+      dispatch({ type: 'ResetNotifyForgotPassword' })
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const forgotPasswordCall = api.request<NAuth.ForgotPasswordForm, null>({
+    method: 'POST',
+    url: 'users/forgot-password',
+  })
+
+  const forgotPassword = (data: NAuth.ForgotPasswordForm) => {
+    dispatch({
+      type: 'NotifyForgotPassword',
+    })
+
+    forgotPasswordCall(data).then((result) => {
+      dispatch({
+        type: 'ForgotPasswordNotified',
+        result,
+      })
+    })
+  }
+
+  return [status, forgotPassword]
 }

@@ -9,6 +9,7 @@ import { NAuth } from './auth.types'
 const initialState: NAuth.State = {
   status: Untriggered(),
   logoutStatus: Untriggered(),
+  notifyForgotPasswordStatus: Untriggered(),
 }
 
 export default produce((draft: NAuth.State, action: LoginAction) => {
@@ -52,6 +53,25 @@ export default produce((draft: NAuth.State, action: LoginAction) => {
         },
       })
 
+      return
+    }
+    case 'NotifyForgotPassword': {
+      draft.notifyForgotPasswordStatus = Loading(null)
+      return
+    }
+    case 'ForgotPasswordNotified': {
+      either.match(action.result)({
+        Right: () => {
+          draft.notifyForgotPasswordStatus = Success(null)
+        },
+        Left: ({ value }) => {
+          draft.notifyForgotPasswordStatus = Failure(value)
+        },
+      })
+      return
+    }
+    case 'ResetNotifyForgotPassword': {
+      draft.notifyForgotPasswordStatus = Untriggered()
       return
     }
   }

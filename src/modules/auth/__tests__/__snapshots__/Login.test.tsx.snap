@@ -69,6 +69,17 @@ exports[`Login view should render correctly 1`] = `
               value=""
             />
           </div>
+          <div
+            class="flex-row-reverse"
+            style="margin-top: 0.5rem;"
+          >
+            <a
+              data-testid="login-form-forgot-password-link"
+              href="/forgot-password"
+            >
+              Forgot password?
+            </a>
+          </div>
         </div>
         <footer
           class="align-center justify-space-between"

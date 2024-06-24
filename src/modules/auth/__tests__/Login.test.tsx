@@ -3,6 +3,7 @@
 import '@testing-library/jest-dom'
 import {
   act,
+  render,
   screen,
   waitFor,
   waitForElementToBeRemoved,
@@ -10,8 +11,15 @@ import {
 import userEvent from '@testing-library/user-event'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import { renderWithProviders } from 'src/utils/test-utils'
+import {
+  RouteObject,
+  RouterProvider,
+  createMemoryRouter,
+} from 'react-router-dom'
+import { renderWithProviders, withRedux } from 'src/utils/test-utils'
+import ForgotPassword from '../ForgotPassword'
 import Login from '../Login'
+
 const mockNavigate = jest.fn(() => ({}))
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -41,6 +49,12 @@ const setupForm = async (fields: ('email' | 'password')[]) => {
   }
 }
 
+// TODO Update renderWithProviders to accept routes instead of a component
+// or move/create this helper to test-util
+const setupRouter = (routes: RouteObject[], initialEntries: string[]) => {
+  const router = createMemoryRouter(routes, { initialEntries })
+  return <RouterProvider router={router} />
+}
 const server = setupServer(...handlers)
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
@@ -150,6 +164,30 @@ describe('Login', () => {
 
       // Assert
       await waitFor(() => expect(mockNavigate).toBeCalledWith('/signup'))
+    })
+
+    it('Should navigate to forgot password page when forgot password link clicked', async () => {
+      // Assemble
+      // Ensures that Login component is rendered by default
+      const initialEntries = ['/login']
+      const routes = [
+        { path: '/login', element: <Login /> },
+        { path: '/forgot-password', element: <ForgotPassword /> },
+      ]
+      render(withRedux(setupRouter(routes, initialEntries)))
+      await setupForm([])
+
+      // Act
+      const forgotPasswordLink = await screen.findByTestId(
+        'login-form-forgot-password-link',
+      )
+      await act(() => forgotPasswordLink.click())
+
+      // Assert
+      const forgotPasswordPage = await screen.findByTestId(
+        'forgot-password-page',
+      )
+      await waitFor(() => expect(forgotPasswordPage).toBeInTheDocument())
     })
   })
 })

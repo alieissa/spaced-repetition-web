@@ -2,7 +2,7 @@
 
 import { FormikState, useFormik } from 'formik'
 import { ChangeEvent, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Container, Form, Loader, Message } from 'semantic-ui-react'
 import { SPButton, SPCheckbox, SPHeader, SPInput, SPText } from 'src/components'
 import { styles } from 'src/styles'
@@ -63,6 +63,14 @@ const LoginComponent = (props: Props) => {
             value={props.form.values.password}
             onChange={props.onChangePassword}
           />
+          <div className="flex-row-reverse" style={styles['mt-0.5r']}>
+            <Link
+              data-testid="login-form-forgot-password-link"
+              to="/forgot-password"
+            >
+              Forgot password?
+            </Link>
+          </div>
           {passwordError && (
             <SPText
               data-testid="login-form-password-error"

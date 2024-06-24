@@ -7,3 +7,7 @@ export const status = (state: RootState) => {
 export const logoutStatus = (state: RootState) => {
   return state.auth.logoutStatus
 }
+
+export const notifyForgotPasswordStatus = (state: RootState) => {
+  return state.auth.notifyForgotPasswordStatus
+}
