@@ -69,10 +69,11 @@ export function useForgotPassword(): [
   const dispatch = useDispatch<Dispatch<LoginAction>>()
   const status = useSelector(Select.notifyForgotPasswordStatus)
 
-  useEffect(() => { 
+  useEffect(() => {
     return () => {
       dispatch({ type: 'ResetNotifyForgotPassword' })
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const forgotPasswordCall = api.request<NAuth.ForgotPasswordForm, null>({

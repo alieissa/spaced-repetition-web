@@ -184,9 +184,10 @@ describe('Login', () => {
       await act(() => forgotPasswordLink.click())
 
       // Assert
-      await waitFor(() =>
-        expect(screen.getByTestId('forgot-password-page')).toBeInTheDocument(),
+      const forgotPasswordPage = await screen.findByTestId(
+        'forgot-password-page',
       )
+      await waitFor(() => expect(forgotPasswordPage).toBeInTheDocument())
     })
   })
 })

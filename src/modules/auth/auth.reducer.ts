@@ -61,7 +61,7 @@ export default produce((draft: NAuth.State, action: LoginAction) => {
     }
     case 'ForgotPasswordNotified': {
       either.match(action.result)({
-        Right: ({}) => {
+        Right: () => {
           draft.notifyForgotPasswordStatus = Success(null)
         },
         Left: ({ value }) => {
