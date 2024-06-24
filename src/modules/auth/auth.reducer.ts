@@ -70,5 +70,9 @@ export default produce((draft: NAuth.State, action: LoginAction) => {
       })
       return
     }
+    case 'ResetNotifyForgotPassword': {
+      draft.notifyForgotPasswordStatus = Untriggered()
+      return
+    }
   }
 }, initialState)

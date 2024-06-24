@@ -1,6 +1,7 @@
 /** @format */
 
 import { Dispatch } from '@reduxjs/toolkit'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as api from 'src/api'
 import { Async } from 'src/utils/async'
@@ -67,6 +68,12 @@ export function useForgotPassword(): [
 ] {
   const dispatch = useDispatch<Dispatch<LoginAction>>()
   const status = useSelector(Select.notifyForgotPasswordStatus)
+
+  useEffect(() => { 
+    return () => {
+      dispatch({ type: 'ResetNotifyForgotPassword' })
+    }
+  }, [])
 
   const forgotPasswordCall = api.request<NAuth.ForgotPasswordForm, null>({
     method: 'POST',
