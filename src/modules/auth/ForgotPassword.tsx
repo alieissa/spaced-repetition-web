@@ -27,10 +27,12 @@ function ForgotPasswordForm(props: Props) {
       onSubmit={props.onNotifyForgotPassword}
     >
       <Form.Field error={emailError}>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="forgot-password-email">Email</label>
         <SPInput
+          id="forgot-password-email"
           data-testid="forgot-password-form-email-input"
           type="email"
+          placeholder="Enter email here"
           value={props.form.values.email}
           onChange={props.onChangeEmail}
         />
