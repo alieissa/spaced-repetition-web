@@ -1,5 +1,5 @@
 import { FormikState, useFormik } from 'formik'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect } from 'react'
 import { Container, Form, Message } from 'semantic-ui-react'
 import { SPButton, SPHeader, SPInput, SPText } from 'src/components'
 import { styles } from 'src/styles'
@@ -101,8 +101,13 @@ export default function ResetPassword() {
       confirmedPassword: '',
     },
     validationSchema: ResetPasswordValidatonSchema,
-    onSubmit: resetPassword,
+    onSubmit: (values: NAuth.ResetPasswordForm) =>
+      resetPassword({ password: values.password }),
   })
+
+  useEffect(() => {
+    form.setSubmitting(resetPasswordStatus.type === 'Loading')
+  }, [resetPasswordStatus])
 
   const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
     form.setFieldValue('password', e.target.value)
@@ -112,15 +117,11 @@ export default function ResetPassword() {
     form.setFieldValue('confirmedPassword', e.target.value)
   }
 
-  const handleResetPassword = () => {
-    resetPassword({ password: form.values.password })
-  }
-
   const commonProps = {
     form: form,
     onChangePassword: handleChangePassword,
     onChangeConfirmedPassword: handleChangeConfirmedPassword,
-    onResetPassword: handleResetPassword,
+    onResetPassword: form.submitForm,
   }
   return (
     <Container>

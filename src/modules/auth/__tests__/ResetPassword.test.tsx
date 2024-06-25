@@ -25,12 +25,12 @@ const setupForm = async ({
 }: NAuth.ResetPasswordForm) => {
   const user = userEvent.setup()
 
-  const passwordInputElement = screen.getByTestId(
+  const passwordInputElement = await screen.findByTestId(
     'reset-password-form-password-input',
   )
   await act(() => user.type(passwordInputElement, password))
 
-  const confirmedPasswordInputElement = screen.getByTestId(
+  const confirmedPasswordInputElement = await screen.findByTestId(
     'reset-password-form-confirmed-password-input',
   )
   await act(() => user.type(confirmedPasswordInputElement, confirmedPassword))
