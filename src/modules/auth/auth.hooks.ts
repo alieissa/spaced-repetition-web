@@ -96,3 +96,39 @@ export function useForgotPassword(): [
 
   return [status, forgotPassword]
 }
+
+type Password = Pick<NAuth.ResetPasswordForm, 'password'>
+export function useResetPassword(): [
+  NAuth.State['resetPasswordStatus'],
+  (data: Password) => void,
+] {
+  const dispatch = useDispatch<Dispatch<LoginAction>>()
+  const status = useSelector(Select.resetPasswordStatus)
+
+  useEffect(() => {
+    return () => {
+      dispatch({ type: 'ResetResetPassword' })
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const resetPasswordCall = api.request<Password, null>({
+    method: 'POST',
+    url: 'users/reset-password',
+  })
+
+  const resetPassword = (data: Password) => {
+    dispatch({
+      type: 'ResetPassword',
+    })
+
+    resetPasswordCall(data).then((result) => {
+      dispatch({
+        type: 'PasswordReset',
+        result,
+      })
+    })
+  }
+
+  return [status, resetPassword]
+}

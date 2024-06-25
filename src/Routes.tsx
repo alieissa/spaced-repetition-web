@@ -1,7 +1,7 @@
 /** @format */
 
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { Login } from 'src/modules/auth'
+import { ForgotPassword, Login, ResetPassword } from 'src/modules/auth'
 import {
   DeckDetails,
   DeckEdit,
@@ -12,7 +12,6 @@ import {
 import { Signup } from 'src/modules/signup'
 import { Verification } from 'src/modules/verification'
 import SPSidebar from './modules/Sidebar'
-import ForgotPassword from './modules/auth/ForgotPassword'
 import { CardCreateModal, CardDetailsModal } from './modules/cards'
 
 const withSidebar = (Component: JSX.Element) => {
@@ -39,6 +38,7 @@ export default function AppRoutes() {
       </Route>
       <Route path="/verify" element={<Verification />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/" element={<Navigate replace to="/decks" />} />
     </Routes>
   )

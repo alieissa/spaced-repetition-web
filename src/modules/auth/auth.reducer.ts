@@ -10,6 +10,7 @@ const initialState: NAuth.State = {
   status: Untriggered(),
   logoutStatus: Untriggered(),
   notifyForgotPasswordStatus: Untriggered(),
+  resetPasswordStatus: Untriggered(),
 }
 
 export default produce((draft: NAuth.State, action: LoginAction) => {
@@ -72,6 +73,25 @@ export default produce((draft: NAuth.State, action: LoginAction) => {
     }
     case 'ResetNotifyForgotPassword': {
       draft.notifyForgotPasswordStatus = Untriggered()
+      return
+    }
+    case 'ResetPassword': {
+      draft.resetPasswordStatus = Loading(null)
+      return
+    }
+    case 'PasswordReset': {
+      either.match(action.result)({
+        Right: () => {
+          draft.resetPasswordStatus = Success(null)
+        },
+        Left: ({ value }) => {
+          draft.resetPasswordStatus = Failure(value)
+        },
+      })
+      return
+    }
+    case 'ResetResetPassword': {
+      draft.resetPasswordStatus = Untriggered()
       return
     }
   }
