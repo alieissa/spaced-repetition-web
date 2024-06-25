@@ -40,6 +40,19 @@ export type ResetNotifyForgotPassword = {
   type: 'ResetNotifyForgotPassword'
 }
 
+type ResetPassword = {
+  type: 'ResetPassword'
+}
+
+type PasswordReset = {
+  type: 'PasswordReset'
+  result: Either<RequestError, null>
+}
+
+type ResetResetPassword = {
+  type: 'ResetResetPassword'
+}
+
 export type LoginAction =
   | Login
   | LoggedIn
@@ -48,4 +61,7 @@ export type LoginAction =
   | LoggedOut
   | NotifyForgotPassword
   | ForgotPasswordNotified
-  |ResetNotifyForgotPassword
+  | ResetNotifyForgotPassword
+  | ResetPassword
+  | PasswordReset
+  | ResetResetPassword

@@ -5,6 +5,7 @@ export namespace NAuth {
     status: Async<null, Error['message'], UserToken>
     logoutStatus: Async<null, Error['message'], string>
     notifyForgotPasswordStatus: Async<null, RequestError, null>
+    resetPasswordStatus: Async<null, RequestError, null>
   }
 
   export type User = {
@@ -19,5 +20,9 @@ export namespace NAuth {
   }
   export type ForgotPasswordForm = {
     email: string
+  }
+  export type ResetPasswordForm = {
+    password: string
+    confirmedPassword: string
   }
 }
