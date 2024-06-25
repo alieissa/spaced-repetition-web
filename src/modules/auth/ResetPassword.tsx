@@ -107,6 +107,7 @@ export default function ResetPassword() {
 
   useEffect(() => {
     form.setSubmitting(resetPasswordStatus.type === 'Loading')
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetPasswordStatus])
 
   const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
