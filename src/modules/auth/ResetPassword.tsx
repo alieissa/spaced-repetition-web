@@ -12,7 +12,7 @@ const ResetPasswordValidatonSchema = Yup.object().shape({
   password: Yup.string()
     .required('Required')
     .min(5, 'Password must be at least 5 characters.'),
-  confirmededPassword: Yup.string().oneOf(
+  confirmedPassword: Yup.string().oneOf(
     [Yup.ref('password')],
     'Passwords must match',
   ),

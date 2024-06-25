@@ -116,8 +116,22 @@ describe('ResetPassword', () => {
       )
     })
 
-    it.todo(
-      'should display error when confirmed password does not match password',
-    )
+    it('should display error when confirmed password does not match password', async () => {
+      // Assemble
+      renderWithProviders(<ResetPassword />)
+      const password = faker.internet.password({ length: 10 })
+      const confirmedPassword = faker.internet.password({ length: 20 })
+      await setupForm({ password, confirmedPassword })
+
+      // Act
+      await submitForm()
+
+      // Assert
+      await waitFor(() =>
+        expectElementToBeInDocument(
+          'reset-password-form-confirmed-password-error',
+        ),
+      )
+    })
   })
 })
