@@ -2,7 +2,7 @@
 
 import { faker } from '@faker-js/faker'
 import '@testing-library/jest-dom'
-import { act, screen } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 
@@ -121,6 +121,21 @@ describe('DeckDetails', () => {
         'deck-delete-confirmation-dialog',
       )
       expect(deckDeleteConfirmation).toBeVisible()
+    })
+
+    it('should display not found component when details not found', async () => {
+      server.use(
+        rest.get(decksUrl, (__, res, ctx) => {
+          return res(ctx.status(404))
+        }),
+      )
+      mountComponent()
+
+      const notFoundElement = await screen.findByTestId(
+        'deck-details-not-found',
+      )
+
+      await waitFor(() => expect(notFoundElement).toBeInTheDocument())
     })
   })
 })

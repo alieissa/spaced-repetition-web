@@ -27,6 +27,8 @@ import * as Select from './decks.selectors'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import NotFound from 'src/NotFound'
+import { isNotFound } from 'src/api'
 import { styles } from 'src/styles'
 import DeckDeleteConfirmationDialog from './DeckDeleteConfirmationDialog'
 import { useDeckById } from './decks.hooks'
@@ -148,8 +150,13 @@ export default function DeckDetails() {
         </>
       )
     },
-    Failure: () => {
-      return (
+    Failure: ({ value: httpError }) => {
+      return isNotFound(httpError) ? (
+        <NotFound
+          data-testid="deck-details-not-found"
+          message={`Deck ${params.deckId!} details not found`}
+        />
+      ) : (
         <Message negative data-testid="deck-details-failure">
           <MessageHeader>Error: Unable to load deck details</MessageHeader>
         </Message>
