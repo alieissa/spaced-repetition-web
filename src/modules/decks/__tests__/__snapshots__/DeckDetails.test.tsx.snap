@@ -12,7 +12,7 @@ exports[`DeckDetails view should render correctly 1`] = `
       <div
         class="justify-space-between"
         style="padding: 1rem 1rem 1rem 2rem; line-height: 2rem; border-bottom: 1px solid;"
-        title="Test name"
+        title="Test name5"
       >
         <div
           class="align-center"
@@ -21,7 +21,7 @@ exports[`DeckDetails view should render correctly 1`] = `
             class="ui header"
             style="font-size: 1.5rem; margin-top: 0px; margin-bottom: 0px;"
           >
-            Test name
+            Test name5
           </div>
         </div>
         <div>

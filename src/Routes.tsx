@@ -11,6 +11,7 @@ import {
 } from 'src/modules/decks'
 import { Signup } from 'src/modules/signup'
 import { Verification } from 'src/modules/verification'
+import NotFound from './NotFound'
 import SPSidebar from './modules/Sidebar'
 import { CardCreateModal, CardDetailsModal } from './modules/cards'
 
@@ -40,6 +41,7 @@ export default function AppRoutes() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/" element={<Navigate replace to="/decks" />} />
+      <Route path="*" element={withSidebar(<NotFound />)} />
     </Routes>
   )
 }

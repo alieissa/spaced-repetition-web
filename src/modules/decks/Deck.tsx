@@ -19,7 +19,7 @@ export default function Deck(props: NDecks.Deck & CardProps) {
   return (
     <SPCard className={clsx('pointer', props.className)} style={styles}>
       <SPCardContent onClick={() => navigate(`/decks/${props.id}`)}>
-        <SPCardHeader size="big">{props.name}</SPCardHeader>
+        <SPCardHeader size="large">{props.name}</SPCardHeader>
         <Card.Description>{props.description}</Card.Description>
       </SPCardContent>
     </SPCard>

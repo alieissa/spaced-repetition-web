@@ -83,7 +83,7 @@ exports[`DecksListPage view should render correctly 1`] = `
                       class="content"
                     >
                       <div
-                        class="ui big header"
+                        class="ui large header"
                         style="margin-top: 0px; margin-bottom: 0px;"
                       >
                         Test Deck

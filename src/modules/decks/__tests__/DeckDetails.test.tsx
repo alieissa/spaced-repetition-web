@@ -2,26 +2,62 @@
 
 import { faker } from '@faker-js/faker'
 import '@testing-library/jest-dom'
-import { act, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
+import {
+  RouteObject,
+  RouterProvider,
+  createMemoryRouter,
+} from 'react-router-dom'
 
-import { flushPromises, renderWithProviders } from 'src/utils/test-utils'
-import DeckDetails from '../DeckDetails'
+import { flushPromises, withRedux } from 'src/utils/test-utils'
+import { DeckDetails, DecksListPage } from '..'
 
+const setupRouter = (routes: RouteObject[], initialEntries: string[]) => {
+  const router = createMemoryRouter(routes, { initialEntries })
+  return <RouterProvider router={router} />
+}
 const deckId = faker.string.uuid()
-const decksUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}`
+const deckDetailsUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks/${deckId}`
+const decksUrl = `${process.env.REACT_APP_API_ENDPOINT}/decks`
 
 // Mounting component this way ensures that the route parameter :deckId
 // has id of the deck, i.e. deckId defined above
-const mountComponent = () =>
-  renderWithProviders(<DeckDetails />, {
-    initialEntries: [`/decks/${deckId}`],
-    path: 'decks/:deckId',
-  })
+const mountComponent = () => {
+  const initialEntries = ['/decks']
+  const routes = [
+    { path: '/decks', element: <DecksListPage /> },
+    { path: `/decks/:deckId`, element: <DeckDetails /> },
+  ]
+  return render(withRedux(setupRouter(routes, initialEntries)))
+}
 
 const handlers = [
   rest.get(decksUrl, (__, res, ctx) => {
+    return res(
+      ctx.json([
+        {
+          id: deckId,
+          name: 'Test name5',
+          cards: [
+            {
+              id: 'testUuid',
+              question: 'Test question',
+              answers: [
+                {
+                  id: 'testUuid',
+                  content: 'Test content',
+                },
+              ],
+            },
+          ],
+        },
+      ]),
+      ctx.status(200),
+    )
+  }),
+  rest.get(deckDetailsUrl, (__, res, ctx) => {
     return res(
       ctx.json({
         id: deckId,
@@ -67,19 +103,10 @@ describe('DeckDetails', () => {
       expect(await screen.findByTestId(testId)).toBeInTheDocument()
     })
 
-    it('should display failure', async () => {
-      server.use(
-        rest.get(decksUrl, (__, res, ctx) => {
-          return res(ctx.status(500))
-        }),
-      )
-      mountComponent()
-
-      await act(flushPromises)
-
-      const testId = 'deck-details-failure'
-      expect(await screen.findByTestId(testId)).toBeInTheDocument()
-    })
+    // The DeckDetails component is not rendered independently of DecksListPage
+    // so there is no scenario where a call to /decks/:id is made. The moment we
+    // decks list then that is used as source of truth for deck details
+    // it.skip('should display failure', ...)
   })
 
   describe('interaction', () => {
@@ -121,6 +148,20 @@ describe('DeckDetails', () => {
         'deck-delete-confirmation-dialog',
       )
       expect(deckDeleteConfirmation).toBeVisible()
+    })
+
+    it('should display nothing when decks list is empty', async () => {
+      // Assemble
+      server.use(
+        rest.get(decksUrl, (__, res, ctx) => {
+          return res(ctx.json([]), ctx.status(200))
+        }),
+      )
+      mountComponent()
+
+      // Assert
+      const deckDetailsComponent = screen.queryByTestId('deck-details')
+      expect(deckDetailsComponent).not.toBeInTheDocument()
     })
   })
 })

@@ -1,6 +1,7 @@
 /** @format */
 // TODO Add type guards to detect HTTP error type
 
+import { RequestError } from './types'
 import { Left, Right } from './utils/either'
 
 type UseRequestParams = {
@@ -10,7 +11,7 @@ type UseRequestParams = {
   token?: string
 }
 
-export const isUnauthorized = (httpError: any) => {
+export const isUnauthorized = (httpError: RequestError) => {
   if (httpError.cause === 401) {
     return true
   }

@@ -5,10 +5,11 @@ import { createSelector } from 'reselect'
 import { RootState } from 'src/types'
 import { Untriggered } from 'src/utils/async'
 import { NDecks } from './decks.types'
+const selectDecks = (state: RootState) => state.decks
 
-export function decks(state: RootState) {
-  return _.values(state.decks.decks)
-}
+export const decks = createSelector([selectDecks], (decks: NDecks.State) =>
+  _.values(decks.decks),
+)
 
 export function status(state: RootState) {
   return state.decks.status
@@ -45,7 +46,6 @@ export const deleteStatus = (id: NDecks.Deck['id']) =>
       deleteStatus[id] || Untriggered(),
   )
 
-const selectDecks = (state: RootState) => state.decks
 export const uploadDecksStatus = createSelector(
   [selectDecks],
   (decks) => decks.uploadDecksStatus,
