@@ -27,12 +27,34 @@ import * as Select from './decks.selectors'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import NotFound from 'src/NotFound'
-import { isNotFound } from 'src/api'
 import { styles } from 'src/styles'
 import DeckDeleteConfirmationDialog from './DeckDeleteConfirmationDialog'
 import { useDeckById } from './decks.hooks'
 import { NDecks } from './decks.types'
+
+type MenuProps = DropdownProps & {
+  onDelete: VoidFunction
+}
+function DeckMenu(props: MenuProps) {
+  return (
+    <Dropdown
+      data-testid="deck-details-dropdown"
+      className="align-center"
+      style={{ ...styles.inlineFlex, ...styles.alignCenter }}
+      icon={<Icon name="ellipsis vertical" style={styles.hFull} />}
+    >
+      <DropdownMenu data-testid="deck-details-dropdown-menu" direction="left">
+        <DropdownItem
+          data-testid="deck-menu-delete-option"
+          style={styles.colorRed}
+          text="Delete"
+          color="red"
+          onClick={props.onDelete}
+        />
+      </DropdownMenu>
+    </Dropdown>
+  )
+}
 
 type DeckDetailsProps = NDecks.Deck & {
   onAddCard: VoidFunction
@@ -103,25 +125,24 @@ function DeckDetailsComponent(props: DeckDetailsProps) {
  * This component displays the details of a deck, including cards of the deck.
  * When a user clicks on a card a modal with the card details is opened.
  */
-export default function DeckDetails() {
+function DeckDetails(props: { deckId: string }) {
   const navigate = useNavigate()
-  const params = useParams<{ deckId: string }>()
-  const { status: loadDeckStatus, deck } = useDeckById(params.deckId!)
+  const { status: loadDeckStatus, deck } = useDeckById(props.deckId)
   const [isDeleteConfirmationDialogOpen, setIsDeleteConfirmationDialogOpen] =
     useState(false)
 
-  const handleEdit = () => navigate(`/decks/${params.deckId}/edit`)
+  const handleEdit = () => navigate(`/decks/${props.deckId}/edit`)
 
-  const handleTest = () => navigate(`/decks/${params.deckId}/test`)
+  const handleTest = () => navigate(`/decks/${props.deckId}/test`)
 
   const handleDelete = () => setIsDeleteConfirmationDialogOpen(true)
   const handleCancelDelete = () => setIsDeleteConfirmationDialogOpen(false)
 
   const handleClickCard = (cardId: string) =>
-    navigate(`/decks/${params.deckId}/cards/${cardId}`)
+    navigate(`/decks/${props.deckId}/cards/${cardId}`)
 
-  const handleAddCard = () => navigate(`/decks/${params.deckId}/cards/new`)
-
+  const handleAddCard = () => navigate(`/decks/${props.deckId}/cards/new`)
+  console.log('load status', loadDeckStatus)
   return async.match(loadDeckStatus)({
     Untriggered: () => null,
     Loading: () => null,
@@ -150,13 +171,8 @@ export default function DeckDetails() {
         </>
       )
     },
-    Failure: ({ value: httpError }) => {
-      return isNotFound(httpError) ? (
-        <NotFound
-          data-testid="deck-details-not-found"
-          message={`Deck ${params.deckId!} details not found`}
-        />
-      ) : (
+    Failure: () => {
+      return (
         <Message negative data-testid="deck-details-failure">
           <MessageHeader>Error: Unable to load deck details</MessageHeader>
         </Message>
@@ -165,26 +181,12 @@ export default function DeckDetails() {
   })
 }
 
-type MenuProps = DropdownProps & {
-  onDelete: VoidFunction
-}
-function DeckMenu(props: MenuProps) {
-  return (
-    <Dropdown
-      data-testid="deck-details-dropdown"
-      className="align-center"
-      style={{ ...styles.inlineFlex, ...styles.alignCenter }}
-      icon={<Icon name="ellipsis vertical" style={styles.hFull} />}
-    >
-      <DropdownMenu data-testid="deck-details-dropdown-menu" direction="left">
-        <DropdownItem
-          data-testid="deck-menu-delete-option"
-          style={styles.colorRed}
-          text="Delete"
-          color="red"
-          onClick={props.onDelete}
-        />
-      </DropdownMenu>
-    </Dropdown>
-  )
+export default function Test12() {
+  const decks = useSelector(Select.decks)
+  const params = useParams<{ deckId: string }>()
+  if (decks.length === 0) {
+    return null
+  }
+
+  return <DeckDetails deckId={params.deckId!} />
 }

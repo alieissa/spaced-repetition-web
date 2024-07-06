@@ -1,13 +1,9 @@
-import _ from 'lodash'
+import { Header } from 'semantic-ui-react'
 
-type Props = {
-  message: string
-}
-export default function NotFound(props: Props) {
+export default function NotFound() {
   return (
-    <div {..._.omit(props, 'message')}>
-      not found
-      <div>{props.message}</div>
+    <div className="h-full align-center justify-center">
+      <Header>Page Not Found.</Header>
     </div>
   )
 }

@@ -36,13 +36,12 @@ export default function AppRoutes() {
         <Route path=":deckId" element={<DeckDetails />}>
           <Route path="cards/new" element={<CardCreateModal />} />
           <Route path="cards/:cardId" element={<CardDetailsModal />} />
-          <Route path="*" element={<NotFound message="Deck not found" />} />
         </Route>
       </Route>
       <Route path="/verify" element={<Verification />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/" element={<Navigate replace to="/decks" />} />
-      <Route path="*" element={<NotFound message="Page Not found" />} />
+      <Route path="*" element={withSidebar(<NotFound />)} />
     </Routes>
   )
 }
