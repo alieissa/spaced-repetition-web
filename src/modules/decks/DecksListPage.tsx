@@ -1,9 +1,7 @@
 /** @format */
 
-import _ from 'lodash'
-import { PropsWithChildren, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { PropsWithChildren, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
   Grid,
@@ -15,29 +13,37 @@ import {
   Segment,
 } from 'semantic-ui-react'
 import 'src/App.css'
-import { isUnauthorized } from 'src/api'
-import { CreateButton, SPHeader, SPList } from 'src/components'
+import {
+  CreateButton,
+  SPHeader,
+  SPList,
+  SPListItem,
+  UploadButton,
+} from 'src/components'
 import { styles } from 'src/styles'
-import { async } from 'src/utils'
+import Deck from './Deck'
+import DeckDetails from './DeckDetails'
 import DecksDownload from './DecksDownload'
-import DecksListItem from './DecksListItem'
 import DecksUploadModal from './DecksUploadModal'
-import { useDecks } from './decks.hooks'
-import * as Select from './decks.selectors'
+import { useDecksQuery } from './decks.hooks'
 import { NDecks } from './decks.types'
 
-type Props = {
-  decks: Record<NDecks.Deck['id'], NDecks.Deck>
-}
-
 function DecksHeader() {
+  const [isUploadModalOPen, setIsUploadModalOpen] = useState(false)
+
   return (
     <div className="justify-space-between bordered p-1r">
       <SPHeader as="h1">Decks</SPHeader>
       <div>
         <CreateButton createLink="/decks/new" />
         <DecksDownload />
-        <DecksUploadModal />
+        <UploadButton
+          data-testid="decks-upload-modal-btn"
+          onClick={() => setIsUploadModalOpen(true)}
+        />
+        {isUploadModalOPen && (
+          <DecksUploadModal onClose={() => setIsUploadModalOpen(false)} />
+        )}
       </div>
     </div>
   )
@@ -55,7 +61,7 @@ function DecksEmpty() {
   )
 }
 
-function DecksComponent(props: PropsWithChildren<any>) {
+function DecksComponent(props: PropsWithChildren<{ deck: NDecks.Deck }>) {
   return (
     <div
       data-testid="decks-list-success"
@@ -70,7 +76,7 @@ function DecksComponent(props: PropsWithChildren<any>) {
           </GridColumn>
           <GridColumn width={12} style={styles['pr-0']}>
             <div className="bordered">
-              <Outlet />
+              <DeckDetails id={props.deck.id} />
             </div>
           </GridColumn>
         </GridRow>
@@ -86,63 +92,57 @@ function DecksComponent(props: PropsWithChildren<any>) {
  */
 export default function Decks() {
   const navigate = useNavigate()
-  const [status, decks] = useDecks()
+  const { status, data } = useDecksQuery()
+
+  const [activeDeck, setActiveDeck] = useState(data?.data[0])
 
   useEffect(() => {
-    async.match(status)({
-      Untriggered: () => null,
-      Loading: () => null,
-      Success: () => {
-        if (_.isEmpty(decks)) {
-          return
-        }
+    switch (status) {
+      case 'idle':
+      case 'loading':
+        return
+      case 'success':
+        const decks = data.data
+        if (decks.length == 0) return
         navigate(`${decks[0].id}`)
-      },
-      Failure: ({ value }) => {
-        if (isUnauthorized(value)) {
-          // TODO Add query params so that message for navigation resulting from
-          // 401 is displayed
-          navigate('/login')
-        }
-      },
-    })
+    }
+
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status.type])
+  }, [status])
 
-  return async.match(status)({
-    Untriggered: () => null,
-    Failure: ({ value }) => {
-      if (isUnauthorized(value)) {
-        // This case is handled in useEffect
-        return null
-      }
-
+  switch (status) {
+    case 'idle': {
+      return null
+    }
+    case 'error': {
       return <Segment data-testid="decks-list-failure"></Segment>
-    },
-    Loading: () => (
-      <Segment data-testid="decks-list-loading">
-        <Loader active></Loader>
-      </Segment>
-    ),
-    Success: () => (
-      <DecksComponent decks={decks}>
-        <div className="bordered">
-          {_.isEmpty(decks) ? (
-            <DecksEmpty />
-          ) : (
-            <SPList divided relaxed>
-              {_.map(_.values(decks), (d) => (
-                <DecksListItemContainer {...d} key={d.id} />
-              ))}
-            </SPList>
-          )}
-        </div>
-      </DecksComponent>
-    ),
-  })
-}
-
-function DecksListItemContainer(props: NDecks.Deck) {
-  const deleteStatus = useSelector(Select.deleteStatus(props.id))
-  return <DecksListItem {...props} disabled={deleteStatus.type === 'Success'} />
+    }
+    case 'loading': {
+      return (
+        <Segment data-testid="decks-list-loading">
+          <Loader active></Loader>
+        </Segment>
+      )
+    }
+    case 'success': {
+      const decks = data.data
+      return (
+        <DecksComponent deck={activeDeck!}>
+          <div className="bordered">
+            {decks.length == 0 ? (
+              <DecksEmpty />
+            ) : (
+              <SPList divided relaxed>
+                {decks.map((d) => (
+                  <SPListItem>
+                    <Deck {...d} onClick={() => setActiveDeck(decks[0])} />
+                  </SPListItem>
+                ))}
+              </SPList>
+            )}
+          </div>
+        </DecksComponent>
+      )
+    }
+  }
 }

@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { MutationStatus } from 'react-query'
 import { Message } from 'semantic-ui-react'
 import {
   SPButton,
@@ -8,31 +7,16 @@ import {
   SPModalContent,
   SPModalHeader,
 } from 'src/components'
-import { async } from 'src/utils'
-import { useDeleteDeck } from './decks.hooks'
 
 type Props = {
   name: string
   open: boolean
+  status: MutationStatus
   onCancel: VoidFunction
   onClose: VoidFunction
+  onConfirm: VoidFunction
 }
 export default function DeckDeleteConfirmationDialog(props: Props) {
-  const params = useParams()
-  const [deleteStatus, deleteDeck] = useDeleteDeck(params.deckId!)
-
-  useEffect(() => {
-    if (deleteStatus.type !== 'Success') {
-      return
-    }
-
-    // Same behaviour as close
-    props.onClose()
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteStatus.type])
-
-  const handleConfirm = deleteDeck
-
   return (
     <SPModal
       data-testid="deck-delete-confirmation-dialog"
@@ -41,16 +25,11 @@ export default function DeckDeleteConfirmationDialog(props: Props) {
       onClose={props.onClose}
     >
       <SPModalHeader>Delete Deck</SPModalHeader>
-      {async.match(deleteStatus)({
-        Untriggered: () => null,
-        Loading: () => null,
-        Success: () => null,
-        Failure: () => (
-          <SPModalContent>
-            <Message data-testid="deck-delete-error" />
-          </SPModalContent>
-        ),
-      })}
+      {props.status === 'error' && (
+        <SPModalContent>
+          <Message data-testid="deck-delete-error" />
+        </SPModalContent>
+      )}
 
       <SPModalContent>
         Are you sure you want to delete {props.name}?
@@ -60,7 +39,7 @@ export default function DeckDeleteConfirmationDialog(props: Props) {
         <SPButton
           data-testid="deck-delete-confirm-btn"
           color="red"
-          onClick={handleConfirm}
+          onClick={props.onConfirm}
         >
           Confirm
         </SPButton>

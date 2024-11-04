@@ -1,81 +1,60 @@
 /** @format */
 
 import { ChangeEvent, useEffect, useState } from 'react'
-import { Loader, Message } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 import 'src/App.css'
 import FileSelector from 'src/components/FileSelector'
-import { async } from 'src/utils'
 import {
   SPButton,
   SPModal,
   SPModalActions,
   SPModalContent,
   SPModalHeader,
-  UploadButton,
 } from '../../components'
-import { useUploadDecks } from './decks.hooks'
+import { useUploadDecksMutation } from './decks.hooks'
 /**
  * This component contains the modal and the button that is used to toggle
  * the modal.
  */
-export default function DecksUploadModal() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+export default function DecksUploadModal(props: { onClose: VoidFunction }) {
   const [file, setFile] = useState<File | null>()
-  const [uploadDecksStatus, uploadDecks, resetUploadDecks] = useUploadDecks()
-  const isUploading = uploadDecksStatus.type === 'Loading'
+  const uploadDecksMutation = useUploadDecksMutation()
 
   const handleFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files![0])
   }
 
   const handleFileUpload = () => {
-    uploadDecks(file!)
-  }
-
-  const handleCloseModal = () => {
-    setFile(null)
-    resetUploadDecks()
-    setIsModalOpen(false)
+    uploadDecksMutation.mutate(file!)
   }
 
   useEffect(() => {
-    if (uploadDecksStatus.type === 'Success') {
-      handleCloseModal()
+    if (uploadDecksMutation.status === 'success') {
+      props.onClose()
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uploadDecksStatus.type])
+  }, [uploadDecksMutation.status])
 
+  const renderErrorMessage = () => {
+    return (
+      <Message negative className="w-inherit" data-testid="decks-upload-error">
+        <Message.Header>Upload failed</Message.Header>
+        <p>Please try again.</p>
+      </Message>
+    )
+  }
   return (
     <>
-      <UploadButton
-        data-testid="decks-upload-modal-btn"
-        onClick={() => setIsModalOpen(true)}
-      />
       <SPModal
         dimmer="inverted"
         size="tiny"
-        open={isModalOpen}
+        open={true}
         data-testid="decks-upload-modal"
-        onClose={handleCloseModal}
+        onClose={props.onClose}
       >
         <SPModalHeader>Upload Decks</SPModalHeader>
         <SPModalContent className="flex-column align-center justify-center">
-          {async.match(uploadDecksStatus)({
-            Untriggered: () => null,
-            Loading: () => <Loader active data-testid="decks-upload-loader" />,
-            Success: () => null,
-            Failure: () => (
-              <Message
-                negative
-                className="w-inherit"
-                data-testid="decks-upload-error"
-              >
-                <Message.Header>Upload failed</Message.Header>
-                <p>Please try again.</p>
-              </Message>
-            ),
-          })}
-
+          {uploadDecksMutation.status === 'error' && renderErrorMessage()}
           <SPModalContent className="pb-10">
             <p>Select file the file containing the decks</p>
           </SPModalContent>
@@ -86,7 +65,10 @@ export default function DecksUploadModal() {
           />
         </SPModalContent>
         <SPModalActions>
-          <SPButton disabled={isUploading} onClick={handleCloseModal}>
+          <SPButton
+            disabled={uploadDecksMutation.status === 'loading'}
+            onClick={props.onClose}
+          >
             Cancel
           </SPButton>
           <SPButton

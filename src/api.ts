@@ -1,8 +1,19 @@
 /** @format */
 // TODO Add type guards to detect HTTP error type
 
+import axios from 'axios'
 import { RequestError } from './types'
 import { Left, Right } from './utils/either'
+
+const token = localStorage.getItem('token') || sessionStorage.getItem('token') || ''
+
+export const axiosInstance = axios.create({
+  baseURL: process.env.REACT_APP_API_ENDPOINT,
+  headers: {
+    Authorization: `Bearer ${token}`,
+    Accept: 'application/json, plain/text',
+  },
+})
 
 type UseRequestParams = {
   url: Request['url']
@@ -48,7 +59,9 @@ const getAuthHeader = (url: string, token: string | null) => {
 }
 
 const getToken = (token?: string) => {
-  return token || localStorage.getItem('token') || sessionStorage.getItem('token')
+  return (
+    token || localStorage.getItem('token') || sessionStorage.getItem('token')
+  )
 }
 
 const getUrl = (url: string) => {
@@ -65,7 +78,7 @@ const getHeaders = (headers: Record<string, string>) => {
   )
 }
 
-export function request<D = {}, R=D>(params: UseRequestParams) {
+export function request<D = {}, R = D>(params: UseRequestParams) {
   const token = getToken(params.token)
   const apiUrl = getUrl(params.url)
   const authHeader = getAuthHeader(params.url, token)
@@ -110,7 +123,7 @@ export function request<D = {}, R=D>(params: UseRequestParams) {
         if (params.method === 'DELETE') {
           return r.text()
         }
-        
+
         return r.json()
       })
       .then((data) => Right<R>(data))
@@ -125,12 +138,12 @@ export function upload<D = FormData>(params: Omit<UseRequestParams, 'method'>) {
   const headers = getHeaders(authHeader!)
 
   return (file: D) => {
-    const init = { method: "POST", headers, body: file }
+    const init = { method: 'POST', headers, body: file }
 
     return fetch(apiUrl, init as RequestInit)
       .then(isResponse4xx)
       .then(isResponse5xx)
       .then(() => Right(null))
-      .catch((error) =>  Left({ message: error.message, cause: error.cause }))
+      .catch((error) => Left({ message: error.message, cause: error.cause }))
   }
 }

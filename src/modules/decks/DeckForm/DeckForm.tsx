@@ -2,6 +2,7 @@
 
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
+import { MutationStatus } from 'react-query'
 import { Message, MessageHeader, Segment } from 'semantic-ui-react'
 import {
   CardForm,
@@ -12,8 +13,6 @@ import {
 } from 'src/components'
 import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
-import { RequestError } from 'src/types'
-import { async } from 'src/utils'
 import { NDecks } from '../decks.types'
 import {
   addAnswer,
@@ -48,7 +47,7 @@ type Props = {
   deck: NDecks.Deck
   successMessage: string
   failureMessage: string
-  submitStatus: async.Async<null, RequestError, null>
+  submitStatus: MutationStatus
   onCancel?: VoidFunction
   onSubmit: (deck: any) => void
 }
@@ -63,8 +62,7 @@ export default function DeckForm(props: Props) {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.deck])
 
-  const isUpdating =
-    displaySubmissionStatus && props.submitStatus.type === 'Loading'
+  const isUpdating = displaySubmissionStatus && props.submitStatus === 'loading'
 
   const handleChangeDeckName = (e: any) => {
     changeDeck(localDispatch, {
@@ -108,6 +106,28 @@ export default function DeckForm(props: Props) {
     addCard(localDispatch)
   }
 
+  const renderMessage = () => {
+    switch (props.submitStatus) {
+      case 'idle':
+      case 'loading':
+        return null
+      case 'success': {
+        return (
+          <Message positive data-testid="deck-submission-success">
+            <MessageHeader>{props.successMessage}</MessageHeader>
+          </Message>
+        )
+      }
+      case 'error': {
+        return (
+          <Message negative data-testid="deck-submission-failure">
+            <MessageHeader>{props.failureMessage}</MessageHeader>
+          </Message>
+        )
+      }
+    }
+  }
+
   return (
     <>
       {displayValidationError && (
@@ -116,21 +136,7 @@ export default function DeckForm(props: Props) {
           <p>Enter valid input and try again</p>
         </Message>
       )}
-      {displaySubmissionStatus &&
-        async.match(props.submitStatus)({
-          Untriggered: () => null,
-          Loading: () => null,
-          Success: () => (
-            <Message positive data-testid="deck-submission-success">
-              <MessageHeader>{props.successMessage}</MessageHeader>
-            </Message>
-          ),
-          Failure: () => (
-            <Message negative data-testid="deck-submission-failure">
-              <MessageHeader>{props.failureMessage}</MessageHeader>
-            </Message>
-          ),
-        })}
+      {displaySubmissionStatus && renderMessage()}
       <div>
         <div>
           <SPInput

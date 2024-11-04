@@ -1,7 +1,7 @@
 /** @format */
 
+import { AxiosInstance } from 'axios'
 import { NAuth } from 'src/modules/auth'
-import { NDecks } from 'src/modules/decks/decks.types'
 import { NSignup } from 'src/modules/signup'
 import { NCards } from './modules/cards'
 import { NVerification } from './modules/verification/verification.types'
@@ -24,8 +24,12 @@ export type RequestError = { message: string; cause?: number }
 
 export type RootState = {
   cards: NCards.State
-  decks: NDecks.State
   auth: NAuth.State
   signup: NSignup.State
   verification: NVerification.State
+}
+
+
+export type AppContext = {
+  api: AxiosInstance
 }
