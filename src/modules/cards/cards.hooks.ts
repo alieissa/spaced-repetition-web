@@ -18,11 +18,10 @@ export function useCheckAnswerMutation() {
   
 }
 
-//TODO replace any type with Card
 export function useCreateCardMutation() {
   const { api: api_ } = useAppContext();
   
-  const mutation = useMutation({ mutationFn: (data: any) => api_.post('cards', data) })
+  const mutation = useMutation({ mutationFn: (data: Card) => api_.post('cards', data) })
   return mutation
 }
 

@@ -1,7 +1,7 @@
 /** @format */
 
 import { uniqueId } from 'lodash'
-import { useEffect } from 'react'
+import { MutationStatus } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Message } from 'semantic-ui-react'
 import {
@@ -12,17 +12,20 @@ import {
   SPModalHeader,
 } from 'src/components'
 import CardForm from './CardForm'
-import { useCardForm, useCreateCardMutation } from './cards.hooks'
+import { useCardForm } from './cards.hooks'
 
 /**
  * This component contains the create card modal and the button that is used to toggle
  * the modal.
  */
-//TODO Move close/open logic to parent component
-export default function CardCreateModal() {
+type Props = {
+  submitStatus: MutationStatus
+  onSubmit: (data: any) => void
+  onClose: VoidFunction
+}
+export default function NewCardModal(props: Props) {
   const params = useParams()
   const navigate = useNavigate()
-  const createCardMutation = useCreateCardMutation()
 
   const initCard = {
     deckId: uniqueId(),
@@ -39,27 +42,20 @@ export default function CardCreateModal() {
     handleChangeAnswer,
     handleChangeQuestion,
   } = useCardForm(initCard, () => {
-    createCardMutation.mutate(form.values)
+    props.onSubmit(form.values)
   })
 
   const handleCloseModal = () => navigate(-1)
-
-  useEffect(() => {
-    if (createCardMutation.status === 'success') {
-      handleCloseModal()
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createCardMutation.status])
 
   return (
     <SPModal
       data-testid="card-create-modal"
       open={true}
-      onClose={handleCloseModal}
+      onClose={props.onClose}
     >
       <SPModalHeader>Create Card</SPModalHeader>
       <SPModalContent className="flex-column align-center justify-center">
-        {createCardMutation.status === 'error' && (
+        {props.submitStatus === 'error' && (
           <Message
             data-testid="card-create-error"
             negative

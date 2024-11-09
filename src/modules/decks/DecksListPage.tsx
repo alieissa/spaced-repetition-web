@@ -105,7 +105,7 @@ export default function Decks() {
         return
       case 'success':
         const decks = data.data
-        if (decks.length == 0) return
+        if (decks.length === 0) return
         navigate(`${decks[0].id}`)
     }
 
@@ -131,7 +131,7 @@ export default function Decks() {
       return (
         <DecksComponent deck={activeDeck!}>
           <div className="bordered">
-            {decks.length == 0 ? (
+            {decks.length === 0 ? (
               <DecksEmpty />
             ) : (
               <SPList divided relaxed>

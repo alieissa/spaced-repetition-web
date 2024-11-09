@@ -28,8 +28,6 @@ const convertToAnswersState = (cards: Card[]) => {
   )
 }
 
-// TODO Update deck type in
-// https://github.com/alieissa/Spaced_Repetition_Web/issues/21
 const getInitState = <D extends Deck>(deck: D): DeckFormState => {
   const cards = convertToCardsState(deck.cards)
   const answers = deck.cards.reduce<Record<string, Answer[]>>(
@@ -132,8 +130,7 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
       return state
   }
 }
-// TODO Update deck type in
-// https://github.com/alieissa/Spaced_Repetition_Web/issues/21
+
 export function useDeckFormReducer<D extends Deck>(deck: D) {
   return useReducer(reducer, getInitState(deck))
 }

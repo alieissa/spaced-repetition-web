@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import _ from 'lodash'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { MutationStatus } from 'react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Icon, Message } from 'semantic-ui-react'
 import 'src/App.css'
 import {
@@ -19,71 +19,40 @@ import {
   SPText,
 } from 'src/components'
 import { styles } from 'src/styles'
-import {
-  useCardDetailsQuery,
-  useCardForm,
-  useUpdateCardMutation,
-} from './cards.hooks'
+import { useCardDetailsQuery, useCardForm } from './cards.hooks'
 
 /**
  * This component contains the card details modal. The modal displays the
  * details of a card and an edit form when user clicks on edit.
- *
- * The modal is not controlled by any parent component, it is displayed when
- * the route /decks/:deckId/cards/:cardId is hit and it controls its state
- * completely
  */
-export default function CardDetailsModal() {
+type Props = {
+  cardId: string
+  submitStatus: MutationStatus
+  onSubmit: (data: any) => void
+  onClose: VoidFunction
+}
+export default function CardDetailsModal(props: Props) {
   const params = useParams()
-  const navigate = useNavigate()
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const queryResult = useCardDetailsQuery(params.cardId!)
-  const updateCardMutation = useUpdateCardMutation()
-
-  // TODO handle modal state in parent component
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setIsEditing(false)
-    setIsSubmitting(false)
-    navigate(`/decks/${params.deckId}`)
-  }
-
-  const handleSubmit = (card: Card) => {
-    updateCardMutation.mutate(card)
-    setIsSubmitting(true)
-  }
-
-  useEffect(() => {
-    if (queryResult.status !== 'success') {
-      return
-    }
-
-    setIsModalOpen(true)
-  }, [queryResult.status])
-
-  useEffect(() => {
-    if (updateCardMutation.status === 'success' && isSubmitting) {
-      handleCloseModal()
-    }
-  }, [updateCardMutation.status])
+  const queryResult = useCardDetailsQuery(props.cardId)
 
   const card = queryResult.data?.data
   return (
     <SPModal
       data-testid="card-details-modal"
-      open={isModalOpen}
-      onClose={handleCloseModal}
+      open={true}
+      onClose={props.onClose}
     >
+      {/* TODO Add proper loader */}
+      {queryResult.isLoading && <div>Loading...</div>}
       {isEditing ? (
         <CardDetailsForm
           {...card}
-          submitStatus={updateCardMutation.status}
+          submitStatus={props.submitStatus}
           onBack={() => setIsEditing(false)}
-          onCancel={handleCloseModal}
-          onSubmit={handleSubmit}
+          onCancel={props.onClose}
+          onSubmit={props.onSubmit}
         />
       ) : (
         <CardDetailsView {...card} onEdit={() => setIsEditing(true)} />

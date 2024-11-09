@@ -1,6 +1,6 @@
 /** @format */
 
-import { Outlet, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
   Dropdown,
@@ -25,6 +25,12 @@ import {
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { styles } from 'src/styles'
+import {
+  CardDetailsModal,
+  NewCardModal,
+  useCreateCardMutation,
+  useUpdateCardMutation,
+} from '../cards'
 import DeckDeleteConfirmationDialog from './DeckDeleteConfirmationDialog'
 import { useDeckByIdQuery, useDeleteDeckMutation } from './decks.hooks'
 
@@ -123,10 +129,32 @@ function DeckDetailsComponent(props: DeckDetailsProps) {
  */
 export default function DeckDetails(props: Pick<Deck, 'id'>) {
   const navigate = useNavigate()
-  const deleteMutation = useDeleteDeckMutation()
+
   const { status, data } = useDeckByIdQuery(props.id)
+
+  const [activeCardId, setActiveCardId] = useState('')
+  const [isCardDetailsModalOpen, setIsCardDetailsModalOpen] = useState(false)
+  const updateCardMutation = useUpdateCardMutation()
+
+  const [isNewCardModalOpen, setIsNewCardModalOpen] = useState(false)
+  const createCardMutation = useCreateCardMutation()
+
+  const deleteMutation = useDeleteDeckMutation()
   const [isDeleteConfirmationDialogOpen, setIsDeleteConfirmationDialogOpen] =
     useState(false)
+
+  useEffect(() => {
+    if (updateCardMutation.status === 'success') {
+      setIsCardDetailsModalOpen(false)
+    }
+  }, [updateCardMutation.status])
+
+  useEffect(() => {
+    if (createCardMutation.status === 'success') {
+      setIsNewCardModalOpen(false)
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createCardMutation.status])
 
   useEffect(() => {
     if (deleteMutation.status === 'success') {
@@ -144,10 +172,12 @@ export default function DeckDetails(props: Pick<Deck, 'id'>) {
   const handleDelete = () => setIsDeleteConfirmationDialogOpen(true)
   const handleCancelDelete = () => setIsDeleteConfirmationDialogOpen(false)
 
-  const handleClickCard = (cardId: string) =>
-    navigate(`/decks/${props.id}/cards/${cardId}`)
+  const handleClickCard = (cardId: string) => {
+    setActiveCardId(cardId)
+    setIsCardDetailsModalOpen(true)
+  }
 
-  const handleAddCard = () => navigate(`/decks/${props.id}/cards/new`)
+  const handleAddCard = () => setIsNewCardModalOpen(true)
 
   const handleDeleteConfirmation = () => {
     deleteMutation.mutate(props.id!)
@@ -157,11 +187,21 @@ export default function DeckDetails(props: Pick<Deck, 'id'>) {
     const deck = data?.data!
     return (
       <>
-        {/* The components of the children routes /decks/:deckId/cards/:cardId
-              and /decks/:deckId/cards/new are opened here, i.e. the card details 
-              and card create modals are opened here
-          */}
-        <Outlet />
+        {isNewCardModalOpen && (
+          <NewCardModal
+            submitStatus={createCardMutation.status}
+            onClose={() => setIsNewCardModalOpen(false)}
+            onSubmit={createCardMutation.mutate}
+          />
+        )}
+        {isCardDetailsModalOpen && (
+          <CardDetailsModal
+            cardId={activeCardId}
+            submitStatus={updateCardMutation.status}
+            onSubmit={updateCardMutation.mutate}
+            onClose={() => setIsCardDetailsModalOpen(false)}
+          />
+        )}
         <DeckDeleteConfirmationDialog
           name={deck.name}
           status={deleteMutation.status}
