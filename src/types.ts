@@ -2,7 +2,6 @@
 
 import { AxiosInstance } from 'axios'
 import { NAuth } from 'src/modules/auth'
-import { NSignup } from 'src/modules/signup'
 import { NVerification } from './modules/verification/verification.types'
 
 /** @format */
@@ -23,7 +22,6 @@ export type RequestError = { message: string; cause?: number }
 
 export type RootState = {
   auth: NAuth.State
-  signup: NSignup.State
   verification: NVerification.State
 }
 
