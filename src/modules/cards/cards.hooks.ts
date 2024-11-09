@@ -9,7 +9,6 @@ import { RequestError } from 'src/types'
 import { Async } from 'src/utils/async'
 import * as Yup from 'yup'
 import { NAnswers } from '../answers'
-import { NDecks } from '../decks/decks.types'
 import * as Select from './cards.selectors'
 import { NCards } from './cards.types'
 
@@ -20,7 +19,7 @@ type Params = [
   (quality: number) => void,
 ]
 export function useCard(
-  deckId: NDecks.Deck['id'],
+  deckId: Deck['id'],
   id: NCards.Card['id'],
 ): Params {
   const dispatch = useDispatch()

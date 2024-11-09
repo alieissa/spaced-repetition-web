@@ -4,6 +4,7 @@ import { PropsWithChildren, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
+  Card,
   Grid,
   GridColumn,
   GridRow,
@@ -15,18 +16,19 @@ import {
 import 'src/App.css'
 import {
   CreateButton,
+  SPCard,
+  SPCardContent,
+  SPCardHeader,
   SPHeader,
   SPList,
   SPListItem,
   UploadButton,
 } from 'src/components'
 import { styles } from 'src/styles'
-import Deck from './Deck'
 import DeckDetails from './DeckDetails'
 import DecksDownload from './DecksDownload'
 import DecksUploadModal from './DecksUploadModal'
 import { useDecksQuery } from './decks.hooks'
-import { NDecks } from './decks.types'
 
 function DecksHeader() {
   const [isUploadModalOPen, setIsUploadModalOpen] = useState(false)
@@ -61,7 +63,7 @@ function DecksEmpty() {
   )
 }
 
-function DecksComponent(props: PropsWithChildren<{ deck: NDecks.Deck }>) {
+function DecksComponent(props: PropsWithChildren<{ deck: Deck }>) {
   return (
     <div
       data-testid="decks-list-success"
@@ -134,8 +136,21 @@ export default function Decks() {
             ) : (
               <SPList divided relaxed>
                 {decks.map((d) => (
-                  <SPListItem>
-                    <Deck {...d} onClick={() => setActiveDeck(decks[0])} />
+                  <SPListItem key={d.id}>
+                    <SPCard
+                      className="pointer"
+                      style={{
+                        width: '100%',
+                        borderTop: 'none',
+                        borderRight: 'none',
+                        borderLeft: 'none',
+                      }}
+                    >
+                      <SPCardContent onClick={() => setActiveDeck(d)}>
+                        <SPCardHeader size="large">{d.name}</SPCardHeader>
+                        <Card.Description>{d.description}</Card.Description>
+                      </SPCardContent>
+                    </SPCard>
                   </SPListItem>
                 ))}
               </SPList>

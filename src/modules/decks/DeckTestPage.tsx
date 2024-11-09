@@ -7,13 +7,12 @@ import 'src/App.css'
 import { SPButtonIcon, SPSectionHeader } from 'src/components'
 import { TestCard, useCardTestFormReducer } from 'src/modules/cards'
 import { useDeckByIdQuery } from './decks.hooks'
-import { NDecks } from './decks.types'
 /**
  * Displays a series of questions that user must answer. User update settings of a question and
  * record an incorrect answer as a correct one
  */
 type Props = {
-  deck: NDecks.Deck
+  deck: Deck
 }
 export function DeckTestPage(props: Props) {
   const navigate = useNavigate()

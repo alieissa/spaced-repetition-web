@@ -4,10 +4,9 @@ import { Card, Header } from 'semantic-ui-react'
 import { SPCard, SPCardContent } from 'src/components'
 import { styles } from 'src/styles'
 import { Settings } from 'src/types'
-import { NDecks } from './decks.types'
 
-type Props = NDecks.Deck & {
-  onSubmitSettings?: (id: NDecks.Deck['id'], settings: Settings) => void
+type Props = Deck & {
+  onSubmitSettings?: (id: Deck['id'], settings: Settings) => void
 }
 
 export default function DeckInfo(props: Partial<Props>) {

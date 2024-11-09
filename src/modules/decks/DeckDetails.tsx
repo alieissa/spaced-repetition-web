@@ -27,7 +27,6 @@ import { useEffect, useState } from 'react'
 import { styles } from 'src/styles'
 import DeckDeleteConfirmationDialog from './DeckDeleteConfirmationDialog'
 import { useDeckByIdQuery, useDeleteDeckMutation } from './decks.hooks'
-import { NDecks } from './decks.types'
 
 type MenuProps = DropdownProps & {
   onDelete: VoidFunction
@@ -53,7 +52,7 @@ function DeckMenu(props: MenuProps) {
   )
 }
 
-type DeckDetailsProps = NDecks.Deck & {
+type DeckDetailsProps = Deck & {
   onAddCard: VoidFunction
   onClickCard: (id: string) => void
   onDelete: VoidFunction
@@ -122,7 +121,7 @@ function DeckDetailsComponent(props: DeckDetailsProps) {
  * This component displays the details of a deck, including cards of the deck.
  * When a user clicks on a card a modal with the card details is opened.
  */
-export default function DeckDetails(props: Pick<NDecks.Deck, 'id'>) {
+export default function DeckDetails(props: Pick<Deck, 'id'>) {
   const navigate = useNavigate()
   const deleteMutation = useDeleteDeckMutation()
   const { status, data } = useDeckByIdQuery(props.id)
@@ -151,7 +150,7 @@ export default function DeckDetails(props: Pick<NDecks.Deck, 'id'>) {
   const handleAddCard = () => navigate(`/decks/${props.id}/cards/new`)
 
   const handleDeleteConfirmation = () => {
-    deleteMutation.mutate(props.id)
+    deleteMutation.mutate(props.id!)
   }
 
   const renderDeckDetails = () => {

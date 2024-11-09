@@ -5,7 +5,6 @@ import { useReducer } from 'react'
 import { NAnswers } from 'src/modules/answers'
 import { NCards } from 'src/modules/cards'
 import { Untriggered } from 'src/utils/async'
-import { NDecks } from '../decks.types'
 import { DeckFormAction } from './deckForm.actions'
 
 export type FormCard = Omit<NCards.Card, 'answers'>
@@ -33,7 +32,7 @@ const convertToAnswersState = (cards: NCards.Card[]) => {
 
 // TODO Update deck type in
 // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
-const getInitState = <D extends NDecks.Deck>(deck: D): DeckFormState => {
+const getInitState = <D extends Deck>(deck: D): DeckFormState => {
   const cards = convertToCardsState(deck.cards)
   const answers = deck.cards.reduce<Record<string, NAnswers.Answer[]>>(
     (acc, card) => ({ ...acc, [card.id]: card.answers }),
@@ -137,6 +136,6 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
 }
 // TODO Update deck type in
 // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
-export function useDeckFormReducer<D extends NDecks.Deck>(deck: D) {
+export function useDeckFormReducer<D extends Deck>(deck: D) {
   return useReducer(reducer, getInitState(deck))
 }

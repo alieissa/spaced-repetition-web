@@ -13,7 +13,6 @@ import {
   SPHeader,
 } from 'src/components'
 import * as Yup from 'yup'
-import { NDecks } from '../decks/decks.types'
 import { useCard } from './cards.hooks'
 import { NCards } from './cards.types'
 
@@ -42,7 +41,7 @@ type Props = {
   id: NCards.Card['id']
   question: NCards.Card['question']
   userAnswer: string
-  deckId: NDecks.Deck['id']
+  deckId: Deck['id']
   onChange: (id: NCards.Card['id'], answer: string) => void
 }
 export default function Card(props: PropsWithChildren<Props>) {

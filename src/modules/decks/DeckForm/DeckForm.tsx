@@ -13,7 +13,6 @@ import {
 } from 'src/components'
 import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
-import { NDecks } from '../decks.types'
 import {
   addAnswer,
   addCard,
@@ -44,7 +43,7 @@ const isValidForm = (state: DeckFormState) => {
 }
 
 type Props = {
-  deck: NDecks.Deck
+  deck: Deck
   successMessage: string
   failureMessage: string
   submitStatus: MutationStatus
