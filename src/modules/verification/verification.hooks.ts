@@ -5,14 +5,14 @@ import { useSearchParams } from 'react-router-dom'
 import useAppContext from 'src/app.hooks'
 
 export function useVerifyUserQuery() {
-  const { api: api_ } = useAppContext()
+  const { api } = useAppContext()
 
   const [queryParams, __] = useSearchParams()
   const token = queryParams.get('token') || undefined
 
   const result = useQuery({
     queryKey: 'verify-user',
-    queryFn: () => api_.get('verify-user', { params: { token } }),
+    queryFn: () => api.get('verify-user', { params: { token } }),
   })
   return result
 }

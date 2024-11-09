@@ -1,8 +1,5 @@
-import { createContext, useContext } from 'react'
-import type { AppContext as AppContextType } from './types'
-// import AppContext from './app.context'
-
-const AppContext = createContext<AppContextType | null>(null)
+import { useContext } from 'react'
+import AppContext from './app.context'
 
 const useAppContext = () => {
   const currentAppContext = useContext(AppContext)

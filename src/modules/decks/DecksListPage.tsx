@@ -117,7 +117,11 @@ export default function Decks() {
       return null
     }
     case 'error': {
-      return <Segment data-testid="decks-list-failure"></Segment>
+      return (
+        <Segment data-testid="decks-list-failure">
+          <div>Error</div>
+        </Segment>
+      )
     }
     case 'loading': {
       return (

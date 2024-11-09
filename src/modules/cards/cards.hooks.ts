@@ -8,10 +8,10 @@ import useAppContext from 'src/app.hooks'
 import * as Yup from 'yup'
 
 export function useCheckAnswerMutation() {
-  const { api: api_ } = useAppContext()
+  const { api } = useAppContext()
 
   const mutation = useMutation({
-    mutationFn: (data: any) => api_.post(`cards/${data.id}/check-answer`, omit(data, 'id')),
+    mutationFn: (data: any) => api.post(`cards/${data.id}/check-answer`, omit(data, 'id')),
   })
 
   return mutation
@@ -19,24 +19,24 @@ export function useCheckAnswerMutation() {
 }
 
 export function useCreateCardMutation() {
-  const { api: api_ } = useAppContext();
+  const { api } = useAppContext();
   
-  const mutation = useMutation({ mutationFn: (data: Card) => api_.post('cards', data) })
+  const mutation = useMutation({ mutationFn: (data: Card) => api.post('cards', data) })
   return mutation
 }
 
 export function useCardDetailsQuery(cardId: string) {
-  const { api: api_ } = useAppContext()
+  const { api } = useAppContext()
 
-  const result = useQuery({ queryKey: ['card', cardId], queryFn: () => api_.get(`cards/${cardId}`) })
+  const result = useQuery({ queryKey: ['card', cardId], queryFn: () => api.get(`cards/${cardId}`) })
   return result
 }
 
 export function useUpdateCardMutation() {
-  const { api: api_ } = useAppContext()
+  const { api } = useAppContext()
 
   const mutation = useMutation({
-    mutationFn: (data: any) => api_.patch(`cards/${data.id}`, omit(data, 'id')),
+    mutationFn: (data: any) => api.patch(`cards/${data.id}`, omit(data, 'id')),
   })
   return mutation
 }

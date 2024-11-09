@@ -3,6 +3,7 @@
 import { createRoot } from 'react-dom/client'
 
 import axios from 'axios'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import App from './App'
 import AppContext from './app.context'
 import './index.css'
@@ -18,10 +19,14 @@ const axiosInstance = axios.create({
   },
 })
 
+const queryClient = new QueryClient()
+
 const container = document.getElementById('root')
 const root = createRoot(container!) // createRoot(container!) if you use TypeScript
 root.render(
-  <AppContext.Provider value={{ api: axiosInstance }}>
-    <App />
-  </AppContext.Provider>,
+  <QueryClientProvider client={queryClient}>
+    <AppContext.Provider value={{ api: axiosInstance }}>
+      <App />
+    </AppContext.Provider>
+  </QueryClientProvider>,
 )

@@ -2,7 +2,6 @@
 
 import _, { uniqueId } from 'lodash'
 import { useReducer } from 'react'
-import { Untriggered } from 'src/utils/async'
 import { DeckFormAction } from './deckForm.actions'
 
 export type FormCard = Omit<Card, 'answers'>
@@ -39,7 +38,7 @@ const getInitState = <D extends Deck>(deck: D): DeckFormState => {
     ...deck,
     cards,
     answers,
-    submitStatus: Untriggered()
+    submitStatus: 'idle'
   }
 }
 
