@@ -3,10 +3,8 @@ import { ChangeEvent, useEffect } from 'react'
 import { Container, Form, Message } from 'semantic-ui-react'
 import { SPButton, SPHeader, SPInput, SPText } from 'src/components'
 import { styles } from 'src/styles'
-import { async } from 'src/utils'
 import * as Yup from 'yup'
-import { useResetPassword } from './auth.hooks'
-import { NAuth } from './auth.types'
+import { useResetPasswordMutation } from './auth.hooks'
 
 const ResetPasswordValidatonSchema = Yup.object().shape({
   password: Yup.string()
@@ -19,7 +17,7 @@ const ResetPasswordValidatonSchema = Yup.object().shape({
 })
 
 type Props = {
-  form: FormikState<NAuth.ResetPasswordForm>
+  form: FormikState<ResetPasswordForm>
   onChangePassword: (e: ChangeEvent<HTMLInputElement>) => void
   onChangeConfirmedPassword: (e: ChangeEvent<HTMLInputElement>) => void
   onResetPassword: VoidFunction
@@ -93,7 +91,7 @@ function ResetPasswordForm(props: Props) {
 }
 
 export default function ResetPassword() {
-  const [resetPasswordStatus, resetPassword] = useResetPassword()
+  const resetPasswordMutation = useResetPasswordMutation()
 
   const form = useFormik({
     initialValues: {
@@ -101,14 +99,14 @@ export default function ResetPassword() {
       confirmedPassword: '',
     },
     validationSchema: ResetPasswordValidatonSchema,
-    onSubmit: (values: NAuth.ResetPasswordForm) =>
-      resetPassword({ password: values.password }),
+    onSubmit: (data: ResetPasswordForm) => resetPasswordMutation.mutate(data),
   })
 
   useEffect(() => {
-    form.setSubmitting(resetPasswordStatus.type === 'Loading')
+    const isSubmitting = resetPasswordMutation.status === 'loading'
+    form.setSubmitting(isSubmitting)
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resetPasswordStatus])
+  }, [resetPasswordMutation.status])
 
   const handleChangePassword = (e: ChangeEvent<HTMLInputElement>) => {
     form.setFieldValue('password', e.target.value)
@@ -118,35 +116,43 @@ export default function ResetPassword() {
     form.setFieldValue('confirmedPassword', e.target.value)
   }
 
-  const commonProps = {
-    form: form,
-    onChangePassword: handleChangePassword,
-    onChangeConfirmedPassword: handleChangeConfirmedPassword,
-    onResetPassword: form.submitForm,
+  const renderResetPasswordComponent = () => {
+    const commonProps = {
+      form: form,
+      onChangePassword: handleChangePassword,
+      onChangeConfirmedPassword: handleChangeConfirmedPassword,
+      onResetPassword: form.submitForm,
+    }
+
+    switch (resetPasswordMutation.status) {
+      case 'idle':
+      case 'loading': {
+        return <ResetPasswordForm {...commonProps} />
+      }
+      case 'success': {
+        return (
+          <div data-testid="reset-password-form-success">
+            <Message positive>Your password has been reset</Message>
+          </div>
+        )
+      }
+      case 'error': {
+        return (
+          <>
+            <Message negative>Unable to reset password</Message>
+            <ResetPasswordForm {...commonProps} />
+          </>
+        )
+      }
+    }
   }
+
   return (
     <Container>
       <div className="justify-space-between bordered p-1r mb-1r">
         <SPHeader as="h1">Spaced Reps</SPHeader>
       </div>
-
-      {async.match(resetPasswordStatus)({
-        Untriggered: () => <ResetPasswordForm {...commonProps} />,
-        Loading: () => <ResetPasswordForm {...commonProps} />,
-        Failure: () => (
-          <>
-            <div data-testid="reset-password-form-error">
-              <Message negative>Unable to reset password</Message>
-            </div>
-            <ResetPasswordForm {...commonProps} />
-          </>
-        ),
-        Success: () => (
-          <div data-testid="reset-password-form-success">
-            <Message positive>Your password has been reset</Message>
-          </div>
-        ),
-      })}
+      {renderResetPasswordComponent()}
     </Container>
   )
 }

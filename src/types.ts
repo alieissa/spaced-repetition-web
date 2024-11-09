@@ -1,8 +1,6 @@
 /** @format */
 
 import { AxiosInstance } from 'axios'
-import { NAuth } from 'src/modules/auth'
-import { NVerification } from './modules/verification/verification.types'
 
 /** @format */
 // export type Optional<T, K extends string | number | symbol> = Omit<T, K> & Partial<Pick<T, K>>
@@ -19,11 +17,6 @@ export type WithSettings<T, V extends keyof Settings = keyof Settings> = T &
   Pick<Settings, V>
 
 export type RequestError = { message: string; cause?: number }
-
-export type RootState = {
-  auth: NAuth.State
-  verification: NVerification.State
-}
 
 
 export type AppContext = {
