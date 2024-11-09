@@ -6,7 +6,6 @@ import { Segment } from 'semantic-ui-react'
 import 'src/App.css'
 
 import { SPButtonIcon, SPSectionHeader } from 'src/components'
-import { NAnswers } from '../answers'
 import DeckForm from './DeckForm/DeckForm'
 import { useDeckByIdQuery, useUpdateDeckMutation } from './decks.hooks'
 
@@ -27,14 +26,12 @@ export default function DeckEdit() {
         const deck = deckQueryResult.data.data
         // __type__ is used to discriminate if an entity is from backend
         // or new.This is important when updating/inserting the entities
-        const getFormedAnswer = (answer: NAnswers.Answer) => ({
+        const getFormedAnswer = (answer: Answer) => ({
           ...answer,
-          __type__: 'FORMED',
         })
 
         const formCards = (deck?.cards || []).map((card) => ({
           ...card,
-          __type__: 'FORMED',
           answers: (card?.answers || []).map(getFormedAnswer),
         }))
 

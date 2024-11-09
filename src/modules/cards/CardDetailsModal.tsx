@@ -2,6 +2,7 @@
 
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
+import { MutationStatus } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Icon, Message } from 'semantic-ui-react'
 import 'src/App.css'
@@ -18,11 +19,11 @@ import {
   SPText,
 } from 'src/components'
 import { styles } from 'src/styles'
-import { RequestError } from 'src/types'
-import { async } from 'src/utils'
-import { Async } from 'src/utils/async'
-import { useCardDetails, useCardForm, useCardUpdate } from './cards.hooks'
-import { NCards } from './cards.types'
+import {
+  useCardDetailsQuery,
+  useCardForm,
+  useUpdateCardMutation,
+} from './cards.hooks'
 
 /**
  * This component contains the card details modal. The modal displays the
@@ -39,16 +40,10 @@ export default function CardDetailsModal() {
   const [isEditing, setIsEditing] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const [loadCardStatus, card, loadCard] = useCardDetails(
-    params.deckId!,
-    params.cardId!,
-  )
+  const queryResult = useCardDetailsQuery(params.cardId!)
+  const updateCardMutation = useUpdateCardMutation()
 
-  const [updateStatus, updateCard] = useCardUpdate(
-    params.deckId!,
-    params.cardId!,
-  )
-
+  // TODO handle modal state in parent component
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setIsEditing(false)
@@ -56,29 +51,26 @@ export default function CardDetailsModal() {
     navigate(`/decks/${params.deckId}`)
   }
 
-  const handleSubmit = (card: NCards.Card) => {
-    updateCard(card)
+  const handleSubmit = (card: Card) => {
+    updateCardMutation.mutate(card)
     setIsSubmitting(true)
   }
 
   useEffect(() => {
-    loadCard()
-  }, [params.cardId])
-
-  useEffect(() => {
-    if (loadCardStatus.type !== 'Success') {
+    if (queryResult.status !== 'success') {
       return
     }
 
     setIsModalOpen(true)
-  }, [loadCardStatus.type])
+  }, [queryResult.status])
 
   useEffect(() => {
-    if (updateStatus.type === 'Success' && isSubmitting) {
+    if (updateCardMutation.status === 'success' && isSubmitting) {
       handleCloseModal()
     }
-  }, [updateStatus.type])
+  }, [updateCardMutation.status])
 
+  const card = queryResult.data?.data
   return (
     <SPModal
       data-testid="card-details-modal"
@@ -88,7 +80,7 @@ export default function CardDetailsModal() {
       {isEditing ? (
         <CardDetailsForm
           {...card}
-          submitStatus={updateStatus}
+          submitStatus={updateCardMutation.status}
           onBack={() => setIsEditing(false)}
           onCancel={handleCloseModal}
           onSubmit={handleSubmit}
@@ -100,7 +92,7 @@ export default function CardDetailsModal() {
   )
 }
 
-type ViewProps = NCards.Card & { onEdit: VoidFunction }
+type ViewProps = Card & { onEdit: VoidFunction }
 function CardDetailsView(props: ViewProps) {
   const [areAnswersVisible, setAreAnswersVisible] = useState(false)
 
@@ -148,11 +140,11 @@ function CardDetailsView(props: ViewProps) {
   )
 }
 
-type FormProps = NCards.Card & {
-  submitStatus: Async<null, RequestError, NCards.Card>
+type FormProps = Card & {
+  submitStatus: MutationStatus
   onBack: VoidFunction
   onCancel: VoidFunction
-  onSubmit: (card: NCards.Card) => void
+  onSubmit: (card: Card) => void
 }
 function CardDetailsForm(props: FormProps) {
   const {
@@ -182,18 +174,13 @@ function CardDetailsForm(props: FormProps) {
           />
         }
       />
-      {async.match(props.submitStatus)({
-        Untriggered: () => null,
-        Loading: () => null,
-        Success: () => null,
-        Failure: () => (
-          <SPModalContent className="flex-column align-center justify-center">
-            <Message data-testid="card-update-error" negative>
-              <Message.Header>Error: Unable to update card</Message.Header>
-            </Message>
-          </SPModalContent>
-        ),
-      })}
+      {props.submitStatus === 'error' && (
+        <SPModalContent className="flex-column align-center justify-center">
+          <Message data-testid="card-update-error" negative>
+            <Message.Header>Error: Unable to update card</Message.Header>
+          </Message>
+        </SPModalContent>
+      )}
       <SPModalContent className="flex-column align-center justify-center">
         <CardForm
           {...form.values}

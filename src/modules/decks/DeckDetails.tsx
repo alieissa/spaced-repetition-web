@@ -99,7 +99,7 @@ function DeckDetailsComponent(props: DeckDetailsProps) {
                     data-testid={`deck-details-card-${index}`}
                     className="pointer"
                     as="div"
-                    onClick={() => props.onClickCard(card.id)}
+                    onClick={() => props.onClickCard(card.id!)}
                   >
                     <SPCardContent>{card.question}</SPCardContent>
                   </SPCard>

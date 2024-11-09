@@ -11,7 +11,6 @@ import {
   SPInput,
   SPSection,
 } from 'src/components'
-import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
 import {
   addAnswer,
@@ -25,7 +24,7 @@ import {
 import { DeckFormState, FormCard, useDeckFormReducer } from './deckForm.reducer'
 import { getAnswersByCardId, getCards } from './deckForm.selectors'
 
-const isValidCard = (card: FormCard, answers: NAnswers.Answer[]) => {
+const isValidCard = (card: FormCard, answers: Answer[]) => {
   const isValidQuestion = card.question.trim() !== ''
   const areValidAnswers = answers.every(
     (answer) => answer.content.trim() !== '',
@@ -36,7 +35,7 @@ const isValidCard = (card: FormCard, answers: NAnswers.Answer[]) => {
 const isValidForm = (state: DeckFormState) => {
   const isValidName = state.name.trim() !== ''
   const areValidCards = getCards(state).every((card) =>
-    isValidCard(card, getAnswersByCardId(state, card.id)),
+    isValidCard(card, getAnswersByCardId(state, card.id!!)),
   )
 
   return isValidName && areValidCards
@@ -163,17 +162,17 @@ export default function DeckForm(props: Props) {
           {_.map(getCards(localState), (card) => (
             <CardForm
               {...card}
-              key={card.id}
-              answers={getAnswersByCardId(localState, card.id)}
+              key={card.id!}
+              answers={getAnswersByCardId(localState, card.id!!)}
               areAnswersVisible={true}
-              onAddAnswer={() => handleAddAnswer(card.id)}
-              onChangeAnswer={(id, content) =>
-                handleChangeAnswer(id, card.id, content)
+              onAddAnswer={() => handleAddAnswer(card.id!)}
+              onChangeAnswer={(id: string, content: string) =>
+                handleChangeAnswer(id, card.id!, content)
               }
               onChangeQuestion={(question: string) =>
-                handleChangeQuestion(card.id, question)
+                handleChangeQuestion(card.id!, question)
               }
-              onDeleteAnswer={(id: string) => handleDeleteAnswer(id, card.id)}
+              onDeleteAnswer={(id: string) => handleDeleteAnswer(id, card.id!)}
             />
           ))}
           <Segment basic style={styles.p0} className="flex-row-reverse">
@@ -195,7 +194,7 @@ export default function DeckForm(props: Props) {
             const cards = getCards(localState)
             const cardsForm = cards.map((card) => ({
               ...card,
-              answers: getAnswersByCardId(localState, card.id),
+              answers: getAnswersByCardId(localState, card.id!),
             }))
 
             const deckToUpdate = {

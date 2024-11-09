@@ -6,9 +6,8 @@ import { Form, Icon } from 'semantic-ui-react'
 import 'src/App.css'
 import { SPButtonIcon, SPFormInput, SPList, SPListItem } from 'src/components'
 import { styles } from 'src/styles'
-import { NCards } from './cards.types'
 
-export type CardFormProps = NCards.Card & {
+export type CardFormProps = Card & {
   areAnswersVisible: boolean
   actions?: JSX.Element
   getQuestionError?: () => boolean

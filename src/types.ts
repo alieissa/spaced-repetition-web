@@ -3,7 +3,6 @@
 import { AxiosInstance } from 'axios'
 import { NAuth } from 'src/modules/auth'
 import { NSignup } from 'src/modules/signup'
-import { NCards } from './modules/cards'
 import { NVerification } from './modules/verification/verification.types'
 
 /** @format */
@@ -23,7 +22,6 @@ export type WithSettings<T, V extends keyof Settings = keyof Settings> = T &
 export type RequestError = { message: string; cause?: number }
 
 export type RootState = {
-  cards: NCards.State
   auth: NAuth.State
   signup: NSignup.State
   verification: NVerification.State

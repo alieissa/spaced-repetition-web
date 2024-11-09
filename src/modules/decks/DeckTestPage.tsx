@@ -61,6 +61,7 @@ export function DeckTestPage(props: Props) {
 
       <TestCard
         {...currentCard}
+        id={currentCard.id!}
         deckId={props.deck.id}
         onChange={handleAnswerChange}
       >

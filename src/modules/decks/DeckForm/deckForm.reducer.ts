@@ -1,13 +1,11 @@
 /** @format */
 
-import _ from 'lodash'
+import _, { uniqueId } from 'lodash'
 import { useReducer } from 'react'
-import { NAnswers } from 'src/modules/answers'
-import { NCards } from 'src/modules/cards'
 import { Untriggered } from 'src/utils/async'
 import { DeckFormAction } from './deckForm.actions'
 
-export type FormCard = Omit<NCards.Card, 'answers'>
+export type FormCard = Omit<Card, 'answers'>
 
 // All Form related logic will eventually be moved
 // to a component that will be used to display both
@@ -16,16 +14,16 @@ export type DeckFormState = {
   name: string
   description?: string
   cards: FormCard[]
-  answers: _.Dictionary<NAnswers.Answer[]>
+  answers: _.Dictionary<Answer[]>
 }
 
-const convertToCardsState = (cards: (NCards.Card)[]) => {
+const convertToCardsState = (cards: Card[]) => {
   return cards.map<FormCard>((card) => _.omit(card, 'answers'))
 }
 
-const convertToAnswersState = (cards: NCards.Card[]) => {
-  return cards.reduce<Record<string, NAnswers.Answer[]>>(
-    (acc, card) => ({ ...acc, [card.id]: card.answers }),
+const convertToAnswersState = (cards: Card[]) => {
+  return cards.reduce<Record<string, Answer[]>>(
+    (acc, card) => ({ ...acc, [card.id!]: card.answers }),
     {},
   )
 }
@@ -34,8 +32,8 @@ const convertToAnswersState = (cards: NCards.Card[]) => {
 // https://github.com/alieissa/Spaced_Repetition_Web/issues/21
 const getInitState = <D extends Deck>(deck: D): DeckFormState => {
   const cards = convertToCardsState(deck.cards)
-  const answers = deck.cards.reduce<Record<string, NAnswers.Answer[]>>(
-    (acc, card) => ({ ...acc, [card.id]: card.answers }),
+  const answers = deck.cards.reduce<Record<string, Answer[]>>(
+    (acc, card) => ({ ...acc, [card.id!]: card.answers }),
     {},
   )
 
@@ -50,7 +48,7 @@ const getInitState = <D extends Deck>(deck: D): DeckFormState => {
 function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
   switch (action.type) {
     case 'AddAnswer': {
-      const newAnswer = NAnswers.Initial({})
+      const newAnswer = {id: uniqueId(), content: ''}
       const updatedCardAnswers = [...state.answers[action.cardId], newAnswer]
       const updatedAnswers = {
         ...state.answers,
@@ -87,7 +85,7 @@ function reducer(state: DeckFormState, action: DeckFormAction): DeckFormState {
     }
 
     case 'AddCard': {
-      const newCard = NCards.Initial({})
+      const newCard = {deckId: uniqueId(), id: uniqueId(), question: '', answers: []}
       const answers = convertToAnswersState([newCard])
       const cards = convertToCardsState([newCard])
 
