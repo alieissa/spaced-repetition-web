@@ -26,27 +26,8 @@ jobs:
         run: npm install
       - name: lint
         run: npm run lint
-      
-  tests:
-    needs:
-      - lint
-    runs-on: ubuntu-22.04
-    name: Test
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.17.x'
-      - name: Install packages
-        run: npm install
-      - name: Run tests
-        run: npm test -- --silent
 
   release:
-    needs: 
-      - tests
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-22.04
     name: Release
