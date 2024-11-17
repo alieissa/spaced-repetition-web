@@ -1,34 +1,18 @@
 /** @format */
 
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
-import * as api from 'src/api'
-import * as Select from './verification.selectors'
+import useAppContext from 'src/app.hooks'
 
-export function useVerification() {
+export function useVerifyUserQuery() {
+  const { api } = useAppContext()
+
   const [queryParams, __] = useSearchParams()
-  const dispatch = useDispatch()
-  const status = useSelector(Select.status)
-  const verify = api.request({
-    method: 'GET',
-    url: 'users/verify',
-    // get method returns string | null, we want string | undefined
-    token: queryParams.get('token') || undefined
+  const token = queryParams.get('token') || undefined
+
+  const result = useQuery({
+    queryKey: 'verify-user',
+    queryFn: () => api.get('verify-user', { params: { token } }),
   })
-
-  useEffect(() => {
-    dispatch({
-      type: 'Verify'
-    })
-    verify().then((result) => {
-      dispatch({
-        type: 'Verified',
-        result
-      })
-    })
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  return { status }
+  return result
 }

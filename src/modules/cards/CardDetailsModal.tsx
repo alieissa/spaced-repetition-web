@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import _ from 'lodash'
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { MutationStatus } from 'react-query'
+import { useParams } from 'react-router-dom'
 import { Icon, Message } from 'semantic-ui-react'
 import 'src/App.css'
 import {
@@ -18,80 +19,40 @@ import {
   SPText,
 } from 'src/components'
 import { styles } from 'src/styles'
-import { RequestError } from 'src/types'
-import { async } from 'src/utils'
-import { Async } from 'src/utils/async'
-import { useCardDetails, useCardForm, useCardUpdate } from './cards.hooks'
-import { NCards } from './cards.types'
+import { useCardDetailsQuery, useCardForm } from './cards.hooks'
 
 /**
  * This component contains the card details modal. The modal displays the
  * details of a card and an edit form when user clicks on edit.
- *
- * The modal is not controlled by any parent component, it is displayed when
- * the route /decks/:deckId/cards/:cardId is hit and it controls its state
- * completely
  */
-export default function CardDetailsModal() {
+type Props = {
+  cardId: string
+  submitStatus: MutationStatus
+  onSubmit: (data: any) => void
+  onClose: VoidFunction
+}
+export default function CardDetailsModal(props: Props) {
   const params = useParams()
-  const navigate = useNavigate()
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const [loadCardStatus, card, loadCard] = useCardDetails(
-    params.deckId!,
-    params.cardId!,
-  )
+  const queryResult = useCardDetailsQuery(props.cardId)
 
-  const [updateStatus, updateCard] = useCardUpdate(
-    params.deckId!,
-    params.cardId!,
-  )
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setIsEditing(false)
-    setIsSubmitting(false)
-    navigate(`/decks/${params.deckId}`)
-  }
-
-  const handleSubmit = (card: NCards.Card) => {
-    updateCard(card)
-    setIsSubmitting(true)
-  }
-
-  useEffect(() => {
-    loadCard()
-  }, [params.cardId])
-
-  useEffect(() => {
-    if (loadCardStatus.type !== 'Success') {
-      return
-    }
-
-    setIsModalOpen(true)
-  }, [loadCardStatus.type])
-
-  useEffect(() => {
-    if (updateStatus.type === 'Success' && isSubmitting) {
-      handleCloseModal()
-    }
-  }, [updateStatus.type])
-
+  const card = queryResult.data?.data
   return (
     <SPModal
       data-testid="card-details-modal"
-      open={isModalOpen}
-      onClose={handleCloseModal}
+      open={true}
+      onClose={props.onClose}
     >
+      {/* TODO Add proper loader */}
+      {queryResult.isLoading && <div>Loading...</div>}
       {isEditing ? (
         <CardDetailsForm
           {...card}
-          submitStatus={updateStatus}
+          submitStatus={props.submitStatus}
           onBack={() => setIsEditing(false)}
-          onCancel={handleCloseModal}
-          onSubmit={handleSubmit}
+          onCancel={props.onClose}
+          onSubmit={props.onSubmit}
         />
       ) : (
         <CardDetailsView {...card} onEdit={() => setIsEditing(true)} />
@@ -100,7 +61,7 @@ export default function CardDetailsModal() {
   )
 }
 
-type ViewProps = NCards.Card & { onEdit: VoidFunction }
+type ViewProps = Card & { onEdit: VoidFunction }
 function CardDetailsView(props: ViewProps) {
   const [areAnswersVisible, setAreAnswersVisible] = useState(false)
 
@@ -148,11 +109,11 @@ function CardDetailsView(props: ViewProps) {
   )
 }
 
-type FormProps = NCards.Card & {
-  submitStatus: Async<null, RequestError, NCards.Card>
+type FormProps = Card & {
+  submitStatus: MutationStatus
   onBack: VoidFunction
   onCancel: VoidFunction
-  onSubmit: (card: NCards.Card) => void
+  onSubmit: (card: Card) => void
 }
 function CardDetailsForm(props: FormProps) {
   const {
@@ -182,18 +143,13 @@ function CardDetailsForm(props: FormProps) {
           />
         }
       />
-      {async.match(props.submitStatus)({
-        Untriggered: () => null,
-        Loading: () => null,
-        Success: () => null,
-        Failure: () => (
-          <SPModalContent className="flex-column align-center justify-center">
-            <Message data-testid="card-update-error" negative>
-              <Message.Header>Error: Unable to update card</Message.Header>
-            </Message>
-          </SPModalContent>
-        ),
-      })}
+      {props.submitStatus === 'error' && (
+        <SPModalContent className="flex-column align-center justify-center">
+          <Message data-testid="card-update-error" negative>
+            <Message.Header>Error: Unable to update card</Message.Header>
+          </Message>
+        </SPModalContent>
+      )}
       <SPModalContent className="flex-column align-center justify-center">
         <CardForm
           {...form.values}

@@ -1,13 +1,14 @@
 /** @format */
 
-import { useSelector } from 'react-redux'
-import * as api from '../../api'
-import * as Select from './signup.selectors'
-import { NSignup } from './signup.types'
+import { useMutation } from 'react-query'
+import useAppContext from 'src/app.hooks'
 
-export function useSignUp() {
-  const status = useSelector(Select.status)
-  const signup = api.request<NSignup.User>({ method: 'POST', url: 'users/register' })
+export function useSignupMutation() {
+  const { api } = useAppContext()
 
-  return { status,  signup }
+  const mutation = useMutation({
+    mutationFn: (data: any) => api.post('signup', data),
+  })
+
+  return mutation
 }

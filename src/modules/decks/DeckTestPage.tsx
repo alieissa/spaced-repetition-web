@@ -6,15 +6,13 @@ import { Message } from 'semantic-ui-react'
 import 'src/App.css'
 import { SPButtonIcon, SPSectionHeader } from 'src/components'
 import { TestCard, useCardTestFormReducer } from 'src/modules/cards'
-import { async } from 'src/utils'
-import { useDeckById } from './decks.hooks'
-import { NDecks } from './decks.types'
+import { useDeckByIdQuery } from './decks.hooks'
 /**
  * Displays a series of questions that user must answer. User update settings of a question and
  * record an incorrect answer as a correct one
  */
 type Props = {
-  deck: NDecks.Deck
+  deck: Deck
 }
 export function DeckTestPage(props: Props) {
   const navigate = useNavigate()
@@ -63,6 +61,7 @@ export function DeckTestPage(props: Props) {
 
       <TestCard
         {...currentCard}
+        id={currentCard.id!}
         deckId={props.deck.id}
         onChange={handleAnswerChange}
       >
@@ -89,18 +88,24 @@ export function DeckTestPage(props: Props) {
 
 export default function DeckTest() {
   const params = useParams<{ deckId: string }>()
-  const { status } = useDeckById(params.deckId!)
+  const { status, data } = useDeckByIdQuery(params.deckId!)
 
-  return async.match(status)({
-    Untriggered: () => null,
-    Loading: () => null,
-    Success: ({ value }) => <DeckTestPage deck={value} />,
-    Failure: () => (
-      <Message data-testid="deck-test-failure" negative className="w-inherit">
-        <Message.Header>
-          Error: Unable to retrieve deck information
-        </Message.Header>
-      </Message>
-    ),
-  })
+  switch (status) {
+    case 'idle':
+    case 'loading':
+      return null
+    case 'success': {
+      const deck = data.data
+      return <DeckTestPage deck={deck} />
+    }
+    case 'error': {
+      return (
+        <Message data-testid="deck-test-failure" negative className="w-inherit">
+          <Message.Header>
+            Error: Unable to retrieve deck information
+          </Message.Header>
+        </Message>
+      )
+    }
+  }
 }

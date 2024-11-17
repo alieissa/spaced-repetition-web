@@ -3,7 +3,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ForgotPassword, Login, ResetPassword } from 'src/modules/auth'
 import {
-  DeckDetails,
   DeckEdit,
   DeckTestPage,
   DecksListPage,
@@ -13,7 +12,6 @@ import { Signup } from 'src/modules/signup'
 import { Verification } from 'src/modules/verification'
 import NotFound from './NotFound'
 import SPSidebar from './modules/Sidebar'
-import { CardCreateModal, CardDetailsModal } from './modules/cards'
 
 const withSidebar = (Component: JSX.Element) => {
   return (
@@ -32,10 +30,6 @@ export default function AppRoutes() {
         <Route path="new" element={<NewDeck />} />
         <Route path=":deckId/edit" element={<DeckEdit />} />
         <Route path=":deckId/test" element={<DeckTestPage />} />
-        <Route path=":deckId" element={<DeckDetails />}>
-          <Route path="cards/new" element={<CardCreateModal />} />
-          <Route path="cards/:cardId" element={<CardDetailsModal />} />
-        </Route>
       </Route>
       <Route path="/verify" element={<Verification />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />

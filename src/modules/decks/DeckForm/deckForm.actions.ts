@@ -1,7 +1,6 @@
 /** @format */
 
 import { Dispatch } from 'react'
-import { NDecks } from '../decks.types'
 
 export type DeckFormAction =
   | {
@@ -38,7 +37,7 @@ export type DeckFormAction =
     }
   | {
       type: 'SetDeck'
-      deck: NDecks.Deck
+      deck: Deck
     }
   | {
       type: 'ResetForm'
@@ -104,7 +103,7 @@ export const addCard = (dispatch: Dispatch<DeckFormAction>) => {
   })
 }
 
-export const setDeck = (dispatch: Dispatch<DeckFormAction>, deck: NDecks.Deck) => {
+export const setDeck = (dispatch: Dispatch<DeckFormAction>, deck: Deck) => {
   dispatch({
     type: 'SetDeck',
     deck,

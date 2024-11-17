@@ -3,13 +3,12 @@ import { MouseEventHandler } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import { Button, Form, Icon, Input, List } from 'semantic-ui-react'
 import 'src/App.css'
-import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
 
 export type CardFormProps = {
   id: string
   question: string
-  answers: NAnswers.Answer[]
+  answers: Answer[]
   onChangeQuestion: (question: string) => void
   onChangeAnswer: (id: string, content: string) => void
   onDeleteAnswer: (id: string) => void

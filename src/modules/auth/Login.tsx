@@ -6,18 +6,16 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Container, Form, Loader, Message } from 'semantic-ui-react'
 import { SPButton, SPCheckbox, SPHeader, SPInput, SPText } from 'src/components'
 import { styles } from 'src/styles'
-import { async } from 'src/utils'
 import * as Yup from 'yup'
-import useLogin from './auth.hooks'
-import { NAuth } from './auth.types'
+import { useLoginMutation } from './auth.hooks'
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string().required('Required'),
 })
 type Props = {
-  form: FormikState<NAuth.UserForm>
-  onLogin: (data: NAuth.UserForm) => void
+  form: FormikState<RememberMeUserForm>
+  onLogin: (data: UserLogin) => void
   onChangeEmail: (e: ChangeEvent<HTMLInputElement>) => void
   onChangePassword: (e: ChangeEvent<HTMLInputElement>) => void
   onChangeRememberMe: VoidFunction
@@ -103,7 +101,7 @@ const LoginComponent = (props: Props) => {
 
 function Login() {
   const navigate = useNavigate()
-  const [status, login, resetLogin] = useLogin()
+  const loginMutation = useLoginMutation()
 
   const form = useFormik({
     initialValues: {
@@ -112,26 +110,25 @@ function Login() {
       rememberMe: true,
     },
     validationSchema: LoginSchema,
-    onSubmit: (data: NAuth.UserForm) => login(data),
+    onSubmit: (data: any) => loginMutation.mutate(data),
   })
 
   // Very important: Makes sure that when login is mounted
   // as a result of a redirect from the app the login status
   // is not success. Without this cleanup code we would have
   // an infinite loop
-  useEffect(() => {
-    return () => resetLogin()
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // TODO Test to make sure this is no longer needed and if needed user
+  // context api to save global value
+  // useEffect(() => {
+  //   return () => resetLogin()
+  //   //eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
 
   useEffect(() => {
-    form.setSubmitting(status.type === 'Loading')
-    if (status.type !== 'Success') {
-      return
-    }
-    navigate('/')
+    const isSubmitting = loginMutation.status === 'loading'
+    form.setSubmitting(isSubmitting)
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status.type])
+  }, [form, loginMutation.status])
 
   const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     form.setFieldValue('email', e.target.value)
@@ -155,6 +152,39 @@ function Login() {
     onLogin: form.submitForm,
   }
 
+  const renderLoginComponent = () => {
+    switch (loginMutation.status) {
+      case 'idle': {
+        return (
+          <div data-testid="login-form">
+            <LoginComponent {...commonProps} />
+          </div>
+        )
+      }
+      case 'loading': {
+        return (
+          <div data-testid="login-form-loading">
+            <Loader active />
+            <LoginComponent {...commonProps} />
+          </div>
+        )
+      }
+      case 'error': {
+        return (
+          <div data-testid="login-form-error">
+            <Message negative>
+              <Message.Header>Login failed</Message.Header>
+              <p>Please make sure email and/or password are correct</p>
+            </Message>
+            <LoginComponent {...commonProps} />
+          </div>
+        )
+      }
+      case 'success': {
+        navigate('/')
+      }
+    }
+  }
   return (
     <Container>
       <div className="justify-space-between bordered p-1r mb-1r">
@@ -170,29 +200,7 @@ function Login() {
           </SPButton>
         </div>
       </div>
-      {async.match(status)({
-        Untriggered: () => (
-          <div data-testid="login-form">
-            <LoginComponent {...commonProps} />
-          </div>
-        ),
-        Loading: () => (
-          <div data-testid="login-form-loading">
-            <Loader active />
-            <LoginComponent {...commonProps} />
-          </div>
-        ),
-        Failure: () => (
-          <div data-testid="login-form-error">
-            <Message negative>
-              <Message.Header>Login failed</Message.Header>
-              <p>Please make sure email and/or password are correct</p>
-            </Message>
-            <LoginComponent {...commonProps} />
-          </div>
-        ),
-        Success: () => null,
-      })}
+      {renderLoginComponent()}
     </Container>
   )
 }

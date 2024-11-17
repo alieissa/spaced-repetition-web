@@ -1,10 +1,6 @@
 /** @format */
 
-import { NAuth } from 'src/modules/auth'
-import { NDecks } from 'src/modules/decks/decks.types'
-import { NSignup } from 'src/modules/signup'
-import { NCards } from './modules/cards'
-import { NVerification } from './modules/verification/verification.types'
+import { AxiosInstance } from 'axios'
 
 /** @format */
 // export type Optional<T, K extends string | number | symbol> = Omit<T, K> & Partial<Pick<T, K>>
@@ -22,10 +18,7 @@ export type WithSettings<T, V extends keyof Settings = keyof Settings> = T &
 
 export type RequestError = { message: string; cause?: number }
 
-export type RootState = {
-  cards: NCards.State
-  decks: NDecks.State
-  auth: NAuth.State
-  signup: NSignup.State
-  verification: NVerification.State
+
+export type AppContext = {
+  api: AxiosInstance
 }

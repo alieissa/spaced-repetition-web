@@ -1,6 +1,6 @@
 /** @format */
 
-import { Outlet, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import {
   Dropdown,
@@ -21,16 +21,18 @@ import {
   SPSection,
   SPSectionHeader,
 } from 'src/components'
-import { async } from 'src/utils'
-import * as Select from './decks.selectors'
 
 import clsx from 'clsx'
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
 import { styles } from 'src/styles'
+import {
+  CardDetailsModal,
+  NewCardModal,
+  useCreateCardMutation,
+  useUpdateCardMutation,
+} from '../cards'
 import DeckDeleteConfirmationDialog from './DeckDeleteConfirmationDialog'
-import { useDeckById } from './decks.hooks'
-import { NDecks } from './decks.types'
+import { useDeckByIdQuery, useDeleteDeckMutation } from './decks.hooks'
 
 type MenuProps = DropdownProps & {
   onDelete: VoidFunction
@@ -56,7 +58,7 @@ function DeckMenu(props: MenuProps) {
   )
 }
 
-type DeckDetailsProps = NDecks.Deck & {
+type DeckDetailsProps = Deck & {
   onAddCard: VoidFunction
   onClickCard: (id: string) => void
   onDelete: VoidFunction
@@ -64,14 +66,14 @@ type DeckDetailsProps = NDecks.Deck & {
   onTest: VoidFunction
 }
 function DeckDetailsComponent(props: DeckDetailsProps) {
-  const deleteStatus = useSelector(Select.deleteStatus(props.id))
-  const isDisabled = deleteStatus.type === 'Success'
+  // const deleteStatus = useSelector(Select.deleteStatus(props.id))
+  // const isDisabled = deleteStatus.type === 'Success'
 
   return (
-    <div className={clsx('h-full', { 'not-allowed-cursor': isDisabled })}>
+    <div className={clsx('h-full', { 'not-allowed-cursor': false })}>
       <div
         data-testid="deck-details-success"
-        className={clsx({ disabled: isDisabled })}
+        className={clsx({ disabled: false })}
       >
         <SPSectionHeader
           title={props.name}
@@ -103,7 +105,7 @@ function DeckDetailsComponent(props: DeckDetailsProps) {
                     data-testid={`deck-details-card-${index}`}
                     className="pointer"
                     as="div"
-                    onClick={() => props.onClickCard(card.id)}
+                    onClick={() => props.onClickCard(card.id!)}
                   >
                     <SPCardContent>{card.question}</SPCardContent>
                   </SPCard>
@@ -125,68 +127,111 @@ function DeckDetailsComponent(props: DeckDetailsProps) {
  * This component displays the details of a deck, including cards of the deck.
  * When a user clicks on a card a modal with the card details is opened.
  */
-function DeckDetails(props: { deckId: string }) {
+export default function DeckDetails(props: Pick<Deck, 'id'>) {
   const navigate = useNavigate()
-  const { status: loadDeckStatus, deck } = useDeckById(props.deckId)
+
+  const { status, data } = useDeckByIdQuery(props.id)
+
+  const [activeCardId, setActiveCardId] = useState('')
+  const [isCardDetailsModalOpen, setIsCardDetailsModalOpen] = useState(false)
+  const updateCardMutation = useUpdateCardMutation()
+
+  const [isNewCardModalOpen, setIsNewCardModalOpen] = useState(false)
+  const createCardMutation = useCreateCardMutation()
+
+  const deleteMutation = useDeleteDeckMutation()
   const [isDeleteConfirmationDialogOpen, setIsDeleteConfirmationDialogOpen] =
     useState(false)
 
-  const handleEdit = () => navigate(`/decks/${props.deckId}/edit`)
+  useEffect(() => {
+    if (updateCardMutation.status === 'success') {
+      setIsCardDetailsModalOpen(false)
+    }
+  }, [updateCardMutation.status])
 
-  const handleTest = () => navigate(`/decks/${props.deckId}/test`)
+  useEffect(() => {
+    if (createCardMutation.status === 'success') {
+      setIsNewCardModalOpen(false)
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createCardMutation.status])
+
+  useEffect(() => {
+    if (deleteMutation.status === 'success') {
+      // Same behaviour as close
+      setIsDeleteConfirmationDialogOpen(false)
+    }
+
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteMutation.status])
+
+  const handleEdit = () => navigate(`/decks/${props.id}/edit`)
+
+  const handleTest = () => navigate(`/decks/${props.id}/test`)
 
   const handleDelete = () => setIsDeleteConfirmationDialogOpen(true)
   const handleCancelDelete = () => setIsDeleteConfirmationDialogOpen(false)
 
-  const handleClickCard = (cardId: string) =>
-    navigate(`/decks/${props.deckId}/cards/${cardId}`)
+  const handleClickCard = (cardId: string) => {
+    setActiveCardId(cardId)
+    setIsCardDetailsModalOpen(true)
+  }
 
-  const handleAddCard = () => navigate(`/decks/${props.deckId}/cards/new`)
-  console.log('load status', loadDeckStatus)
-  return async.match(loadDeckStatus)({
-    Untriggered: () => null,
-    Loading: () => null,
-    Success: () => {
-      return (
-        <>
-          {/* The components of the children routes /decks/:deckId/cards/:cardId
-              and /decks/:deckId/cards/new are opened here, i.e. the card details 
-              and card create modals are opened here
-          */}
-          <Outlet />
-          <DeckDeleteConfirmationDialog
-            name={deck.name}
-            open={isDeleteConfirmationDialogOpen}
-            onCancel={handleCancelDelete}
-            onClose={handleCancelDelete}
+  const handleAddCard = () => setIsNewCardModalOpen(true)
+
+  const handleDeleteConfirmation = () => {
+    deleteMutation.mutate(props.id!)
+  }
+
+  const renderDeckDetails = () => {
+    const deck = data?.data!
+    return (
+      <>
+        {isNewCardModalOpen && (
+          <NewCardModal
+            submitStatus={createCardMutation.status}
+            onClose={() => setIsNewCardModalOpen(false)}
+            onSubmit={createCardMutation.mutate}
           />
-          <DeckDetailsComponent
-            {...deck}
-            onAddCard={handleAddCard}
-            onClickCard={handleClickCard}
-            onEdit={handleEdit}
-            onTest={handleTest}
-            onDelete={handleDelete}
+        )}
+        {isCardDetailsModalOpen && (
+          <CardDetailsModal
+            cardId={activeCardId}
+            submitStatus={updateCardMutation.status}
+            onSubmit={updateCardMutation.mutate}
+            onClose={() => setIsCardDetailsModalOpen(false)}
           />
-        </>
-      )
-    },
-    Failure: () => {
+        )}
+        <DeckDeleteConfirmationDialog
+          name={deck.name}
+          status={deleteMutation.status}
+          open={isDeleteConfirmationDialogOpen}
+          onCancel={handleCancelDelete}
+          onClose={handleCancelDelete}
+          onConfirm={handleDeleteConfirmation}
+        />
+        <DeckDetailsComponent
+          {...deck}
+          onAddCard={handleAddCard}
+          onClickCard={handleClickCard}
+          onEdit={handleEdit}
+          onTest={handleTest}
+          onDelete={handleDelete}
+        />
+      </>
+    )
+  }
+  switch (status) {
+    case 'idle':
+    case 'loading':
+      return null
+    case 'success':
+      return renderDeckDetails()
+    case 'error':
       return (
         <Message negative data-testid="deck-details-failure">
           <MessageHeader>Error: Unable to load deck details</MessageHeader>
         </Message>
       )
-    },
-  })
-}
-
-export default function Test12() {
-  const decks = useSelector(Select.decks)
-  const params = useParams<{ deckId: string }>()
-  if (decks.length === 0) {
-    return null
   }
-
-  return <DeckDetails deckId={params.deckId!} />
 }

@@ -1,158 +1,44 @@
 /** @format */
 
 import { useFormik } from 'formik'
-import _ from 'lodash'
+import _, { omit } from 'lodash'
 import { useReducer } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import * as api from 'src/api'
-import { RequestError } from 'src/types'
-import { Async } from 'src/utils/async'
+import { useMutation, useQuery } from 'react-query'
+import useAppContext from 'src/app.hooks'
 import * as Yup from 'yup'
-import { NAnswers } from '../answers'
-import { NDecks } from '../decks/decks.types'
-import * as Select from './cards.selectors'
-import { NCards } from './cards.types'
 
-type Params = [
-  NCards.State['checkStatus'][string],
-  NCards.State['check'][string],
-  (answer: { answer: string }) => void,
-  (quality: number) => void,
-]
-export function useCard(
-  deckId: NDecks.Deck['id'],
-  id: NCards.Card['id'],
-): Params {
-  const dispatch = useDispatch()
-  const putCard = api.request({
-    method: 'PUT',
-    url: `decks/${deckId}/cards/${id}`,
-  })
-  const postAnswerCheck = api.request({
-    method: 'POST',
-    url: `decks/${deckId}/cards/${id}/answers/check`,
+export function useCheckAnswerMutation() {
+  const { api } = useAppContext()
+
+  const mutation = useMutation({
+    mutationFn: (data: any) => api.post(`cards/${data.id}/check-answer`, omit(data, 'id')),
   })
 
-  const checkAnswerStatus = useSelector(Select.checkStatus(id))
-  const checkAnswerResult = useSelector(Select.check(id))
-
-  const checkAnswer = (answer: { answer: string }) => {
-    dispatch({
-      type: 'CheckAnswer',
-      id,
-    })
-
-    postAnswerCheck(answer).then((result) => {
-      dispatch({
-        type: 'AnswerChecked',
-        result,
-        id,
-      })
-    })
-  }
-
-  const updateCardQuality = (quality: number) => {
-    dispatch({
-      type: 'UpdateCardQuality',
-      id,
-    })
-
-    putCard({ quality }).then((result: any) => {
-      dispatch({
-        type: 'CardQualityUpdated',
-        result,
-      })
-    })
-  }
-
-  return [checkAnswerStatus, checkAnswerResult, checkAnswer, updateCardQuality]
+  return mutation
+  
 }
 
-export function useCardCreate(
-  deckId: string,
-): [Async<null, RequestError, NCards.Card>, (card: NCards.Card) => void] {
-  const createStatus = useSelector(Select.createStatus)
-
-  const dispatch = useDispatch()
-  const postCard = api.request<NCards.Card>({
-    method: 'POST',
-    url: `decks/${deckId}/cards`,
-  })
-
-  const createCard = (card: NCards.Card) => {
-    dispatch({
-      type: 'CreateCard',
-    })
-
-    postCard(card).then((result) => {
-      dispatch({
-        type: 'CardCreated',
-        result,
-      })
-    })
-  }
-
-  return [createStatus, createCard]
+export function useCreateCardMutation() {
+  const { api } = useAppContext();
+  
+  const mutation = useMutation({ mutationFn: (data: Card) => api.post('cards', data) })
+  return mutation
 }
 
-export function useCardDetails(
-  deckId: string,
-  cardId: string,
-): [Async<null, RequestError, NCards.Card>, NCards.Card, () => void] {
-  const loadStatus = useSelector(Select.loadStatus(cardId))
-  const card = useSelector(Select.loadedCard(cardId))
+export function useCardDetailsQuery(cardId: string) {
+  const { api } = useAppContext()
 
-  const dispatch = useDispatch()
-  const getCard = api.request({
-    method: 'GET',
-    url: `decks/${deckId}/cards/${cardId}`,
-  })
-
-  const loadCard = () => {
-    dispatch({
-      type: 'LoadCard',
-    })
-
-    getCard().then((result: any) => {
-      dispatch({
-        type: 'CardLoaded',
-        id: cardId,
-        result,
-      })
-    })
-  }
-
-  return [loadStatus, card, loadCard]
+  const result = useQuery({ queryKey: ['card', cardId], queryFn: () => api.get(`cards/${cardId}`) })
+  return result
 }
 
-export function useCardUpdate(
-  deckId: string,
-  cardId: string,
-): [Async<null, RequestError, NCards.Card>, (card: NCards.Card) => void] {
-  const updateStatus = useSelector(Select.updateStatus(cardId))
+export function useUpdateCardMutation() {
+  const { api } = useAppContext()
 
-  const dispatch = useDispatch()
-  const putCard = api.request<NCards.Card>({
-    method: 'PUT',
-    url: `decks/${deckId}/cards/${cardId}`,
+  const mutation = useMutation({
+    mutationFn: (data: any) => api.patch(`cards/${data.id}`, omit(data, 'id')),
   })
-
-  const updateCard = (card: NCards.Card) => {
-    dispatch({
-      type: 'UpdateCard',
-      id: card.id,
-    })
-
-    putCard(card).then((result) => {
-      dispatch({
-        type: 'CardUpdated',
-        id: cardId,
-        result,
-      })
-    })
-  }
-
-  return [updateStatus, updateCard]
+  return mutation
 }
 
 const CardFormValidationSchema = Yup.object().shape({
@@ -165,7 +51,7 @@ const CardFormValidationSchema = Yup.object().shape({
     .min(1)
     .required('Required'),
 })
-export function useCardForm(card: NCards.Card, onSubmit: (args: any) => void) {
+export function useCardForm(card: Card, onSubmit: (args: any) => void) {
   const form = useFormik({
     initialValues: {
       ...card
@@ -174,7 +60,7 @@ export function useCardForm(card: NCards.Card, onSubmit: (args: any) => void) {
     onSubmit: onSubmit,
   })
   const handleAddAnswer = () => {
-    const answers = [...form.values.answers, NAnswers.Initial({})]
+    const answers = [...form.values.answers, {content: ''}]
     form.setFieldValue('answers', answers)
   }
 
@@ -225,13 +111,13 @@ type GetPreviousCard = {
 }
 type UpdateUserAnswer = {
   type: 'UpdateUserAnswer'
-  id: NCards.Card['id']
+  id: string
   userAnswer: string
 }
 type Action = GetNextCard | GetPreviousCard | UpdateUserAnswer
 type State = {
   currentCardIndex: number
-  cards: { id: string; question: string; userAnswer: string }[]
+  cards: { id?: string; question: string; userAnswer: string }[]
 }
 function cardTestFormReducer(state: State, action: Action) {
   switch (action.type) {
@@ -259,7 +145,7 @@ function cardTestFormReducer(state: State, action: Action) {
     }
   }
 }
-const getInitialState = (cards: ReadonlyArray<NCards.Card>) => {
+const getInitialState = (cards: ReadonlyArray<Card>) => {
   return {
     currentCardIndex: 0,
     cards: cards.map((card) => ({
@@ -269,6 +155,6 @@ const getInitialState = (cards: ReadonlyArray<NCards.Card>) => {
     })),
   }
 }
-export function useCardTestFormReducer(cards: ReadonlyArray<NCards.Card>) {
+export function useCardTestFormReducer(cards: ReadonlyArray<Card>) {
   return useReducer(cardTestFormReducer, getInitialState(cards))
 }

@@ -3,28 +3,29 @@
 import { useEffect, useRef } from 'react'
 import 'src/App.css'
 import { DownloadButton } from '../../components'
-import { useDownloadDecks } from './decks.hooks'
+import { useDownloadDecksQuery } from './decks.hooks'
 /**
  * This contains the download button. Once the button is clicked all the users
  * decks are imported in a file called decks.json
  */
 export default function DecksDownload() {
   const downloadAnchorRef = useRef<HTMLAnchorElement>(null)
-  const [downloadDecksUrl, downloadDecksStatus, downloadDecks] =
-    useDownloadDecks()
+  const { status, data, refetch } = useDownloadDecksQuery()
 
-  const status = downloadDecksStatus.type
-  const isDownloadDecksDisbaled = status === 'Loading' || status === 'Failure'
+  const isDownloadDecksDisbaled = status === 'loading' || status === 'error'
+  const downloadHref = status === 'success' ? data.data : ''
 
   useEffect(() => {
-    if (status !== 'Success') {
-      return
+    if (status === 'success') {
+      downloadAnchorRef.current?.click()
     }
-    downloadAnchorRef.current?.click()
   }, [status])
 
-  // TODO display success or failure message component on page wher
-  // download button is displayed
+  // https://github.com/TanStack/query/discussions/1205
+  const downloadDecks = () => {
+    refetch()
+  }
+
   return (
     <>
       <DownloadButton
@@ -33,13 +34,13 @@ export default function DecksDownload() {
         onClick={downloadDecks}
       />
 
-      {downloadDecksUrl && (
+      {status === 'success' && (
         <a
           hidden
           download
           data-testid="decks-download-anchor"
           ref={downloadAnchorRef}
-          href={downloadDecksUrl}
+          href={downloadHref}
         />
       )}
     </>

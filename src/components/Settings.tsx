@@ -12,13 +12,12 @@ import {
   PopupProps,
 } from 'semantic-ui-react'
 import 'src/App.css'
-import { NDecks } from 'src/modules/decks/decks.types'
 import { styles } from 'src/styles'
 
 interface Props {
   id: string
   deckId?: string
-  decks?: ReadonlyArray<NDecks.Deck>
+  decks?: ReadonlyArray<Deck>
   open: boolean
   easiness: number
   quality: number

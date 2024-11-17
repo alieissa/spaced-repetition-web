@@ -2,6 +2,7 @@
 
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
+import { MutationStatus } from 'react-query'
 import { Message, MessageHeader, Segment } from 'semantic-ui-react'
 import {
   CardForm,
@@ -10,11 +11,7 @@ import {
   SPInput,
   SPSection,
 } from 'src/components'
-import { NAnswers } from 'src/modules/answers'
 import { styles } from 'src/styles'
-import { RequestError } from 'src/types'
-import { async } from 'src/utils'
-import { NDecks } from '../decks.types'
 import {
   addAnswer,
   addCard,
@@ -27,7 +24,7 @@ import {
 import { DeckFormState, FormCard, useDeckFormReducer } from './deckForm.reducer'
 import { getAnswersByCardId, getCards } from './deckForm.selectors'
 
-const isValidCard = (card: FormCard, answers: NAnswers.Answer[]) => {
+const isValidCard = (card: FormCard, answers: Answer[]) => {
   const isValidQuestion = card.question.trim() !== ''
   const areValidAnswers = answers.every(
     (answer) => answer.content.trim() !== '',
@@ -38,17 +35,17 @@ const isValidCard = (card: FormCard, answers: NAnswers.Answer[]) => {
 const isValidForm = (state: DeckFormState) => {
   const isValidName = state.name.trim() !== ''
   const areValidCards = getCards(state).every((card) =>
-    isValidCard(card, getAnswersByCardId(state, card.id)),
+    isValidCard(card, getAnswersByCardId(state, card.id!!)),
   )
 
   return isValidName && areValidCards
 }
 
 type Props = {
-  deck: NDecks.Deck
+  deck: Deck
   successMessage: string
   failureMessage: string
-  submitStatus: async.Async<null, RequestError, null>
+  submitStatus: MutationStatus
   onCancel?: VoidFunction
   onSubmit: (deck: any) => void
 }
@@ -63,8 +60,7 @@ export default function DeckForm(props: Props) {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.deck])
 
-  const isUpdating =
-    displaySubmissionStatus && props.submitStatus.type === 'Loading'
+  const isUpdating = displaySubmissionStatus && props.submitStatus === 'loading'
 
   const handleChangeDeckName = (e: any) => {
     changeDeck(localDispatch, {
@@ -108,6 +104,28 @@ export default function DeckForm(props: Props) {
     addCard(localDispatch)
   }
 
+  const renderMessage = () => {
+    switch (props.submitStatus) {
+      case 'idle':
+      case 'loading':
+        return null
+      case 'success': {
+        return (
+          <Message positive data-testid="deck-submission-success">
+            <MessageHeader>{props.successMessage}</MessageHeader>
+          </Message>
+        )
+      }
+      case 'error': {
+        return (
+          <Message negative data-testid="deck-submission-failure">
+            <MessageHeader>{props.failureMessage}</MessageHeader>
+          </Message>
+        )
+      }
+    }
+  }
+
   return (
     <>
       {displayValidationError && (
@@ -116,21 +134,7 @@ export default function DeckForm(props: Props) {
           <p>Enter valid input and try again</p>
         </Message>
       )}
-      {displaySubmissionStatus &&
-        async.match(props.submitStatus)({
-          Untriggered: () => null,
-          Loading: () => null,
-          Success: () => (
-            <Message positive data-testid="deck-submission-success">
-              <MessageHeader>{props.successMessage}</MessageHeader>
-            </Message>
-          ),
-          Failure: () => (
-            <Message negative data-testid="deck-submission-failure">
-              <MessageHeader>{props.failureMessage}</MessageHeader>
-            </Message>
-          ),
-        })}
+      {displaySubmissionStatus && renderMessage()}
       <div>
         <div>
           <SPInput
@@ -158,17 +162,17 @@ export default function DeckForm(props: Props) {
           {_.map(getCards(localState), (card) => (
             <CardForm
               {...card}
-              key={card.id}
-              answers={getAnswersByCardId(localState, card.id)}
+              key={card.id!}
+              answers={getAnswersByCardId(localState, card.id!!)}
               areAnswersVisible={true}
-              onAddAnswer={() => handleAddAnswer(card.id)}
-              onChangeAnswer={(id, content) =>
-                handleChangeAnswer(id, card.id, content)
+              onAddAnswer={() => handleAddAnswer(card.id!)}
+              onChangeAnswer={(id: string, content: string) =>
+                handleChangeAnswer(id, card.id!, content)
               }
               onChangeQuestion={(question: string) =>
-                handleChangeQuestion(card.id, question)
+                handleChangeQuestion(card.id!, question)
               }
-              onDeleteAnswer={(id: string) => handleDeleteAnswer(id, card.id)}
+              onDeleteAnswer={(id: string) => handleDeleteAnswer(id, card.id!)}
             />
           ))}
           <Segment basic style={styles.p0} className="flex-row-reverse">
@@ -190,7 +194,7 @@ export default function DeckForm(props: Props) {
             const cards = getCards(localState)
             const cardsForm = cards.map((card) => ({
               ...card,
-              answers: getAnswersByCardId(localState, card.id),
+              answers: getAnswersByCardId(localState, card.id!),
             }))
 
             const deckToUpdate = {

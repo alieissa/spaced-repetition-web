@@ -1,17 +1,21 @@
 /** @format */
 
-import { FormikHelpers, FormikState, useFormik } from 'formik'
-import { ChangeEvent } from 'react'
-import { useDispatch } from 'react-redux'
+import { FormikState, useFormik } from 'formik'
+import { ChangeEvent, useEffect } from 'react'
 import { Container, Form, Loader, Message } from 'semantic-ui-react'
 import { SPButton, SPHeader, SPInput, SPText } from 'src/components'
 import { styles } from 'src/styles'
-import { async } from 'src/utils'
 import * as Yup from 'yup'
-import { useSignUp } from './signup.hooks'
-import { NSignup } from './signup.types'
+import { useSignupMutation } from './signup.hooks'
 
-const SignUpSchema = Yup.object().shape({
+type UserForm = {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  confirmedPassword: string
+}
+const UserFormSchema = Yup.object().shape({
   firstName: Yup.string(),
   lastName: Yup.string(),
   email: Yup.string().email('Invalid email').required('Required'),
@@ -19,7 +23,7 @@ const SignUpSchema = Yup.object().shape({
   confirmedPassword: Yup.string().required('Required'),
 })
 type Props = {
-  form: FormikState<NSignup.User>
+  form: FormikState<UserForm>
   onChangeFirstName: (e: ChangeEvent<HTMLInputElement>) => void
   onChangeLastName: (e: ChangeEvent<HTMLInputElement>) => void
   onChangeEmail: (e: ChangeEvent<HTMLInputElement>) => void
@@ -135,21 +139,7 @@ const SignupComponent = (props: Props) => {
 }
 
 function Signup() {
-  const { status, signup } = useSignUp()
-
-  const dispatch = useDispatch()
-  const handleSignUp = (
-    data: NSignup.User,
-    { setSubmitting }: FormikHelpers<NSignup.User>,
-  ) => {
-    dispatch({
-      type: 'Signup',
-    })
-    signup(data).then((result) => {
-      setSubmitting(false)
-      dispatch({ type: 'Signedup', result })
-    })
-  }
+  const signupMutation = useSignupMutation()
 
   const form = useFormik({
     initialValues: {
@@ -159,9 +149,14 @@ function Signup() {
       password: '',
       confirmedPassword: '',
     },
-    validationSchema: SignUpSchema,
-    onSubmit: handleSignUp,
+    validationSchema: UserFormSchema,
+    onSubmit: (data: any) => signupMutation.mutate(data),
   })
+
+  useEffect(() => {
+    const isSubmitting = signupMutation.status === 'loading'
+    form.setSubmitting(isSubmitting)
+  }, [form, signupMutation.status])
 
   const handleChangeFirstName = (e: ChangeEvent<HTMLInputElement>) => {
     form.setFieldValue('firstName', e.target.value)
@@ -179,14 +174,52 @@ function Signup() {
     form.setFieldValue('confirmedPassword', e.target.value)
   }
 
-  const commonProps = {
-    form,
-    onChangeFirstName: handleChangeFirstName,
-    onChangeLastName: handleChangeLastName,
-    onChangeEmail: handleChangeEmail,
-    onChangePassword: handleChangePassword,
-    onChangeConfirmedPassword: handleChangeConfirmedPassword,
-    onSignup: form.submitForm,
+  const renderSignupComponent = () => {
+    const commonProps = {
+      form,
+      onChangeFirstName: handleChangeFirstName,
+      onChangeLastName: handleChangeLastName,
+      onChangeEmail: handleChangeEmail,
+      onChangePassword: handleChangePassword,
+      onChangeConfirmedPassword: handleChangeConfirmedPassword,
+      onSignup: form.submitForm,
+    }
+    switch (signupMutation.status) {
+      case 'idle': {
+        return (
+          <div data-testid="signup-form">
+            <SignupComponent {...commonProps} />
+          </div>
+        )
+      }
+      case 'loading': {
+        return (
+          <>
+            <Loader active />
+            <SignupComponent {...commonProps} />
+          </>
+        )
+      }
+      case 'success': {
+        return (
+          <Message positive>
+            <Message.Header>Signup successful</Message.Header>
+            <p>An email has been sent to you.</p>
+          </Message>
+        )
+      }
+      case 'error': {
+        return (
+          <>
+            <Message negative>
+              <Message.Header>Signup failed</Message.Header>
+              <p>Please try again.</p>
+            </Message>
+            <SignupComponent {...commonProps} />
+          </>
+        )
+      }
+    }
   }
 
   return (
@@ -194,36 +227,7 @@ function Signup() {
       <div className="justify-space-between bordered p-1r mb-1r">
         <SPHeader as="h1">Spaced Reps</SPHeader>
       </div>
-      {async.match(status)({
-        Untriggered: () => (
-          <div data-testid="signup-form">
-            <SignupComponent {...commonProps} />
-          </div>
-        ),
-        Loading: () => (
-          <div data-testid="signup-form-loading">
-            <Loader active />
-            <SignupComponent {...commonProps} />
-          </div>
-        ),
-        Failure: () => (
-          <div data-testid="signup-form-error">
-            <Message negative>
-              <Message.Header>Signup failed</Message.Header>
-              <p>Please try again.</p>
-            </Message>
-            <SignupComponent {...commonProps} />
-          </div>
-        ),
-        Success: () => (
-          <div data-testid="signup-form-successful">
-            <Message positive>
-              <Message.Header>Signup successful</Message.Header>
-              <p>An email has been sent to you.</p>
-            </Message>
-          </div>
-        ),
-      })}
+      {renderSignupComponent()}
     </Container>
   )
 }
