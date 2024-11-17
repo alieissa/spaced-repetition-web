@@ -113,22 +113,11 @@ function Login() {
     onSubmit: (data: any) => loginMutation.mutate(data),
   })
 
-  // Very important: Makes sure that when login is mounted
-  // as a result of a redirect from the app the login status
-  // is not success. Without this cleanup code we would have
-  // an infinite loop
-  // TODO Test to make sure this is no longer needed and if needed user
-  // context api to save global value
-  // useEffect(() => {
-  //   return () => resetLogin()
-  //   //eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
-
   useEffect(() => {
     const isSubmitting = loginMutation.status === 'loading'
     form.setSubmitting(isSubmitting)
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form, loginMutation.status])
+  }, [loginMutation.status])
 
   const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     form.setFieldValue('email', e.target.value)

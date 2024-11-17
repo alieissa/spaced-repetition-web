@@ -21,4 +21,6 @@ export type RequestError = { message: string; cause?: number }
 
 export type AppContext = {
   api: AxiosInstance
+  token?: string
+  setToken: (token: string) => void
 }

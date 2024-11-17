@@ -1,5 +1,6 @@
 /** @format */
 
+import { PropsWithChildren } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { ForgotPassword, Login, ResetPassword } from 'src/modules/auth'
 import {
@@ -11,6 +12,7 @@ import {
 import { Signup } from 'src/modules/signup'
 import { Verification } from 'src/modules/verification'
 import NotFound from './NotFound'
+import useAppContext from './app.hooks'
 import SPSidebar from './modules/Sidebar'
 
 const withSidebar = (Component: JSX.Element) => {
@@ -21,20 +23,76 @@ const withSidebar = (Component: JSX.Element) => {
     </div>
   )
 }
+
+const AuthRoute = ({ children }: PropsWithChildren) => {
+  const { token } = useAppContext()
+  console.log('tokens', token)
+  if (!token) {
+    return <Login />
+  }
+
+  return <>{children}</>
+}
+
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/decks" element={withSidebar(<DecksListPage />)}>
-        <Route path="new" element={<NewDeck />} />
-        <Route path=":deckId/edit" element={<DeckEdit />} />
-        <Route path=":deckId/test" element={<DeckTestPage />} />
+      <Route
+        path="/login"
+        element={
+          <AuthRoute>
+            <Login />
+          </AuthRoute>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <AuthRoute>
+            <Signup />
+          </AuthRoute>
+        }
+      />
+      <Route
+        path="/decks"
+        element={<AuthRoute>{withSidebar(<DecksListPage />)}</AuthRoute>}
+      >
+        <Route
+          path="new"
+          element={
+            <AuthRoute>
+              <NewDeck />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path=":deckId/edit"
+          element={
+            <AuthRoute>
+              <DeckEdit />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path=":deckId/test"
+          element={
+            <AuthRoute>
+              <DeckTestPage />
+            </AuthRoute>
+          }
+        />
       </Route>
       <Route path="/verify" element={<Verification />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/" element={<Navigate replace to="/decks" />} />
+      <Route
+        path="/"
+        element={
+          <AuthRoute>
+            <Navigate replace to="/decks" />
+          </AuthRoute>
+        }
+      />
       <Route path="*" element={withSidebar(<NotFound />)} />
     </Routes>
   )

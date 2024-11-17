@@ -156,7 +156,7 @@ function Signup() {
   useEffect(() => {
     const isSubmitting = signupMutation.status === 'loading'
     form.setSubmitting(isSubmitting)
-  }, [form, signupMutation.status])
+  }, [signupMutation.status])
 
   const handleChangeFirstName = (e: ChangeEvent<HTMLInputElement>) => {
     form.setFieldValue('firstName', e.target.value)
@@ -211,6 +211,7 @@ function Signup() {
       case 'error': {
         return (
           <>
+            {/* TODO Update visual */}
             <Message negative>
               <Message.Header>Signup failed</Message.Header>
               <p>Please try again.</p>

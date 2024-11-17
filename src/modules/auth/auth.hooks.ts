@@ -1,13 +1,17 @@
 /** @format */
 
-import { useMutation, useQuery } from 'react-query'
-import useAppContext from 'src/app.hooks'
+import { useMutation, useQuery } from 'react-query';
+import useAppContext from 'src/app.hooks';
 
 export function useLoginMutation() {
-  const { api } = useAppContext()
+  const { api, setToken } = useAppContext()
 
   const mutation = useMutation({
-    mutationFn: (data: any) => api.post('login', data),
+    mutationFn: (data: any) => api.post('login', data).then(data => {
+      console.log(data);
+      setToken(data.data.token);
+      return data
+    }),
   })
 
   return mutation
